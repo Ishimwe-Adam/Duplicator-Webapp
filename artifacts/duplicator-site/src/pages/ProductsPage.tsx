@@ -73,6 +73,14 @@ const categories: Category[] = [
     desc: "Inks, masters, toner, parts, and software for continuous operation.",
     subcategories: ["Inks & Masters", "Toner & Parts", "Software"],
   },
+  {
+    id: "sewing",
+    label: "Sewing & Apparel",
+    icon: "🧵",
+    color: "#7C3AED",
+    desc: "Custom-sewn uniforms, branded apparel, and embroidery services for teams, events and corporate identity.",
+    subcategories: ["Polo Shirts & T-Shirts", "Corporate Uniforms", "Workwear & Overalls", "Caps & Headwear", "Aprons & Accessories"],
+  },
 ];
 
 const products: Product[] = [
@@ -120,6 +128,34 @@ const products: Product[] = [
   // Software
   { id: "impostrip", name: "Ultimate Impostrip", desc: "Workflow automation for imposition and prepress. Reduces manual layout time by up to 80%.", sku: "CON-SW-001", emoji: "💻", subcategory: "Software", category: "consumables", featured: true, badge: "Software" },
   { id: "dupconnect", name: "DupConnect Print Driver", desc: "Network connectivity driver for seamless integration of duplicators with office print workflows.", sku: "CON-SW-002", emoji: "🌐", subcategory: "Software", category: "consumables" },
+
+  // Sewing & Apparel — Polo Shirts & T-Shirts
+  { id: "polo-std", name: "Corporate Polo Shirt", desc: "Premium piqué polo with embroidered or printed logo. Available in all sizes from XS–4XL. Minimum order: 10 pcs.", sku: "SEW-PL-001", emoji: "👕", subcategory: "Polo Shirts & T-Shirts", category: "sewing", featured: true },
+  { id: "tshirt-crew", name: "Crew-Neck T-Shirt", desc: "100% cotton crew-neck tee. Custom screen-printed or DTG-printed design. Ideal for events and staff branding.", sku: "SEW-TS-001", emoji: "👕", subcategory: "Polo Shirts & T-Shirts", category: "sewing" },
+  { id: "polo-dry-fit", name: "Dry-Fit Performance Polo", desc: "Moisture-wicking fabric for hospitality, sport and outdoor teams. Full-colour dye-sublimation printing.", sku: "SEW-PL-002", emoji: "👕", subcategory: "Polo Shirts & T-Shirts", category: "sewing" },
+  { id: "tshirt-event", name: "Event T-Shirt (Bulk Pack)", desc: "High-volume event shirts. Minimum 50 pcs, competitive pricing per unit. Single or double-sided print.", sku: "SEW-TS-002", emoji: "👕", subcategory: "Polo Shirts & T-Shirts", category: "sewing", badge: "Bulk" },
+
+  // Sewing & Apparel — Corporate Uniforms
+  { id: "uniform-shirt", name: "Corporate Dress Shirt", desc: "Tailored long-sleeve or short-sleeve corporate shirt with embroidered logo on chest. Men's and women's cuts.", sku: "SEW-UN-001", emoji: "👔", subcategory: "Corporate Uniforms", category: "sewing", featured: true },
+  { id: "uniform-suit", name: "Office Uniform Set", desc: "Complete uniform package: trousers, shirt, and optional blazer. Custom-fitted to your organisation's colour spec.", sku: "SEW-UN-002", emoji: "🧥", subcategory: "Corporate Uniforms", category: "sewing" },
+  { id: "uniform-security", name: "Security & Guard Uniform", desc: "Heavy-duty security uniform with reinforced stitching, epaulette loops, and custom badge embroidery.", sku: "SEW-UN-003", emoji: "🦺", subcategory: "Corporate Uniforms", category: "sewing" },
+  { id: "uniform-hospitality", name: "Hospitality Uniform", desc: "Hotel, restaurant, and service industry uniforms. Elegant cuts, stain-resistant fabric options, logo embroidery.", sku: "SEW-UN-004", emoji: "👔", subcategory: "Corporate Uniforms", category: "sewing" },
+
+  // Sewing & Apparel — Workwear & Overalls
+  { id: "overall-heavy", name: "Heavy-Duty Overall", desc: "Full-body industrial overall in durable poly-cotton blend. Reflective strips available. Custom logo printing.", sku: "SEW-OV-001", emoji: "🦺", subcategory: "Workwear & Overalls", category: "sewing", featured: true },
+  { id: "coverall-flame", name: "Flame-Retardant Coverall", desc: "Safety coverall for industrial, chemical, and energy-sector workers. Meets international safety standards.", sku: "SEW-OV-002", emoji: "🦺", subcategory: "Workwear & Overalls", category: "sewing", badge: "Safety" },
+  { id: "jacket-work", name: "Branded Work Jacket", desc: "Sleeveless or full-sleeve work jacket with logo patch, zipped pockets, and reinforced elbows.", sku: "SEW-OV-003", emoji: "🧥", subcategory: "Workwear & Overalls", category: "sewing" },
+
+  // Sewing & Apparel — Caps & Headwear
+  { id: "cap-baseball", name: "Branded Baseball Cap", desc: "6-panel structured cap with embroidered logo on front. Adjustable strap back. One size fits most.", sku: "SEW-CP-001", emoji: "🧢", subcategory: "Caps & Headwear", category: "sewing", featured: true },
+  { id: "cap-bucket", name: "Bucket Hat", desc: "Unisex cotton bucket hat ideal for outdoor events, promotions, and NGO field teams. Custom embroidery.", sku: "SEW-CP-002", emoji: "🧢", subcategory: "Caps & Headwear", category: "sewing" },
+  { id: "cap-beanie", name: "Branded Beanie / Knit Cap", desc: "Warm knit beanie with woven or embroidered logo patch. Ideal for corporate gifting and cold-weather staff gear.", sku: "SEW-CP-003", emoji: "🧢", subcategory: "Caps & Headwear", category: "sewing" },
+
+  // Sewing & Apparel — Aprons & Accessories
+  { id: "apron-kitchen", name: "Chef & Kitchen Apron", desc: "Full-length or half-apron for restaurants, catering and hotels. Custom embroidered logo and adjustable straps.", sku: "SEW-AP-001", emoji: "🧑‍🍳", subcategory: "Aprons & Accessories", category: "sewing", featured: true },
+  { id: "apron-salon", name: "Salon & Spa Apron", desc: "Lightweight, water-resistant apron for beauty and wellness professionals. Clean logo finish, multiple colour options.", sku: "SEW-AP-002", emoji: "✂️", subcategory: "Aprons & Accessories", category: "sewing" },
+  { id: "bib-promo", name: "Promotional Bib / Vest", desc: "High-visibility promotional bibs and race-day vests. Ideal for marathons, community events, and NGO campaigns.", sku: "SEW-AP-003", emoji: "🦺", subcategory: "Aprons & Accessories", category: "sewing" },
+  { id: "bag-tote", name: "Custom Tote Bag", desc: "Non-woven or cotton tote bag with screen-printed or sublimated logo. Perfect for conference giveaways.", sku: "SEW-AP-004", emoji: "👜", subcategory: "Aprons & Accessories", category: "sewing" },
 ];
 
 // ── Product Card ───────────────────────────────────────────────────────────
