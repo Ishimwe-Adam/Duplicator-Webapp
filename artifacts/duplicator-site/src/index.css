@@ -1,0 +1,96 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}
+
+:root {
+  --navy: #1B2B8A;
+  --blue: #2645C8;
+  --light-blue: #4A90E2;
+  --sky: #A8D4F5;
+  --electric: #00C6FF;
+  --gold: #F5C518;
+  --off-white: #F7F8FC;
+  --ink: #0D1117;
+  --grey: #5A6478;
+  --light-grey: #E8ECF2;
+  --wa-green: #25D366;
+  --wa-dark: #128C7E;
+
+  --background: 231 100% 98%;
+  --foreground: 220 58% 7%;
+  --border: 218 30% 88%;
+  --input: 218 30% 88%;
+  --ring: 222 71% 47%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 58% 7%;
+  --primary: 222 71% 47%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 231 100% 98%;
+  --secondary-foreground: 220 58% 7%;
+  --muted: 220 20% 94%;
+  --muted-foreground: 218 14% 41%;
+  --accent: 222 71% 47%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --radius: 0.5rem;
+  --app-font-sans: 'Plus Jakarta Sans', sans-serif;
+  --app-font-serif: 'DM Serif Display', serif;
+  --app-font-mono: 'Space Mono', monospace;
+}
+
+@layer base {
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--ink);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+}
+
+/* ANIMATIONS */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes floatBadge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes wordReveal { to { opacity: 1; transform: translateY(0); } }
+@keyframes waPulse {
+  0%,100% { box-shadow: 0 8px 24px rgba(37,211,102,.35); }
+  50% { box-shadow: 0 8px 32px rgba(37,211,102,.6), 0 0 0 8px rgba(37,211,102,.08); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }

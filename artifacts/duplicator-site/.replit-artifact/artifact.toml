@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Duplicator Ltd"
+version = "1.0.0"
+id = "artifacts/duplicator-site"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24468
+
+[services.development]
+run = "pnpm --filter @workspace/duplicator-site run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/duplicator-site", "run", "build" ]
+publicDir = "artifacts/duplicator-site/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24468"
+BASE_PATH = "/"

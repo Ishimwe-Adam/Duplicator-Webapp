@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duplicator Ltd — Switch Your Brand ON | Printing, Branding & Sewing Kigali</title>
+<meta name="description" content="Rwanda's leading printing, branding and sewing company. 15+ years delivering premium business cards, banners, uniforms, signage and corporate gifts. Order via WhatsApp today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2B8A;
+  --blue: #2645C8;
+  --light-blue: #4A90E2;
+  --sky: #A8D4F5;
+  --electric: #00C6FF;
+  --gold: #F5C518;
+  --white: #FFFFFF;
+  --off-white: #F7F8FC;
+  --ink: #0D1117;
+  --grey: #5A6478;
+  --light-grey: #E8ECF2;
+  --wa-green: #25D366;
+  --wa-dark: #128C7E;
+  --max-w: 1320px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off-white);color:var(--ink);overflow-x:hidden;line-height:1.6}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--blue);border-radius:3px}
+
+/* TYPOGRAPHY */
+.font-display{font-family:'DM Serif Display',serif}
+.font-syne{font-family:'Syne',sans-serif}
+.font-mono{font-family:'Space Mono',monospace}
+
+/* UTILITY */
+.container{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;padding:6px 14px;border-radius:100px;border:1px solid currentColor}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:.05em;text-decoration:none;cursor:pointer;border:none;transition:all .25s}
+.btn-primary{background:var(--electric);color:var(--ink)}
+.btn-primary:hover{background:#fff;color:var(--navy);transform:translateY(-2px)}
+.btn-wa{background:var(--wa-green);color:#fff}
+.btn-wa:hover{background:var(--wa-dark);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)}
+.btn-outline:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.section-pad{padding:100px 0}
+.section-pad-sm{padding:60px 0}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:1000;transition:background .3s,backdrop-filter .3s,box-shadow .3s;padding:0}
+header.scrolled{background:rgba(13,17,23,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px;max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-svg{width:44px;height:44px}
+.logo-text{display:flex;flex-direction:column;line-height:1}
+.logo-name{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;letter-spacing:.06em}
+.logo-sub{font-family:'Space Mono',monospace;font-size:9px;color:var(--electric);letter-spacing:.12em}
+nav{display:flex;align-items:center;gap:32px}
+nav a{font-family:'Syne',sans-serif;font-weight:600;font-size:13px;color:rgba(255,255,255,.75);text-decoration:none;letter-spacing:.04em;transition:color .2s;position:relative}
+nav a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--electric);transform:scaleX(0);transition:transform .2s}
+nav a:hover{color:#fff}
+nav a:hover::after{transform:scaleX(1)}
+.nav-cta{display:flex;align-items:center;gap:12px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{width:24px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+
+/* MOBILE NAV */
+.mobile-nav{position:fixed;inset:0;background:var(--ink);z-index:999;display:flex;flex-direction:column;justify-content:center;padding:48px 32px;transform:translateX(100%);transition:transform .4s cubic-bezier(.77,0,.175,1)}
+.mobile-nav.open{transform:translateX(0)}
+.mobile-nav a{font-family:'Syne',sans-serif;font-weight:800;font-size:36px;color:rgba(255,255,255,.8);text-decoration:none;display:block;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s}
+.mobile-nav a:hover{color:var(--electric)}
+.mobile-nav-close{position:absolute;top:28px;right:28px;background:none;border:none;color:#fff;font-size:28px;cursor:pointer;line-height:1}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;background:var(--ink);display:flex;align-items:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;overflow:hidden}
+.hero-diagonal{position:absolute;right:-5%;top:0;bottom:0;width:55%;background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 40%,var(--light-blue) 100%);clip-path:polygon(20% 0,100% 0,100% 100%,0% 100%);opacity:.9}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(38,69,200,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(38,69,200,.08) 1px,transparent 1px);background-size:60px 60px}
+.hero-d-bg{position:absolute;right:8%;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:clamp(300px,35vw,520px);line-height:1;color:rgba(255,255,255,.04);pointer-events:none;user-select:none;letter-spacing:-.04em}
+.hero-content{position:relative;z-index:2;max-width:var(--max-w);margin:0 auto;padding:0 24px;padding-top:120px;padding-bottom:80px;width:100%}
+.hero-eyebrow{color:var(--electric);margin-bottom:24px}
+.hero-eyebrow span{font-size:13px;letter-spacing:.12em}
+.hero-headline{font-family:'DM Serif Display',serif;line-height:.95;font-size:clamp(64px,9vw,118px);color:#fff;margin-bottom:32px}
+.hero-headline .accent{color:var(--electric)}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.65);max-width:480px;margin-bottom:40px;line-height:1.7}
+.hero-actions{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:64px}
+.hero-stats{display:flex;flex-wrap:wrap;gap:40px;border-top:1px solid rgba(255,255,255,.08);padding-top:40px}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:#fff;line-height:1}
+.hero-stat-num .stat-accent{color:var(--electric)}
+.hero-stat-label{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.hero-badges{position:absolute;right:6%;bottom:15%;display:flex;flex-direction:column;gap:12px;z-index:3}
+.hero-badge{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 18px;color:#fff;display:flex;align-items:center;gap:10px;font-size:13px;white-space:nowrap;animation:floatBadge 3s ease-in-out infinite}
+.hero-badge:nth-child(2){animation-delay:1s}
+.hero-badge svg{width:18px;height:18px;flex-shrink:0}
+@keyframes floatBadge{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--blue);padding:16px 0;overflow:hidden;position:relative;z-index:2}
+.marquee-track{display:flex;width:max-content;animation:marquee 28s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+.marquee-item{display:flex;align-items:center;gap:32px;padding:0 32px;white-space:nowrap;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.9);text-transform:uppercase}
+.marquee-dot{width:6px;height:6px;background:var(--electric);border-radius:50%;flex-shrink:0}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* WHAT WE DO / SERVICES */
+.services{background:var(--off-white);position:relative;overflow:hidden}
+.section-label{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.section-label::before{content:'';width:32px;height:2px;background:var(--electric)}
+.section-headline{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(36px,5vw,58px);line-height:1.05;color:var(--ink)}
+.section-headline .hl{color:var(--blue)}
+.section-sub{font-size:17px;color:var(--grey);max-width:520px;margin-top:16px}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2px;margin-top:64px;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.service-card{background:#fff;padding:40px 36px;position:relative;overflow:hidden;transition:background .3s;cursor:default}
+.service-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--electric));transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.service-card:hover{background:var(--navy)}
+.service-card:hover::before{transform:scaleX(1)}
+.service-card:hover .sc-icon{background:var(--electric);color:var(--ink)}
+.service-card:hover .sc-title{color:#fff}
+.service-card:hover .sc-desc{color:rgba(255,255,255,.6)}
+.service-card:hover .sc-items li{color:rgba(255,255,255,.5)}
+.sc-icon{width:52px;height:52px;background:var(--off-white);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;transition:background .3s,color .3s;color:var(--blue)}
+.sc-icon svg{width:24px;height:24px}
+.sc-num{font-family:'Space Mono',monospace;font-size:11px;color:rgba(0,0,0,.2);letter-spacing:.1em;margin-bottom:8px;transition:color .3s}
+.service-card:hover .sc-num{color:rgba(255,255,255,.2)}
+.sc-title{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--ink);margin-bottom:12px;transition:color .3s}
+.sc-desc{font-size:14px;color:var(--grey);line-height:1.65;margin-bottom:20px;transition:color .3s}
+.sc-items{list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.sc-items li{font-family:'Space Mono',monospace;font-size:10px;padding:4px 10px;background:var(--light-grey);border-radius:3px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;transition:color .3s,background .3s}
+.service-card:hover .sc-items li{background:rgba(255,255,255,.08)}
+
+/* HOW IT WORKS */
+.how-it-works{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.hiw-bg-d{position:absolute;left:-80px;top:50%;transform:translateY(-50%);font-family:'DM Serif Display',serif;font-size:600px;line-height:1;color:rgba(255,255,255,.02);pointer-events:none;user-select:none}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;margin-top:64px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:36px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--blue),var(--electric),var(--blue),transparent);z-index:0}
+.step{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;position:relative;z-index:1}
+.step-num{width:72px;height:72px;border-radius:50%;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;margin-bottom:24px;background:var(--ink);position:relative}
+.step-num::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(38,69,200,.2)}
+.step-num span{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--electric)}
+.step-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#fff;margin-bottom:10px}
+.step-desc{font-size:13px;color:rgba(255,255,255,.45);line-height:1.65}
+
+/* STATS */
+.stats-section{background:var(--blue);padding:80px 0;position:relative;overflow:hidden}
+.stats-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Ccircle cx='20' cy='20' r='1' fill='rgba(255,255,255,0.1)'/%3E%3C/g%3E%3C/svg%3E")}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:48px;position:relative;z-index:1}
+.stat-item{text-align:center;color:#fff}
+.stat-number{font-family:'DM Serif Display',serif;font-size:clamp(48px,7vw,80px);line-height:1;color:#fff}
+.stat-number .stat-plus{color:var(--electric);font-size:.7em}
+.stat-label{font-family:'Space Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.6);margin-top:8px}
+.stat-bar{width:40px;height:3px;background:var(--electric);border-radius:2px;margin:12px auto 0}
+
+/* PRODUCTS */
+.products-section{background:#fff}
+.filter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:40px 0}
+.filter-tab{font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;padding:10px 20px;border-radius:3px;border:1.5px solid var(--light-grey);background:transparent;color:var(--grey);cursor:pointer;transition:all .2s}
+.filter-tab.active,.filter-tab:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+.product-card{background:var(--off-white);border-radius:8px;overflow:hidden;border:1.5px solid transparent;transition:all .3s;cursor:pointer}
+.product-card:hover{border-color:var(--blue);transform:translateY(-4px);box-shadow:0 16px 40px rgba(38,69,200,.12)}
+.pc-img{height:200px;background:linear-gradient(135deg,var(--light-grey),#e0e8f8);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.pc-img-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.pc-img-icon{font-size:72px;opacity:.12}
+.pc-cat-badge{position:absolute;top:12px;left:12px;font-family:'Space Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:4px 10px;background:var(--blue);color:#fff;border-radius:2px}
+.pc-body{padding:24px}
+.pc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;color:var(--ink);margin-bottom:8px}
+.pc-desc{font-size:13px;color:var(--grey);line-height:1.6;margin-bottom:20px}
+.pc-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pc-sku{font-family:'Space Mono',monospace;font-size:10px;color:rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.06em}
+.pc-wa-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--wa-green);color:#fff;border-radius:4px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;text-decoration:none;transition:background .2s}
+.pc-wa-btn:hover{background:var(--wa-dark)}
+
+/* INDUSTRIES */
+.industries{background:var(--off-white);position:relative}
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:56px}
+.ind-card{background:#fff;border:1.5px solid var(--light-grey);border-radius:8px;padding:28px 20px;text-align:center;transition:all .3s;cursor:default}
+.ind-card:hover{background:var(--navy);border-color:var(--navy);transform:translateY(-4px)}
+.ind-card:hover .ind-icon{color:var(--electric)}
+.ind-card:hover .ind-name{color:#fff}
+.ind-icon{font-size:32px;margin-bottom:12px;transition:color .3s;color:var(--blue)}
+.ind-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--ink);transition:color .3s}
+
+/* GET QUOTE */
+.get-quote{background:var(--navy);position:relative;overflow:hidden}
+.get-quote::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(0,198,255,.12) 0%,transparent 70%)}
+.gq-split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.gq-left .section-label{color:var(--electric)}
+.gq-left .section-label::before{background:var(--electric)}
+.gq-headline{font-family:'DM Serif Display',serif;font-size:clamp(36px,5vw,56px);color:#fff;line-height:1.1;margin-bottom:20px}
+.gq-sub{font-size:16px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:36px}
+.gq-wa-block{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;padding:28px;margin-bottom:24px}
+.gq-wa-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.gq-wa-block p{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:20px}
+.gq-tips{list-style:none;margin-bottom:24px}
+.gq-tips li{font-size:13px;color:rgba(255,255,255,.65);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px}
+.gq-tips li::before{content:'→';color:var(--electric);font-weight:700;flex-shrink:0}
+
+/* FORM */
+.gq-form{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:40px}
+.form-title{font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:#fff;margin-bottom:28px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.5);margin-bottom:8px}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:13px 16px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;transition:border .2s;outline:none}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.25)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--electric)}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-group select option{background:var(--navy);color:#fff}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-submit{width:100%;padding:16px;background:var(--electric);color:var(--ink);border:none;border-radius:6px;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:.05em;cursor:pointer;transition:all .2s;margin-top:8px}
+.form-submit:hover{background:#fff;color:var(--navy)}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--ink);padding:100px 0}
+.testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:56px}
+.testi-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:32px;position:relative;overflow:hidden}
+.testi-card::before{content:'"';position:absolute;top:16px;right:20px;font-family:'DM Serif Display',serif;font-size:80px;color:rgba(38,69,200,.2);line-height:1}
+.testi-text{font-size:15px;color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:24px;position:relative;z-index:1}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:40px;height:40px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff}
+.testi-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:#fff}
+.testi-role{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.35);letter-spacing:.06em;margin-top:2px}
+.testi-stars{color:var(--gold);font-size:12px;margin-bottom:16px;letter-spacing:2px}
+
+/* CONTACT */
+.contact{background:var(--off-white)}
+.contact-split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.contact-cards{display:flex;flex-direction:column;gap:16px;margin-top:36px}
+.contact-card{background:#fff;border:1.5px solid var(--light-grey);border-radius:10px;padding:20px 24px;display:flex;align-items:center;gap:16px;text-decoration:none;transition:all .25s}
+.contact-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(38,69,200,.1)}
+.cc-icon{width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cc-icon.blue{background:#EEF2FF;color:var(--blue)}
+.cc-icon.green{background:#DCFCE7;color:var(--wa-dark)}
+.cc-label{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);margin-bottom:2px}
+.cc-value{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--ink)}
+.hours-block{background:var(--navy);border-radius:12px;padding:28px;margin-top:24px;color:#fff}
+.hours-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:16px;color:#fff}
+.hours-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+.hours-row .day{color:rgba(255,255,255,.5);font-family:'Space Mono',monospace;font-size:11px}
+.hours-row .time{color:rgba(255,255,255,.85);font-weight:500}
+.map-block{background:#fff;border:1.5px solid var(--light-grey);border-radius:12px;overflow:hidden}
+.map-placeholder{height:320px;background:linear-gradient(135deg,#e8ecf2,#d0daf0);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.map-icon{font-size:48px;opacity:.4}
+.map-address{font-family:'Space Mono',monospace;font-size:11px;text-align:center;color:var(--grey);letter-spacing:.06em;line-height:1.8;padding:0 24px}
+.map-cta-row{padding:20px 24px;display:flex;gap:12px}
+.map-btn{flex:1;padding:12px;text-align:center;border-radius:6px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;text-decoration:none;transition:all .2s}
+.map-btn.primary{background:var(--blue);color:#fff}
+.map-btn.primary:hover{background:var(--navy)}
+.map-btn.wa{background:var(--wa-green);color:#fff}
+.map-btn.wa:hover{background:var(--wa-dark)}
+
+/* FOOTER */
+footer{background:var(--ink);padding:80px 0 40px}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;margin-bottom:64px}
+.footer-brand .logo-name{font-size:18px;margin-bottom:4px}
+.footer-brand-sub{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.12em;margin-bottom:20px;text-transform:uppercase}
+.footer-tagline{font-family:'DM Serif Display',serif;font-size:22px;color:rgba(255,255,255,.7);line-height:1.3;margin-bottom:16px}
+.footer-contact-mini{font-size:13px;color:rgba(255,255,255,.4);line-height:1.9}
+.footer-contact-mini a{color:rgba(255,255,255,.5);text-decoration:none}
+.footer-contact-mini a:hover{color:var(--electric)}
+.footer-col h5{font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.3);margin-bottom:20px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--electric)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-copy{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.06em}
+.social-links{display:flex;gap:12px}
+.social-link{width:38px;height:38px;border:1px solid rgba(255,255,255,.12);border-radius:6px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;transition:all .2s;font-weight:700}
+.social-link:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* FLOATING WA BUTTON */
+.wa-fab{position:fixed;bottom:28px;right:28px;z-index:900;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.wa-btn-main{width:64px;height:64px;border-radius:50%;background:var(--wa-green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,.35);transition:transform .25s;border:none;animation:waPulse 2.5s ease-in-out infinite}
+.wa-btn-main:hover{transform:scale(1.1);animation:none}
+.wa-btn-main svg{width:30px;height:30px;fill:#fff}
+@keyframes waPulse{0%,100%{box-shadow:0 8px 24px rgba(37,211,102,.35)}50%{box-shadow:0 8px 32px rgba(37,211,102,.6),0 0 0 8px rgba(37,211,102,.08)}}
+.wa-menu{background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.2);padding:16px;min-width:240px;opacity:0;pointer-events:none;transform:translateY(10px) scale(.97);transition:all .25s}
+.wa-menu.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+.wa-menu-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--ink);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--light-grey)}
+.wa-quick-msg{display:block;font-size:13px;color:var(--grey);padding:10px 12px;border-radius:6px;cursor:pointer;text-decoration:none;transition:background .15s;border:none;background:none;width:100%;text-align:left;font-family:'Plus Jakarta Sans',sans-serif}
+.wa-quick-msg:hover{background:var(--off-white);color:var(--blue)}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* HERO TEXT ANIMATION */
+.hero-word{display:inline-block;opacity:0;transform:translateY(20px);animation:wordReveal .6s forwards}
+@keyframes wordReveal{to{opacity:1;transform:translateY(0)}}
+
+/* DIVIDER */
+.diagonal-divider{height:80px;background:inherit;clip-path:polygon(0 0,100% 0,100% 60%,0 100%);margin-bottom:-40px}
+
+/* MOBILE NAV BAR */
+.mobile-bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(13,17,23,.95);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.06);z-index:800;padding:0 4px 8px}
+.mbn-inner{display:flex;justify-content:space-around}
+.mbn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;text-decoration:none;color:rgba(255,255,255,.45);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
+.mbn-item:hover,.mbn-item.active{color:var(--electric)}
+.mbn-item svg{width:20px;height:20px}
+.mbn-item.wa-item{background:var(--wa-green);border-radius:12px 12px 0 0;color:#fff !important;margin-top:-6px;padding-top:14px}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .gq-split,.contact-split{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .hero-badges{display:none}
+  nav{display:none}
+  .hamburger{display:flex}
+}
+@media(max-width:768px){
+  .section-pad{padding:64px 0}
+  .steps-grid{grid-template-columns:1fr;gap:40px}
+  .steps-grid::before{display:none}
+  .footer-top{grid-template-columns:1fr}
+  .mobile-bottom-nav{display:block}
+  body{padding-bottom:64px}
+  .wa-fab{bottom:88px;right:16px}
+  .wa-btn-main{width:52px;height:52px}
+  .wa-btn-main svg{width:24px;height:24px}
+  .form-row{grid-template-columns:1fr}
+  .hero-headline{font-size:clamp(48px,13vw,80px)}
+  .hero-stats{gap:24px}
+  .hero-stat-num{font-size:28px}
+}
+@media(max-width:480px){
+  .products-grid{grid-template-columns:1fr}
+  .ind-grid{grid-template-columns:repeat(2,1fr)}
+  .testi-grid{grid-template-columns:1fr}
+  .footer-col{display:none}
+  .footer-top{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE NAV OVERLAY -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" onclick="closeMobileNav()">✕</button>
+  <a href="#home" onclick="closeMobileNav()">Home</a>
+  <a href="#services" onclick="closeMobileNav()">Services</a>
+  <a href="#products" onclick="closeMobileNav()">Products</a>
+  <a href="#industries" onclick="closeMobileNav()">Industries</a>
+  <a href="#quote" onclick="closeMobileNav()">Get Quote</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <div style="margin-top:40px">
+    <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20found%20your%20website%20and%20I'd%20like%20to%20get%20pricing%20information." class="btn btn-wa" style="display:inline-flex;width:100%;justify-content:center">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Order via WhatsApp
+    </a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="nav-inner">
+    <a href="#home" class="logo">
+      <!-- SVG LOGO -->
+      <svg class="logo-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="44" height="44" rx="6" fill="#2645C8"/>
+        <!-- D letterform -->
+        <path d="M10 12h12c5.5 0 10 4.5 10 10s-4.5 10-10 10H10V12z" fill="white" fill-opacity="0.15"/>
+        <path d="M13 15h8.5c3.5 0 6.5 3 6.5 7s-3 7-6.5 7H13V15z" fill="white"/>
+        <path d="M16.5 18.5h4.5c2 0 3.5 1.5 3.5 3.5s-1.5 3.5-3.5 3.5H16.5V18.5z" fill="#2645C8"/>
+        <!-- Paper flying out top-right -->
+        <rect x="26" y="6" width="9" height="11" rx="1.5" fill="white" transform="rotate(15 26 6)"/>
+        <rect x="28" y="8" width="5" height="1.5" rx=".75" fill="#A8D4F5" transform="rotate(15 28 8)"/>
+        <rect x="28" y="10.5" width="5" height="1.5" rx=".75" fill="#A8D4F5" transform="rotate(15 28 10.5)"/>
+        <!-- Electric accent dot -->
+        <circle cx="38" cy="6" r="3" fill="#00C6FF"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-name">DUPLICATOR LTD.</span>
+        <span class="logo-sub">•PRINTING •BRANDING •SEWING</span>
+      </div>
+    </a>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#products">Products</a>
+      <a href="#industries">Industries</a>
+      <a href="#quote">Quote</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20found%20your%20website%20and%20I'd%20like%20to%20get%20pricing%20information." class="btn btn-wa" style="padding:10px 20px;font-size:13px">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Order via WhatsApp
+      </a>
+      <div class="hamburger" onclick="openMobileNav()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-diagonal"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-d-bg">D</div>
+  </div>
+  <div class="hero-content">
+    <div class="tag hero-eyebrow" style="background:rgba(0,198,255,.1);color:var(--electric);border-color:rgba(0,198,255,.3)">
+      <span>🇷🇼 Kigali · Rwanda · Est. 2008+</span>
+    </div>
+    <h1 class="hero-headline">
+      <span class="hero-word" style="animation-delay:.1s;display:block">Switch Your</span>
+      <span class="hero-word" style="animation-delay:.25s;display:block">Brand</span>
+      <span class="hero-word accent" style="animation-delay:.4s;display:block">ON.</span>
+    </h1>
+    <p class="hero-sub reveal" style="opacity:0;animation:wordReveal .8s .55s forwards">Premium printing, branding and sewing solutions for businesses that demand to be noticed. Serving Rwanda and East Africa.</p>
+    <div class="hero-actions reveal" style="opacity:0;animation:wordReveal .8s .7s forwards">
+      <a href="#quote" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        Get a Free Quote
+      </a>
+      <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20found%20your%20website%20and%20I'd%20like%20to%20get%20pricing%20information." class="btn btn-wa">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Chat on WhatsApp
+      </a>
+      <a href="#services" class="btn btn-outline">Explore Services →</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num"><span class="counter" data-target="15">0</span><span class="stat-accent">+</span></div>
+        <div class="hero-stat-label">Years in Business</div>
+      </div>
+      <div>
+        <div class="hero-stat-num"><span class="counter" data-target="500">0</span><span class="stat-accent">+</span></div>
+        <div class="hero-stat-label">Happy Clients</div>
+      </div>
+      <div>
+        <div class="hero-stat-num"><span class="counter" data-target="5000">0</span><span class="stat-accent">+</span></div>
+        <div class="hero-stat-label">Orders Completed</div>
+      </div>
+      <div>
+        <div class="hero-stat-num"><span class="counter" data-target="12">0</span><span class="stat-accent"></span></div>
+        <div class="hero-stat-label">Product Categories</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-badges">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--wa-green)" stroke-width="2.5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      WhatsApp Orders Available
+    </div>
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      15+ Years · Kigali, Rwanda
+    </div>
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--electric)" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Fast Turnaround Guaranteed
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack">
+    <div class="marquee-item"><span class="marquee-dot"></span>Business Cards<span class="marquee-dot"></span>PVC Banners<span class="marquee-dot"></span>Corporate Uniforms<span class="marquee-dot"></span>Roll-Up Stands<span class="marquee-dot"></span>Branded Gifts<span class="marquee-dot"></span>Embroidery<span class="marquee-dot"></span>Signage<span class="marquee-dot"></span>Stationery<span class="marquee-dot"></span>Custom Apparel<span class="marquee-dot"></span>Letterheads<span class="marquee-dot"></span>Posters<span class="marquee-dot"></span>Vehicle Branding<span class="marquee-dot"></span>Trophies</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Business Cards<span class="marquee-dot"></span>PVC Banners<span class="marquee-dot"></span>Corporate Uniforms<span class="marquee-dot"></span>Roll-Up Stands<span class="marquee-dot"></span>Branded Gifts<span class="marquee-dot"></span>Embroidery<span class="marquee-dot"></span>Signage<span class="marquee-dot"></span>Stationery<span class="marquee-dot"></span>Custom Apparel<span class="marquee-dot"></span>Letterheads<span class="marquee-dot"></span>Posters<span class="marquee-dot"></span>Vehicle Branding<span class="marquee-dot"></span>Trophies</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services section-pad" id="services">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:0">
+      <div class="reveal">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-headline">We Don't Just Print.<br>We Build <span class="hl">Brands.</span></h2>
+      </div>
+      <p class="section-sub reveal reveal-delay-2">From a single business card to a full corporate rebrand — we deliver quality that speaks before you say a word.</p>
+    </div>
+    <div class="services-grid reveal">
+      <!-- Card 1 -->
+      <div class="service-card">
+        <div class="sc-num">01 / 05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>
+        </div>
+        <h3 class="sc-title">Printing & Stationery</h3>
+        <p class="sc-desc">Crisp, colour-accurate printing for every touchpoint — from business cards to full document packages.</p>
+        <ul class="sc-items">
+          <li>Business Cards</li><li>Letterheads</li><li>Brochures</li><li>Flyers</li><li>Envelopes</li><li>Notebooks</li>
+        </ul>
+      </div>
+      <!-- Card 2 -->
+      <div class="service-card">
+        <div class="sc-num">02 / 05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+        </div>
+        <h3 class="sc-title">Large Format & Signage</h3>
+        <p class="sc-desc">Make a big statement. Our large-format output commands attention at any distance.</p>
+        <ul class="sc-items">
+          <li>PVC Banners</li><li>Roll-Up Stands</li><li>Billboards</li><li>Posters</li><li>Backlit</li><li>Wall Graphics</li>
+        </ul>
+      </div>
+      <!-- Card 3 -->
+      <div class="service-card">
+        <div class="sc-num">03 / 05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <h3 class="sc-title">Branding & Promotional</h3>
+        <p class="sc-desc">Turn everyday items into brand ambassadors with personalised corporate merchandise.</p>
+        <ul class="sc-items">
+          <li>Branded Pens</li><li>Mugs</li><li>Umbrellas</li><li>Bags</li><li>Caps</li><li>USB Drives</li>
+        </ul>
+      </div>
+      <!-- Card 4 -->
+      <div class="service-card">
+        <div class="sc-num">04 / 05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22v-9l9-9 9 9v9"/><path d="M9 22V12h6v10"/></svg>
+        </div>
+        <h3 class="sc-title">Sewing & Apparel</h3>
+        <p class="sc-desc">Custom-sewn uniforms and branded apparel that unify your team and elevate your brand presence.</p>
+        <ul class="sc-items">
+          <li>Polo Shirts</li><li>T-Shirts</li><li>Overalls</li><li>Aprons</li><li>Bibs</li><li>Embroidery</li>
+        </ul>
+      </div>
+      <!-- Card 5 -->
+      <div class="service-card">
+        <div class="sc-num">05 / 05</div>
+        <div class="sc-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h3 class="sc-title">Corporate Gifts & Awards</h3>
+        <p class="sc-desc">Reward excellence with premium branded trophies, plaques, and corporate gift packages.</p>
+        <ul class="sc-items">
+          <li>Trophies</li><li>Plaques</li><li>Gift Sets</li><li>Certificates</li><li>Custom Boxes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works section-pad" id="how">
+  <div class="hiw-bg-d">D</div>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:0" class="reveal">
+      <div class="section-label" style="justify-content:center;color:var(--electric)"><span style="background:var(--electric);display:inline-block;width:32px;height:2px"></span>How It Works<span style="background:var(--electric);display:inline-block;width:32px;height:2px"></span></div>
+      <h2 class="section-headline" style="color:#fff;text-align:center">From Idea to <span style="color:var(--electric)">Delivered.</span></h2>
+      <p style="color:rgba(255,255,255,.5);max-width:480px;margin:16px auto 0;font-size:16px">Four simple steps from your first message to finished product in your hands.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num"><span>01</span></div>
+        <h4 class="step-title">Contact Us</h4>
+        <p class="step-desc">Reach out via WhatsApp, phone, or email. Tell us what you need — product, quantity, deadline.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num"><span>02</span></div>
+        <h4 class="step-title">Get Your Quote</h4>
+        <p class="step-desc">We send a clear, itemised quote with pricing and timeline. No hidden fees, no surprises.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step-num"><span>03</span></div>
+        <h4 class="step-title">Approve & Produce</h4>
+        <p class="step-desc">You approve the design proof and we begin production. Quality checked at every stage.</p>
+      </div>
+      <div class="step reveal reveal-delay-4">
+        <div class="step-num"><span>04</span></div>
+        <h4 class="step-title">Receive & Brand On</h4>
+        <p class="step-desc">Collection from Karuruma or delivery arranged. Your brand is switched ON and ready to go.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:56px" class="reveal">
+      <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20want%20to%20place%20an%20order.%20Please%20send%20me%20pricing." class="btn btn-wa" style="padding:16px 36px;font-size:15px">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Start Your Order Now
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-number"><span class="counter" data-target="15">0</span><span class="stat-plus">+</span></div>
+        <div class="stat-label">Years Experience</div>
+        <div class="stat-bar"></div>
+      </div>
+      <div class="stat-item reveal reveal-delay-1">
+        <div class="stat-number"><span class="counter" data-target="500">0</span><span class="stat-plus">+</span></div>
+        <div class="stat-label">Business Clients</div>
+        <div class="stat-bar"></div>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <div class="stat-number"><span class="counter" data-target="5000">0</span><span class="stat-plus">+</span></div>
+        <div class="stat-label">Orders Delivered</div>
+        <div class="stat-bar"></div>
+      </div>
+      <div class="stat-item reveal reveal-delay-3">
+        <div class="stat-number"><span class="counter" data-target="12">0</span></div>
+        <div class="stat-label">Product Categories</div>
+        <div class="stat-bar"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products-section section-pad" id="products">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px">
+      <div class="reveal">
+        <div class="section-label">Product Catalogue</div>
+        <h2 class="section-headline">Everything Your<br>Brand <span class="hl">Needs.</span></h2>
+      </div>
+      <a href="https://wa.me/250788355226?text=Hi!%20Please%20send%20me%20your%20full%20price%20list." class="btn btn-wa reveal reveal-delay-2">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        View Full Price List
+      </a>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" data-filter="all">All Products</button>
+      <button class="filter-tab" data-filter="printing">Printing</button>
+      <button class="filter-tab" data-filter="signage">Signage</button>
+      <button class="filter-tab" data-filter="branding">Branding</button>
+      <button class="filter-tab" data-filter="sewing">Sewing</button>
+      <button class="filter-tab" data-filter="gifts">Corporate Gifts</button>
+    </div>
+    <div class="products-grid">
+      <!-- Products -->
+      <div class="product-card reveal" data-cat="printing">
+        <div class="pc-img">
+          <div class="pc-img-bg"><span class="pc-img-icon">🃏</span></div>
+          <span class="pc-cat-badge">Printing</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Business Cards</h4>
+          <p class="pc-desc">Premium full-colour cards. Single or double-sided, gloss or matte, standard or custom sizes.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-PRT-001</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I'm%20interested%20in%20ordering%20Business%20Cards.%20Please%20send%20me%20a%20quote." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1" data-cat="signage">
+        <div class="pc-img" style="background:linear-gradient(135deg,#1B2B8A22,#2645C822)">
+          <div class="pc-img-bg"><span class="pc-img-icon">🎌</span></div>
+          <span class="pc-cat-badge">Signage</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">PVC Banners</h4>
+          <p class="pc-desc">Durable, weather-resistant PVC banners for outdoor events, storefronts and exhibitions.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-SGN-002</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I'm%20interested%20in%20PVC%20Banners.%20Please%20quote%20me." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-2" data-cat="sewing">
+        <div class="pc-img" style="background:linear-gradient(135deg,#F5C51822,#2645C822)">
+          <div class="pc-img-bg"><span class="pc-img-icon">👕</span></div>
+          <span class="pc-cat-badge">Sewing</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Corporate Polo Shirts</h4>
+          <p class="pc-desc">Custom-sewn polo shirts with embroidered or printed logos. Perfect for teams and events.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-SEW-001</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I'm%20interested%20in%20Corporate%20Polo%20Shirts.%20Please%20send%20me%20a%20quote." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal" data-cat="signage">
+        <div class="pc-img" style="background:linear-gradient(135deg,#00C6FF11,#2645C822)">
+          <div class="pc-img-bg"><span class="pc-img-icon">📋</span></div>
+          <span class="pc-cat-badge">Signage</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Roll-Up Banners</h4>
+          <p class="pc-desc">Professional retractable roll-up stands for exhibitions, receptions, and presentations.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-SGN-004</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20Roll-Up%20Banners.%20Please%20quote%20me." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1" data-cat="branding">
+        <div class="pc-img" style="background:linear-gradient(135deg,#F5C51822,#1B2B8A22)">
+          <div class="pc-img-bg"><span class="pc-img-icon">🎁</span></div>
+          <span class="pc-cat-badge">Branding</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Branded Mugs & Drinkware</h4>
+          <p class="pc-desc">Ceramic mugs, travel flasks, and glassware printed with your brand for gifting and office use.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-BRD-003</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20Branded%20Mugs.%20Can%20you%20quote%20me?" class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-2" data-cat="gifts">
+        <div class="pc-img" style="background:linear-gradient(135deg,#F5C51833,#1B2B8A22)">
+          <div class="pc-img-bg"><span class="pc-img-icon">🏆</span></div>
+          <span class="pc-cat-badge">Corporate Gifts</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Trophies & Award Plaques</h4>
+          <p class="pc-desc">Engraved trophies, acrylic plaques and crystal awards for corporate recognition events.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-GFT-001</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20Trophies%20and%20Awards.%20Please%20quote%20me." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal" data-cat="printing">
+        <div class="pc-img" style="background:linear-gradient(135deg,#4A90E222,#2645C811)">
+          <div class="pc-img-bg"><span class="pc-img-icon">📰</span></div>
+          <span class="pc-cat-badge">Printing</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Letterheads & Stationery</h4>
+          <p class="pc-desc">Official company letterheads, envelopes, compliment slips and full stationery packages.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-PRT-003</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20Company%20Letterheads.%20Please%20quote%20me." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="product-card reveal reveal-delay-1" data-cat="sewing">
+        <div class="pc-img" style="background:linear-gradient(135deg,#1B2B8A22,#00C6FF11)">
+          <div class="pc-img-bg"><span class="pc-img-icon">🦺</span></div>
+          <span class="pc-cat-badge">Sewing</span>
+        </div>
+        <div class="pc-body">
+          <h4 class="pc-title">Staff Uniforms & Overalls</h4>
+          <p class="pc-desc">Custom-cut and sewn uniforms for hospitality, healthcare, security and industrial teams.</p>
+          <div class="pc-footer">
+            <span class="pc-sku">SKU-SEW-003</span>
+            <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20Staff%20Uniforms.%20Please%20quote%20me." class="pc-wa-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bulk Order CTA -->
+    <div style="margin-top:48px;background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:12px;padding:40px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px" class="reveal">
+      <div>
+        <div class="section-label" style="color:var(--electric);margin-bottom:8px"><span style="width:24px;height:2px;background:var(--electric);display:inline-block"></span> Bulk Orders</div>
+        <h3 style="font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(22px,3vw,32px);color:#fff;margin-bottom:8px">Need 100+ Units?</h3>
+        <p style="font-size:14px;color:rgba(255,255,255,.55)">We specialise in large corporate orders. Better pricing, priority production.</p>
+      </div>
+      <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20have%20a%20large%20bulk%20order%20requirement.%20Can%20we%20discuss%20pricing%20and%20timeline?" class="btn btn-wa" style="padding:16px 32px;white-space:nowrap">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Bulk Order Enquiry
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries section-pad" id="industries">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <div class="section-label" style="justify-content:center">Industries We Serve</div>
+      <h2 class="section-headline" style="text-align:center">Trusted Across <span class="hl">Every Sector.</span></h2>
+      <p class="section-sub" style="margin:16px auto 0;text-align:center">From government to startups — if you have a brand, we make it visible.</p>
+    </div>
+    <div class="ind-grid">
+      <div class="ind-card reveal"><div class="ind-icon">🏦</div><div class="ind-name">Banking & Finance</div></div>
+      <div class="ind-card reveal reveal-delay-1"><div class="ind-icon">🏥</div><div class="ind-name">Healthcare</div></div>
+      <div class="ind-card reveal reveal-delay-2"><div class="ind-icon">🏫</div><div class="ind-name">Education</div></div>
+      <div class="ind-card reveal reveal-delay-3"><div class="ind-icon">🏛️</div><div class="ind-name">Government</div></div>
+      <div class="ind-card reveal"><div class="ind-icon">🌍</div><div class="ind-name">NGOs & Nonprofits</div></div>
+      <div class="ind-card reveal reveal-delay-1"><div class="ind-icon">🏨</div><div class="ind-name">Hospitality</div></div>
+      <div class="ind-card reveal reveal-delay-2"><div class="ind-icon">📦</div><div class="ind-name">Retail & FMCG</div></div>
+      <div class="ind-card reveal reveal-delay-3"><div class="ind-icon">🎪</div><div class="ind-name">Events & Marketing</div></div>
+      <div class="ind-card reveal"><div class="ind-icon">🏗️</div><div class="ind-name">Construction</div></div>
+      <div class="ind-card reveal reveal-delay-1"><div class="ind-icon">✈️</div><div class="ind-name">Travel & Tourism</div></div>
+      <div class="ind-card reveal reveal-delay-2"><div class="ind-icon">💻</div><div class="ind-name">Tech & Startups</div></div>
+      <div class="ind-card reveal reveal-delay-3"><div class="ind-icon">🚗</div><div class="ind-name">Automotive</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <div class="section-label" style="justify-content:center;color:var(--electric)"><span style="background:var(--electric);width:32px;height:2px;display:inline-block"></span>Testimonials<span style="background:var(--electric);width:32px;height:2px;display:inline-block"></span></div>
+      <h2 class="section-headline" style="color:#fff;text-align:center">Clients Who <span style="color:var(--electric)">Trust Us.</span></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Duplicator Ltd delivered 1,000 branded polo shirts in under a week. The quality was exceptional — our entire team was impressed. We've used them for all our corporate events since.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MK</div>
+          <div>
+            <div class="testi-name">Marie K.</div>
+            <div class="testi-role">HR Manager · Kigali Bank</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">We needed 50 roll-up banners for a national conference on short notice. Duplicator Ltd came through flawlessly — on time, on budget, and beyond our expectations.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JN</div>
+          <div>
+            <div class="testi-name">Jean-Pierre N.</div>
+            <div class="testi-role">Events Director · REMA</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">From business cards to full office signage — Duplicator Ltd handles all our branding needs. Professional, responsive, and consistently excellent quality.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AC</div>
+          <div>
+            <div class="testi-name">Amina C.</div>
+            <div class="testi-role">Marketing Lead · TechHub Rwanda</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GET QUOTE -->
+<section class="get-quote section-pad" id="quote">
+  <div class="container">
+    <div class="gq-split">
+      <div class="gq-left reveal">
+        <div class="section-label">Get A Quote</div>
+        <h2 class="gq-headline">Ready to Switch Your Brand <span style="color:var(--electric)">ON?</span></h2>
+        <p class="gq-sub">Two ways to order — choose what works for you. We respond to all enquiries within 2 hours during business hours.</p>
+        <div class="gq-wa-block">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="#25D366" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Order Instantly via WhatsApp
+          </h4>
+          <p>Fastest way to get a quote. Just send us a message and we'll get back to you right away.</p>
+          <ul class="gq-tips">
+            <li>Tell us: what product you need</li>
+            <li>Tell us: your required quantity</li>
+            <li>Tell us: your deadline</li>
+            <li>Send us: your logo file (if available)</li>
+          </ul>
+          <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20want%20to%20place%20an%20order.%20Here%20are%20my%20details%3A%0A%0A%F0%9F%93%A6%20Product%3A%20%0A%F0%9F%94%A2%20Quantity%3A%20%0A%F0%9F%93%85%20Needed%20by%3A%20" class="btn btn-wa" style="width:100%;justify-content:center;padding:16px">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            Open WhatsApp Now
+          </a>
+        </div>
+      </div>
+      <div class="gq-form reveal reveal-delay-2">
+        <h3 class="form-title">📋 Request a Formal Quote</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Company</label>
+            <input type="text" placeholder="Company name">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone / WhatsApp *</label>
+            <input type="tel" placeholder="+250 7XX XXX XXX">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Product Category *</label>
+          <select>
+            <option value="">Select a category...</option>
+            <option>Printing & Stationery</option>
+            <option>Large Format & Signage</option>
+            <option>Branding & Promotional</option>
+            <option>Sewing & Apparel</option>
+            <option>Corporate Gifts</option>
+            <option>Multiple Categories</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Products Needed *</label>
+          <textarea placeholder="e.g. 500 business cards, 2 roll-up banners, 50 branded polo shirts..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Approximate Quantity</label>
+            <input type="text" placeholder="e.g. 500 units">
+          </div>
+          <div class="form-group">
+            <label>Required By Date</label>
+            <input type="date">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Additional Notes</label>
+          <textarea placeholder="Any special requirements, colours, sizes..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitQuoteViaWhatsApp(this)">Send My Quote Request via WhatsApp →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact section-pad" id="contact">
+  <div class="container">
+    <div class="contact-split">
+      <div class="reveal">
+        <div class="section-label">Contact Us</div>
+        <h2 class="section-headline">Let's Talk <span class="hl">Business.</span></h2>
+        <p class="section-sub">We're in Karuruma, Kigali. Visit us, call, or just send a WhatsApp.</p>
+        <div class="contact-cards">
+          <a href="tel:+250788978879" class="contact-card">
+            <div class="cc-icon blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5 19.79 19.79 0 01.1 2.83 2 2 0 012.07 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.41-.41a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="cc-label">Call Us</div>
+              <div class="cc-value">+250 788 978 879</div>
+            </div>
+          </a>
+          <a href="https://wa.me/250788355226" class="contact-card">
+            <div class="cc-icon green">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+            </div>
+            <div>
+              <div class="cc-label">WhatsApp</div>
+              <div class="cc-value">+250 788 355 226</div>
+            </div>
+          </a>
+          <a href="tel:+250785177044" class="contact-card">
+            <div class="cc-icon blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11.5 19.79 19.79 0 01.1 2.83 2 2 0 012.07 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l.41-.41a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="cc-label">Secondary Line</div>
+              <div class="cc-value">+250 785 177 044</div>
+            </div>
+          </a>
+          <a href="mailto:duplicator10@gmail.com" class="contact-card">
+            <div class="cc-icon blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="cc-label">Email</div>
+              <div class="cc-value">duplicator10@gmail.com</div>
+            </div>
+          </a>
+          <div class="contact-card" style="cursor:default">
+            <div class="cc-icon blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="cc-label">Location</div>
+              <div class="cc-value">Karuruma, Kigali–Rwanda</div>
+            </div>
+          </div>
+        </div>
+        <div class="hours-block">
+          <h4>Business Hours</h4>
+          <div class="hours-row"><span class="day">MON – FRI</span><span class="time">8:00 AM – 6:00 PM</span></div>
+          <div class="hours-row"><span class="day">SATURDAY</span><span class="time">9:00 AM – 2:00 PM</span></div>
+          <div class="hours-row"><span class="day">SUNDAY</span><span class="time" style="color:rgba(255,255,255,.4)">Closed</span></div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="map-block">
+          <div class="map-placeholder">
+            <div class="map-icon">📍</div>
+            <p style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--navy)">Karuruma, Kigali</p>
+            <p class="map-address">4344+JVF, Karuruma<br>Kigali, Rwanda<br>P.O. Box 6332</p>
+          </div>
+          <div class="map-cta-row">
+            <a href="https://maps.google.com/?q=Karuruma,Kigali,Rwanda" target="_blank" class="map-btn primary">📍 Get Directions</a>
+            <a href="https://wa.me/250788355226?text=Hi!%20I'd%20like%20to%20visit%20your%20shop.%20What%20are%20your%20opening%20hours?" class="map-btn wa">💬 Chat First</a>
+          </div>
+        </div>
+        <!-- Social -->
+        <div style="margin-top:24px;background:#fff;border:1.5px solid var(--light-grey);border-radius:12px;padding:24px">
+          <p style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--grey);margin-bottom:16px">Follow Us</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <a href="https://instagram.com/duplicatorltd" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px solid var(--light-grey);border-radius:6px;text-decoration:none;color:var(--ink);font-family:'Syne',sans-serif;font-weight:700;font-size:13px;transition:all .2s" onmouseover="this.style.borderColor='#2645C8';this.style.color='#2645C8'" onmouseout="this.style.borderColor='var(--light-grey)';this.style.color='var(--ink)'">
+              📸 Instagram
+            </a>
+            <a href="https://linkedin.com" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px solid var(--light-grey);border-radius:6px;text-decoration:none;color:var(--ink);font-family:'Syne',sans-serif;font-weight:700;font-size:13px;transition:all .2s" onmouseover="this.style.borderColor='#2645C8';this.style.color='#2645C8'" onmouseout="this.style.borderColor='var(--light-grey)';this.style.color='var(--ink)'">
+              💼 LinkedIn
+            </a>
+            <a href="https://twitter.com/duplicatorltd" target="_blank" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border:1.5px solid var(--light-grey);border-radius:6px;text-decoration:none;color:var(--ink);font-family:'Syne',sans-serif;font-weight:700;font-size:13px;transition:all .2s" onmouseover="this.style.borderColor='#2645C8';this.style.color='#2645C8'" onmouseout="this.style.borderColor='var(--light-grey)';this.style.color='var(--ink)'">
+              𝕏 Twitter/X
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <svg width="36" height="36" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="6" fill="#2645C8"/>
+            <path d="M10 12h12c5.5 0 10 4.5 10 10s-4.5 10-10 10H10V12z" fill="white" fill-opacity="0.15"/>
+            <path d="M13 15h8.5c3.5 0 6.5 3 6.5 7s-3 7-6.5 7H13V15z" fill="white"/>
+            <path d="M16.5 18.5h4.5c2 0 3.5 1.5 3.5 3.5s-1.5 3.5-3.5 3.5H16.5V18.5z" fill="#2645C8"/>
+            <rect x="26" y="6" width="9" height="11" rx="1.5" fill="white" transform="rotate(15 26 6)"/>
+            <circle cx="38" cy="6" r="3" fill="#00C6FF"/>
+          </svg>
+          <div>
+            <div class="logo-name" style="font-size:15px">DUPLICATOR LTD.</div>
+            <div class="footer-brand-sub">Kigali, Rwanda</div>
+          </div>
+        </div>
+        <p class="footer-tagline">"Switch Your Brand ON."</p>
+        <div class="footer-contact-mini">
+          <a href="tel:+250788978879">+250 788 978 879</a><br>
+          <a href="https://wa.me/250788355226">+250 788 355 226 (WhatsApp)</a><br>
+          <a href="mailto:duplicator10@gmail.com">duplicator10@gmail.com</a><br>
+          Karuruma, 4344+JVF, Kigali–Rwanda<br>
+          P.O. Box 6332, Kigali–Rwanda
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul class="footer-links">
+          <li><a href="#services">Printing & Stationery</a></li>
+          <li><a href="#services">Large Format & Signage</a></li>
+          <li><a href="#services">Branding & Promotional</a></li>
+          <li><a href="#services">Sewing & Apparel</a></li>
+          <li><a href="#services">Corporate Gifts</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul class="footer-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#industries">Industries</a></li>
+          <li><a href="#quote">Get a Quote</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="https://wa.me/250788355226">WhatsApp Orders</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Order Now</h5>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/250788355226?text=I%20need%20a%20price%20list">📋 Get Price List</a></li>
+          <li><a href="https://wa.me/250788355226?text=I%20want%20to%20place%20an%20order">📦 Place an Order</a></li>
+          <li><a href="https://wa.me/250788355226?text=I%20need%20a%20custom%20quote">💬 Custom Quote</a></li>
+          <li><a href="https://wa.me/250788355226?text=I%20have%20an%20urgent%20order">⚡ Urgent Order</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Duplicator Ltd. All rights reserved. · Kigali, Rwanda</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="social-links">
+          <a href="https://instagram.com/duplicatorltd" class="social-link" target="_blank">IG</a>
+          <a href="https://linkedin.com" class="social-link" target="_blank">LI</a>
+          <a href="https://twitter.com/duplicatorltd" class="social-link" target="_blank">𝕏</a>
+          <a href="https://wa.me/250788355226" class="social-link" style="background:var(--wa-green);border-color:var(--wa-green);color:#fff" target="_blank">WA</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING WA BUTTON -->
+<div class="wa-fab">
+  <div class="wa-menu" id="waMenu">
+    <div class="wa-menu-title">💬 Chat with Sales</div>
+    <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20a%20price%20list." class="wa-quick-msg">📋 I need a price list</a>
+    <a href="https://wa.me/250788355226?text=Hi!%20I%20want%20to%20place%20an%20order." class="wa-quick-msg">📦 I want to place an order</a>
+    <a href="https://wa.me/250788355226?text=Hi!%20I%20need%20a%20custom%20quote." class="wa-quick-msg">💬 I need a custom quote</a>
+    <a href="https://wa.me/250788355226?text=Hi!%20I%20have%20artwork%20ready%20to%20submit." class="wa-quick-msg">🎨 I have artwork ready</a>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--light-grey);font-family:'Space Mono',monospace;font-size:10px;color:var(--grey);text-align:center;letter-spacing:.06em">+250 788 355 226</div>
+  </div>
+  <button class="wa-btn-main" id="waFab" onclick="toggleWaMenu()" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </button>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
+  <div class="mbn-inner">
+    <a href="#home" class="mbn-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <a href="#products" class="mbn-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      Products
+    </a>
+    <a href="https://wa.me/250788355226?text=Hi!%20I%20want%20to%20place%20an%20order." class="mbn-item wa-item">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Order
+    </a>
+    <a href="#quote" class="mbn-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+      Quote
+    </a>
+    <a href="#contact" class="mbn-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Find Us
+    </a>
+  </div>
+</nav>
+
+<script>
+// HEADER SCROLL
+window.addEventListener('scroll',()=>{
+  const h=document.getElementById('header');
+  h.classList.toggle('scrolled',window.scrollY>40);
+});
+
+// MOBILE NAV
+function openMobileNav(){
+  document.getElementById('mobileNav').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobileNav(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// WA FAB
+let waMenuOpen=false;
+function toggleWaMenu(){
+  waMenuOpen=!waMenuOpen;
+  document.getElementById('waMenu').classList.toggle('open',waMenuOpen);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.wa-fab')){
+    waMenuOpen=false;
+    document.getElementById('waMenu').classList.remove('open');
+  }
+});
+
+// SCROLL REVEAL
+const revealEls=document.querySelectorAll('.reveal');
+const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible')}});
+},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+revealEls.forEach(el=>revealObserver.observe(el));
+
+// COUNTER ANIMATION
+function animateCounter(el,target,duration=2000){
+  let start=0;
+  const step=timestamp=>{
+    if(!start)start=timestamp;
+    const progress=Math.min((timestamp-start)/duration,1);
+    const ease=1-Math.pow(1-progress,3);
+    el.textContent=Math.floor(ease*target).toLocaleString();
+    if(progress<1)requestAnimationFrame(step);
+    else el.textContent=target.toLocaleString();
+  };
+  requestAnimationFrame(step);
+}
+
+const counterEls=document.querySelectorAll('.counter');
+const counterObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting&&!e.target.dataset.animated){
+      e.target.dataset.animated='true';
+      animateCounter(e.target,parseInt(e.target.dataset.target));
+    }
+  });
+},{threshold:.5});
+counterEls.forEach(el=>counterObserver.observe(el));
+
+// FILTER TABS
+const tabs=document.querySelectorAll('.filter-tab');
+const cards=document.querySelectorAll('.product-card');
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter=tab.dataset.filter;
+    cards.forEach(card=>{
+      const show=filter==='all'||card.dataset.cat===filter;
+      card.style.display=show?'':'none';
+    });
+  });
+});
+
+// QUOTE FORM → WHATSAPP
+function submitQuoteViaWhatsApp(btn){
+  const form=btn.closest('.gq-form');
+  const name=form.querySelector('input[type="text"]').value||'[Name not provided]';
+  const phone=form.querySelector('input[type="tel"]').value||'[Phone not provided]';
+  const cat=form.querySelector('select').value||'[Not selected]';
+  const products=form.querySelectorAll('textarea')[0].value||'[Not specified]';
+  const qty=form.querySelectorAll('input[type="text"]')[1]?.value||'[Not specified]';
+  const notes=form.querySelectorAll('textarea')[1].value||'';
+  const msg=`Hi Duplicator Ltd!\n\n📋 QUOTE REQUEST\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n📦 Category: ${cat}\n\n📝 Products Needed:\n${products}\n\n🔢 Quantity: ${qty}\n\n📌 Notes: ${notes}\n\nPlease send me a quote. Thank you!`;
+  window.open(`https://wa.me/250788355226?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// Duplicate marquee content to ensure seamless loop
+const track=document.getElementById('marqueeTrack');
+if(track){
+  const clone=track.innerHTML;
+  track.innerHTML=clone+clone;
+}
+</script>
+</body>
+</html>
