@@ -466,79 +466,175 @@ const products: Product[] = [
   },
 ];
 
+// ── Product visual icon lookup ──────────────────────────────────────────
+function getVisualEmoji(subcategory: string): string {
+  const map: Record<string, string> = {
+    "Business Cards": "🪪", "Letterheads & Compliment Slips": "📄",
+    "Envelopes & Folders": "📁", "Notepads & Memo Pads": "📓",
+    "Brochures & Flyers": "📋", "Booklets & Catalogues": "📚",
+    "Presentation Folders": "🗂️", "Posters & Calendars": "🗓️",
+    "Pull-Up & Display Banners": "🚩", "Outdoor & Indoor Signage": "🪧",
+    "Vehicle Graphics & Wraps": "🚗", "Exhibition Displays & Backdrops": "🎪",
+    "Corporate & Office Uniforms": "👔", "Medical & Hospital Scrubs": "🩺",
+    "Workwear & Safety Gear": "🦺", "Event T-Shirts & Polo Shirts": "👕",
+    "Caps & Headwear": "🧢", "Awards & Trophies": "🏆",
+    "Branded Pens & Writing Sets": "🖊️", "Premium Notebooks": "📒",
+    "Branded Tech Accessories": "💡", "Executive Gift Sets": "🎁",
+  };
+  return map[subcategory] || "✦";
+}
+
 // ── Product Card ───────────────────────────────────────────────────────────
 function ProductCard({ product, catColor }: { product: Product; catColor: string }) {
+  const [activeTab, setActiveTab] = useState<"overview" | "specs">("overview");
   const [hovered, setHovered] = useState(false);
+
+  const badgeBg = product.badge === "Premium" || product.badge === "Luxury"
+    ? "#F5C518" : product.badge === "Healthcare"
+    ? "#059669" : product.badge === "Bundle" || product.badge === "Turnkey"
+    ? "#fff" : null;
+  const badgeColor = product.badge === "Premium" || product.badge === "Luxury"
+    ? "#0D1117" : product.badge === "Bundle" || product.badge === "Turnkey"
+    ? catColor : "#fff";
+
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "#fff", borderRadius: 12, overflow: "hidden",
-        border: `1.5px solid ${hovered ? catColor : "#E8ECF2"}`,
-        transition: "all .3s",
-        transform: hovered ? "translateY(-5px)" : "none",
-        boxShadow: hovered ? `0 20px 48px ${catColor}22` : "0 2px 10px rgba(0,0,0,.05)",
+        background: "#fff", borderRadius: 16, overflow: "hidden",
+        border: `2px solid ${hovered ? catColor : "#E8ECF2"}`,
+        transition: "all .3s cubic-bezier(.4,0,.2,1)",
+        transform: hovered ? "translateY(-6px)" : "none",
+        boxShadow: hovered ? `0 24px 56px ${catColor}28` : "0 2px 12px rgba(0,0,0,.06)",
         display: "flex", flexDirection: "column"
       }}
     >
-      {/* Top colour band */}
+      {/* ── Visual Image Panel ─────────────────────────────────── */}
       <div style={{
-        height: 6,
-        background: `linear-gradient(90deg, ${catColor}, ${catColor}88)`
-      }} />
-
-      {/* Body */}
-      <div style={{ padding: "24px 22px 20px", flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Badges row */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 14, flexWrap: "wrap" }}>
-          <span style={{
-            fontFamily: "'Space Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em",
-            padding: "3px 10px", borderRadius: 2, background: `${catColor}14`, color: catColor, fontWeight: 700
-          }}>{product.subcategory}</span>
-          {product.badge && (
-            <span style={{
-              fontFamily: "'Space Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em",
-              padding: "3px 10px", borderRadius: 2, fontWeight: 700,
-              background: product.badge === "Premium" || product.badge === "Luxury" ? "#F5C518" : product.badge === "Healthcare" ? "#059669" : product.badge === "Bundle" ? "#2645C8" : catColor,
-              color: product.badge === "Premium" || product.badge === "Luxury" ? "#0D1117" : "#fff"
-            }}>{product.badge}</span>
-          )}
-          {product.featured && !product.badge && (
-            <span style={{
-              fontFamily: "'Space Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em",
-              padding: "3px 10px", borderRadius: 2, background: "rgba(0,198,255,.1)", color: "#007FAA", border: "1px solid rgba(0,198,255,.25)"
-            }}>Popular</span>
-          )}
+        height: 168, position: "relative", overflow: "hidden",
+        background: `linear-gradient(145deg, ${catColor}, ${catColor}99)`
+      }}>
+        {/* Grid pattern overlay */}
+        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: .13 }}
+          viewBox="0 0 240 168" preserveAspectRatio="xMidYMid slice">
+          {[0,20,40,60,80,100,120,140,160,180,200,220,240].map(x => (
+            <line key={`v${x}`} x1={x} y1="0" x2={x} y2="168" stroke="white" strokeWidth="1"/>
+          ))}
+          {[0,20,40,60,80,100,120,140,160].map(y => (
+            <line key={`h${y}`} x1="0" y1={y} x2="240" y2={y} stroke="white" strokeWidth="1"/>
+          ))}
+        </svg>
+        {/* Decorative circles */}
+        <div style={{ position: "absolute", right: -32, bottom: -32, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,.1)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", right: 18, bottom: 18, width: 56, height: 56, borderRadius: "50%", background: "rgba(255,255,255,.08)", pointerEvents: "none" }} />
+        {/* Large emoji watermark */}
+        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+          <span style={{ fontSize: 72, opacity: .2, userSelect: "none" }}>{getVisualEmoji(product.subcategory)}</span>
         </div>
+        {/* Subcategory pill badge */}
+        <div style={{ position: "absolute", top: 12, left: 12 }}>
+          <span style={{
+            fontFamily: "'Fredoka', sans-serif", fontWeight: 600, fontSize: 11,
+            textTransform: "uppercase", letterSpacing: ".06em",
+            padding: "5px 14px", borderRadius: 50,
+            border: "2px solid rgba(255,255,255,.55)",
+            background: "rgba(0,0,0,.25)", color: "#fff",
+            backdropFilter: "blur(6px)", display: "inline-block"
+          }}>{product.subcategory}</span>
+        </div>
+        {/* Quality badge top-right */}
+        {(product.badge || product.featured) && (
+          <div style={{ position: "absolute", top: 12, right: 12 }}>
+            <span style={{
+              fontFamily: "'Fredoka', sans-serif", fontWeight: 700, fontSize: 11,
+              textTransform: "uppercase", letterSpacing: ".06em",
+              padding: "5px 14px", borderRadius: 50,
+              background: badgeBg || "rgba(255,255,255,.9)",
+              color: badgeColor,
+              border: "2px solid rgba(255,255,255,.3)",
+              display: "inline-block"
+            }}>{product.badge || "Popular"}</span>
+          </div>
+        )}
+      </div>
 
-        <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 17, color: "#0D1117", marginBottom: 4, lineHeight: 1.2 }}>{product.name}</h4>
-        <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: 13, color: catColor, marginBottom: 10, fontStyle: "italic" }}>{product.tagline}</p>
-        <p style={{ fontSize: 13, color: "#5A6478", lineHeight: 1.65, marginBottom: 16, flex: 1 }}>{product.desc}</p>
+      {/* ── Card Body ──────────────────────────────────────────── */}
+      <div style={{ padding: "20px 20px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
+        {/* Product name */}
+        <h4 style={{
+          fontFamily: "'Cormorant Garamond', serif", fontWeight: 700, fontSize: 20,
+          color: "#0D1117", marginBottom: 3, lineHeight: 1.2
+        }}>{product.name}</h4>
+        {/* Tagline */}
+        <p style={{
+          fontFamily: "'Cormorant Garamond', serif", fontStyle: "italic",
+          fontSize: 14, color: catColor, marginBottom: 14, lineHeight: 1.35
+        }}>{product.tagline}</p>
 
-        {/* Specs */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: 18 }}>
-          {product.specs.map((s, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <div style={{ width: 5, height: 5, borderRadius: "50%", background: catColor, flexShrink: 0 }} />
-              <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: "#374151" }}>{s}</span>
-            </div>
+        {/* ── Tab toggle: Overview / Specs ───────────────────── */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+          {(["overview", "specs"] as const).map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)}
+              style={{
+                fontFamily: "'Fredoka', sans-serif", fontWeight: 600, fontSize: 12,
+                textTransform: "uppercase", letterSpacing: ".06em",
+                padding: "6px 18px", borderRadius: 50,
+                border: `2px solid ${activeTab === tab ? catColor : "#E0E5EF"}`,
+                background: activeTab === tab ? catColor : "transparent",
+                color: activeTab === tab ? "#fff" : "#6B7280",
+                cursor: "pointer", transition: "all .2s"
+              }}
+            >{tab === "overview" ? "Overview" : "Specs"}</button>
           ))}
         </div>
 
+        {/* ── Tab content ────────────────────────────────────── */}
+        <div className="card-tab-content" style={{
+          flex: 1, minHeight: 80, marginBottom: 18,
+          opacity: 1, transform: "none"
+        }}>
+          {activeTab === "overview" ? (
+            <p style={{
+              fontSize: 13, color: "#4B5563", lineHeight: 1.7,
+              fontFamily: "'Plus Jakarta Sans', sans-serif"
+            }}>{product.desc}</p>
+          ) : (
+            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+              {product.specs.map((s, i) => (
+                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 9 }}>
+                  <span style={{
+                    width: 7, height: 7, borderRadius: "50%",
+                    background: catColor, flexShrink: 0, marginTop: 5,
+                    display: "inline-block"
+                  }} />
+                  <span style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontSize: 13, color: "#374151", lineHeight: 1.5
+                  }}>{s}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* ── Enquire button ─────────────────────────────────── */}
         <a
           href={`https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%27m%20interested%20in%20${encodeURIComponent(product.name)}.%20Please%20send%20me%20pricing%20and%20availability.`}
           target="_blank" rel="noreferrer"
           style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-            padding: "11px 16px", background: "#25D366", color: "#fff",
-            borderRadius: 6, fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12,
-            textDecoration: "none", transition: "background .2s", letterSpacing: ".02em"
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+            padding: "12px 20px",
+            background: "#25D366", color: "#fff",
+            borderRadius: 50, border: "2px solid #25D366",
+            fontFamily: "'Fredoka', sans-serif", fontWeight: 600, fontSize: 14,
+            textDecoration: "none", transition: "all .2s",
+            letterSpacing: ".06em", textTransform: "uppercase"
           }}
-          onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
-          onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
+          onMouseEnter={e => { e.currentTarget.style.background = "#128C7E"; e.currentTarget.style.borderColor = "#128C7E"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#25D366"; e.currentTarget.style.borderColor = "#25D366"; }}
         >
-          <WaIcon /> Enquire via WhatsApp
+          <WaIcon size={16} /> Enquire via WhatsApp
         </a>
       </div>
     </div>
@@ -556,7 +652,7 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
   return (
     <div style={{ marginBottom: 96 }} id={`cat-${category.id}`}>
       {/* Category header */}
-      <div style={{
+      <div className="cat-section-header" style={{
         background: `linear-gradient(135deg, ${category.color}0a, ${category.color}04)`,
         borderRadius: 16, border: `1px solid ${category.color}20`,
         padding: "36px 40px", marginBottom: 32
@@ -613,7 +709,7 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
       </div>
 
       {/* Products grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 22 }}>
+      <div className="products-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 22 }}>
         {displayed.map(p => <ProductCard key={p.id} product={p} catColor={category.color} />)}
       </div>
     </div>
@@ -668,7 +764,7 @@ export default function ProductsPage() {
           <p style={{ fontSize: 14, color: "rgba(255,255,255,.4)", maxWidth: 520, marginBottom: 44, lineHeight: 1.65, fontFamily: "'Space Mono', monospace", letterSpacing: ".02em" }}>
             In-house capabilities: Graphic Design · Offset & Digital Print · Laser/CNC Cutting · Sewing Factory · Large Format · Distribution
           </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
+          <div className="hero-cta" style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20Please%20send%20me%20your%20full%20product%20and%20services%20brochure." target="_blank" rel="noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "background .2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
@@ -688,7 +784,7 @@ export default function ProductsPage() {
 
       {/* ── Trust / Differentiator Bar ────────────────────────────────── */}
       <div style={{ background: "#0D1117", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", flexWrap: "wrap" }}>
+        <div className="stats-bar" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", flexWrap: "wrap" }}>
           {[
             { icon: "✦", stat: "15+", label: "Years of Experience" },
             { icon: "✦", stat: "In-House", label: "Laser & CNC Cutting" },
@@ -706,7 +802,7 @@ export default function ProductsPage() {
 
       {/* ── Category Nav Bar ─────────────────────────────────────────────── */}
       <div style={{ background: "#fff", borderBottom: "1px solid #E8ECF2", position: "sticky", top: 70, zIndex: 100 }}>
-        <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", overflowX: "auto", gap: 0 }}>
+        <div className="cat-nav" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", overflowX: "auto", gap: 0 }}>
           {categories.map(cat => {
             const count = products.filter(p => p.category === cat.id).length;
             const active = activeCategory === cat.id;

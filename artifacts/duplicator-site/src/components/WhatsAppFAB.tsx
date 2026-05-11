@@ -17,7 +17,7 @@ export default function WhatsAppFAB() {
   ];
 
   return (
-    <div style={{ position: "fixed", bottom: 28, right: 28, zIndex: 900, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
+    <div className="wa-fab" style={{ position: "fixed", bottom: 28, right: 28, zIndex: 900, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
       {/* Menu */}
       <div style={{
         background: "#fff", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,.2)",

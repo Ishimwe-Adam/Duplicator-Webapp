@@ -81,6 +81,84 @@
   ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
 }
 
+/* ── TYPOGRAPHY: Cormorant Garamond + Fredoka ──────────────────────────── */
+h1, h2 {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 700;
+}
+h3 {
+  font-family: 'Fredoka', sans-serif !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── PILL / BORDER BUTTON STYLE ────────────────────────────────────────── */
+.pill-btn {
+  border: 2px solid #000;
+  border-radius: 50px;
+  padding: 10px 25px;
+  background: transparent;
+  color: #000;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.pill-badge {
+  border: 2px solid currentColor;
+  border-radius: 50px;
+  padding: 4px 14px;
+  background: transparent;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 600;
+}
+
+/* ── HIDE WHATSAPP FAB ON MOBILE ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .wa-fab { display: none !important; }
+}
+
+/* ── GLOBAL RESPONSIVE UTILITIES ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  section, .section-inner { overflow-x: hidden; }
+
+  /* Product grid: 1 col on small phones */
+  .products-grid { grid-template-columns: 1fr !important; }
+
+  /* Category nav: scrollable */
+  .cat-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cat-nav::-webkit-scrollbar { display: none; }
+
+  /* Trust/stats bar: scrollable */
+  .stats-bar { overflow-x: auto; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; }
+  .stats-bar > * { flex-shrink: 0; min-width: 140px; }
+
+  /* Hero headings scale */
+  h1 { line-height: 1 !important; }
+
+  /* CTA buttons: stack */
+  .hero-cta { flex-direction: column !important; }
+  .hero-cta a, .hero-cta button { width: 100% !important; justify-content: center !important; box-sizing: border-box; }
+
+  /* Category section padding */
+  .cat-section-header { padding: 24px 20px !important; }
+
+  /* Bottom nav spacing */
+  body { padding-bottom: 80px; }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+  /* Product grid: 2 col on tablet */
+  .products-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ── CARD FLIP TRANSITION ──────────────────────────────────────────────── */
+.card-tab-content {
+  transition: opacity .22s ease, transform .22s ease;
+}
+
 /* ANIMATIONS */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @keyframes floatBadge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
