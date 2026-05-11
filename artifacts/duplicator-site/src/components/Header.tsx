@@ -72,7 +72,7 @@ export default function Header() {
             href={l.href}
             onClick={(e) => { e.preventDefault(); handleNavClick(l.href); }}
             style={{
-              fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 36,
+              fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 36,
               color: "rgba(255,255,255,.8)", textDecoration: "none", display: "block",
               padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,.06)",
               transition: "color .2s"
@@ -85,7 +85,7 @@ export default function Header() {
           style={{
             marginTop: 40, display: "inline-flex", alignItems: "center", gap: 8,
             padding: "14px 28px", borderRadius: 4, background: "#25D366", color: "#fff",
-            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none"
+            fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none"
           }}>
           <WaIcon /> Order via WhatsApp
         </a>
@@ -102,8 +102,8 @@ export default function Header() {
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
             <Logo />
             <div style={{ lineHeight: 1 }}>
-              <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 16, color: "#fff", letterSpacing: ".06em" }}>DUPLICATOR LTD.</div>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, color: "#00C6FF", letterSpacing: ".12em" }}>•PRINTING •BRANDING •SEWING</div>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 16, color: "#fff", letterSpacing: ".06em" }}>DUPLICATOR LTD.</div>
+              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 9, color: "#00C6FF", letterSpacing: ".12em" }}>•PRINTING •BRANDING •SEWING</div>
             </div>
           </a>
 
@@ -112,7 +112,7 @@ export default function Header() {
               <a key={l.href} href={l.href}
                 onClick={(e) => { if (l.href.startsWith("/#")) { e.preventDefault(); handleNavClick(l.href); } }}
                 style={{
-                  fontFamily: "'Syne', sans-serif", fontWeight: 600, fontSize: 13,
+                  fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: 13,
                   color: "rgba(255,255,255,.75)", textDecoration: "none", letterSpacing: ".04em",
                   transition: "color .2s", position: "relative"
                 }}
@@ -128,7 +128,7 @@ export default function Header() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8,
                 padding: "10px 20px", borderRadius: 4, background: "#25D366", color: "#fff",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, textDecoration: "none",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, textDecoration: "none",
                 transition: "background .2s"
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}

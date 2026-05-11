@@ -100,7 +100,7 @@ function ServiceCard({ num, title, desc, items, icon, inverted = false }: {
         transition: "transform .3s",
         transformOrigin: "left"
       }} />
-      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: isDark ? "rgba(255,255,255,.2)" : "rgba(0,0,0,.2)", letterSpacing: ".1em", marginBottom: 8, transition: "color .3s" }}>{num}</div>
+      <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, color: isDark ? "rgba(255,255,255,.2)" : "rgba(0,0,0,.2)", letterSpacing: ".1em", marginBottom: 8, transition: "color .3s" }}>{num}</div>
       <div style={{
         width: 52, height: 52, background: isDark ? "var(--electric)" : "var(--off-white)",
         borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
@@ -109,12 +109,12 @@ function ServiceCard({ num, title, desc, items, icon, inverted = false }: {
       }}>
         {icon}
       </div>
-      <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 20, color: isDark ? "#fff" : "var(--ink)", marginBottom: 12, transition: "color .3s" }}>{title}</h3>
+      <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 20, color: isDark ? "#fff" : "var(--ink)", marginBottom: 12, transition: "color .3s" }}>{title}</h3>
       <p style={{ fontSize: 14, color: isDark ? "rgba(255,255,255,.6)" : "var(--grey)", lineHeight: 1.65, marginBottom: 20, transition: "color .3s" }}>{desc}</p>
       <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: 6 }}>
         {items.map(item => (
           <li key={item} style={{
-            fontFamily: "'Space Mono', monospace", fontSize: 10, padding: "4px 10px",
+            fontFamily: "'Open Sans', sans-serif", fontSize: 10, padding: "4px 10px",
             background: isDark ? "rgba(255,255,255,.08)" : "var(--light-grey)",
             borderRadius: 3, color: isDark ? "rgba(255,255,255,.5)" : "var(--grey)",
             textTransform: "uppercase", letterSpacing: ".06em", transition: "color .3s, background .3s"
@@ -229,7 +229,7 @@ export default function HomePage() {
           }} />
           <div style={{
             position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)",
-            fontFamily: "'DM Serif Display', serif", fontSize: "clamp(300px,35vw,520px)", lineHeight: 1,
+            fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(300px,35vw,520px)", lineHeight: 1,
             color: "rgba(255,255,255,.04)", pointerEvents: "none", userSelect: "none"
           }}>D</div>
         </div>
@@ -237,13 +237,13 @@ export default function HomePage() {
         <div style={{ position: "relative", zIndex: 2, maxWidth: 1320, margin: "0 auto", padding: "120px 24px 80px", width: "100%" }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: 6,
-            fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em",
+            fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em",
             padding: "6px 14px", borderRadius: 100, border: "1px solid rgba(0,198,255,.3)",
             background: "rgba(0,198,255,.1)", color: "#00C6FF", marginBottom: 24,
             opacity: 0, animation: "wordReveal .8s .1s forwards"
           }}>🇷🇼 Kigali · Rwanda · Est. 2008+</div>
 
-          <h1 style={{ fontFamily: "'DM Serif Display', serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: "#fff", marginBottom: 32 }}>
+          <h1 style={{ fontFamily: "'Montserrat', sans-serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: "#fff", marginBottom: 32 }}>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .1s forwards" }}>Switch Your</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .25s forwards" }}>Brand</span>
             <span style={{ display: "block", color: "#00C6FF", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .4s forwards" }}>ON.</span>
@@ -258,7 +258,7 @@ export default function HomePage() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
                 borderRadius: 4, background: "#00C6FF", color: "var(--ink)",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
               onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }}
@@ -271,7 +271,7 @@ export default function HomePage() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
                 borderRadius: 4, background: "#25D366", color: "#fff",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
               onMouseEnter={e => { e.currentTarget.style.background = "#128C7E"; e.currentTarget.style.transform = "translateY(-2px)"; }}
@@ -284,7 +284,7 @@ export default function HomePage() {
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
                 borderRadius: 4, background: "transparent", color: "#fff",
                 border: "1.5px solid rgba(255,255,255,.4)",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.1)"; e.currentTarget.style.borderColor = "#fff"; }}
@@ -295,7 +295,7 @@ export default function HomePage() {
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
                 borderRadius: 4, background: "rgba(255,255,255,.08)", color: "rgba(255,255,255,.85)",
                 border: "1.5px solid rgba(255,255,255,.2)",
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.15)"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,.4)"; }}
@@ -313,10 +313,10 @@ export default function HomePage() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: 40, borderTop: "1px solid rgba(255,255,255,.08)", paddingTop: 40 }}>
             {[{ target: 15, suffix: "+", label: "Years in Business" }, { target: 500, suffix: "+", label: "Happy Clients" }, { target: 5000, suffix: "+", label: "Orders Completed" }, { target: 12, suffix: "", label: "Product Categories" }].map(s => (
               <div key={s.label}>
-                <div style={{ fontFamily: "'Syne', sans-serif", fontSize: "clamp(28px,4vw,40px)", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(28px,4vw,40px)", fontWeight: 800, color: "#fff", lineHeight: 1 }}>
                   <Counter target={s.target} /><span style={{ color: "#00C6FF" }}>{s.suffix}</span>
                 </div>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "rgba(255,255,255,.4)", letterSpacing: ".1em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
+                <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, color: "rgba(255,255,255,.4)", letterSpacing: ".1em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -347,7 +347,7 @@ export default function HomePage() {
       <div style={{ background: "var(--blue)", padding: "16px 0", overflow: "hidden" }}>
         <div style={{ display: "flex", width: "max-content", animation: "marquee 28s linear infinite" }}>
           {[0, 1].map(i => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 32, padding: "0 32px", whiteSpace: "nowrap", fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700, letterSpacing: ".1em", color: "rgba(255,255,255,.9)", textTransform: "uppercase" }}>
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 32, padding: "0 32px", whiteSpace: "nowrap", fontFamily: "'Open Sans', sans-serif", fontSize: 12, fontWeight: 700, letterSpacing: ".1em", color: "rgba(255,255,255,.9)", textTransform: "uppercase" }}>
               {marqueeItems.map((item, j) => (
                 <span key={j} style={{ display: "flex", alignItems: "center", gap: 32 }}>
                   <span style={{ width: 6, height: 6, background: "#00C6FF", borderRadius: "50%", display: "inline-block" }} />
@@ -364,10 +364,10 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24, marginBottom: 0 }}>
             <RevealDiv>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> What We Do
               </div>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
+              <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
                 We Don't Just Print.<br />We Build <span style={{ color: "var(--blue)" }}>Brands.</span>
               </h2>
             </RevealDiv>
@@ -388,13 +388,13 @@ export default function HomePage() {
 
       {/* HOW IT WORKS */}
       <section id="how" style={{ background: "var(--ink)", color: "#fff", padding: "100px 0", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: -80, top: "50%", transform: "translateY(-50%)", fontFamily: "'DM Serif Display', serif", fontSize: 600, lineHeight: 1, color: "rgba(255,255,255,.02)", pointerEvents: "none", userSelect: "none" }}>D</div>
+        <div style={{ position: "absolute", left: -80, top: "50%", transform: "translateY(-50%)", fontFamily: "'Montserrat', sans-serif", fontSize: 600, lineHeight: 1, color: "rgba(255,255,255,.02)", pointerEvents: "none", userSelect: "none" }}>D</div>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
           <RevealDiv style={{ textAlign: "center", marginBottom: 0 }}>
-            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> How It Works <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} />
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff", textAlign: "center" }}>
+            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff", textAlign: "center" }}>
               From Idea to <span style={{ color: "#00C6FF" }}>Delivered.</span>
             </h2>
             <p style={{ color: "rgba(255,255,255,.5)", maxWidth: 480, margin: "16px auto 0", fontSize: 16 }}>Four simple steps from your first message to finished product in your hands.</p>
@@ -410,9 +410,9 @@ export default function HomePage() {
             ].map((step, i) => (
               <RevealDiv key={step.num} delay={i * 0.1} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 24px", position: "relative", zIndex: 1 }}>
                 <div style={{ width: 72, height: 72, borderRadius: "50%", border: "2px solid var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, background: "var(--ink)", position: "relative" }}>
-                  <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 22, color: "#00C6FF" }}>{step.num}</span>
+                  <span style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 22, color: "#00C6FF" }}>{step.num}</span>
                 </div>
-                <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, color: "#fff", marginBottom: 10 }}>{step.title}</h4>
+                <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 16, color: "#fff", marginBottom: 10 }}>{step.title}</h4>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,.45)", lineHeight: 1.65 }}>{step.desc}</p>
               </RevealDiv>
             ))}
@@ -423,7 +423,7 @@ export default function HomePage() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "16px 36px",
                 background: "#25D366", color: "#fff", borderRadius: 4,
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 15, textDecoration: "none",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 15, textDecoration: "none",
                 transition: "background .2s"
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
@@ -441,10 +441,10 @@ export default function HomePage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 48 }}>
             {[{ target: 15, suffix: "+", label: "Years Experience" }, { target: 500, suffix: "+", label: "Business Clients" }, { target: 5000, suffix: "+", label: "Orders Delivered" }, { target: 12, suffix: "", label: "Product Categories" }].map(s => (
               <RevealDiv key={s.label} style={{ textAlign: "center", color: "#fff" }}>
-                <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(48px,7vw,80px)", lineHeight: 1, color: "#fff" }}>
+                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(48px,7vw,80px)", lineHeight: 1, color: "#fff" }}>
                   <Counter target={s.target} /><span style={{ color: "#00C6FF", fontSize: ".7em" }}>{s.suffix}</span>
                 </div>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 12, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.6)", marginTop: 8 }}>{s.label}</div>
+                <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 12, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.6)", marginTop: 8 }}>{s.label}</div>
                 <div style={{ width: 40, height: 3, background: "#00C6FF", borderRadius: 2, margin: "12px auto 0" }} />
               </RevealDiv>
             ))}
@@ -457,10 +457,10 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 24 }}>
             <RevealDiv>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Product Catalogue
               </div>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
+              <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
                 Everything Your<br />Brand <span style={{ color: "var(--blue)" }}>Needs.</span>
               </h2>
             </RevealDiv>
@@ -469,7 +469,7 @@ export default function HomePage() {
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
                   background: "#25D366", color: "#fff", borderRadius: 4,
-                  fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
+                  fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
                   transition: "background .2s"
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
@@ -485,7 +485,7 @@ export default function HomePage() {
             {cats.map(cat => (
               <button key={cat} onClick={() => setActiveCat(cat)}
                 style={{
-                  fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em",
+                  fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em",
                   padding: "10px 20px", borderRadius: 3,
                   border: `1.5px solid ${activeCat === cat ? "var(--blue)" : "var(--light-grey)"}`,
                   background: activeCat === cat ? "var(--blue)" : "transparent",
@@ -510,7 +510,7 @@ export default function HomePage() {
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 32px",
                 background: "var(--navy)", color: "#fff", borderRadius: 4,
-                fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
+                fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
                 transition: "background .2s"
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "var(--blue)")}
@@ -524,15 +524,15 @@ export default function HomePage() {
           <RevealDiv delay={0.1} style={{ marginTop: 48 }}>
             <div style={{ background: "linear-gradient(135deg, var(--navy), var(--blue))", borderRadius: 12, padding: "40px 48px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
               <div>
-                <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, color: "#00C6FF", textTransform: "uppercase", letterSpacing: ".14em", marginBottom: 8 }}>Bulk Orders</div>
-                <h3 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(22px,3vw,32px)", color: "#fff", marginBottom: 8 }}>Need 100+ Units?</h3>
+                <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, color: "#00C6FF", textTransform: "uppercase", letterSpacing: ".14em", marginBottom: 8 }}>Bulk Orders</div>
+                <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(22px,3vw,32px)", color: "#fff", marginBottom: 8 }}>Need 100+ Units?</h3>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,.55)" }}>We specialise in large corporate orders. Better pricing, priority production.</p>
               </div>
               <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20have%20a%20large%20bulk%20order%20requirement." target="_blank" rel="noreferrer"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 8, padding: "16px 32px", whiteSpace: "nowrap",
                   background: "#25D366", color: "#fff", borderRadius: 4,
-                  fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
+                  fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none",
                   transition: "background .2s"
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
@@ -549,10 +549,10 @@ export default function HomePage() {
       <section id="industries" style={{ background: "var(--off-white)", padding: "100px 0" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <RevealDiv style={{ textAlign: "center" }}>
-            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Industries We Serve
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", textAlign: "center" }}>
+            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", textAlign: "center" }}>
               Trusted Across <span style={{ color: "var(--blue)" }}>Every Sector.</span>
             </h2>
             <p style={{ fontSize: 17, color: "var(--grey)", maxWidth: 520, margin: "16px auto 0", textAlign: "center" }}>From government to startups — if you have a brand, we make it visible.</p>
@@ -571,17 +571,17 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }} className="gq-grid">
             <RevealDiv>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Get a Quote
               </div>
-              <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(36px,5vw,56px)", color: "#fff", lineHeight: 1.1, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(36px,5vw,56px)", color: "#fff", lineHeight: 1.1, marginBottom: 20 }}>
                 Let's Talk About Your Project
               </h2>
               <p style={{ fontSize: 16, color: "rgba(255,255,255,.55)", lineHeight: 1.7, marginBottom: 36 }}>
                 Tell us what you need and we'll send a clear, itemised quote within hours. WhatsApp or form — your choice.
               </p>
               <div style={{ background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.2)", borderRadius: 10, padding: 28, marginBottom: 24 }}>
-                <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 18, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 10 }}>
+                <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 18, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 10 }}>
                   <WaIcon size={20} /> Fastest: WhatsApp Us
                 </h4>
                 <p style={{ fontSize: 14, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
@@ -591,7 +591,7 @@ export default function HomePage() {
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 8, padding: "12px 24px",
                     background: "#25D366", color: "#fff", borderRadius: 4,
-                    fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none"
+                    fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none"
                   }}
                 >
                   <WaIcon /> +250 788 355 226
@@ -618,10 +618,10 @@ export default function HomePage() {
       <section style={{ background: "var(--ink)", padding: "100px 0" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <RevealDiv style={{ textAlign: "center", marginBottom: 0 }}>
-            <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Client Stories
             </div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff" }}>
+            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff" }}>
               What Clients <span style={{ color: "#00C6FF" }}>Say.</span>
             </h2>
           </RevealDiv>
@@ -629,14 +629,14 @@ export default function HomePage() {
             {testimonials.map((t, i) => (
               <RevealDiv key={t.name} delay={i * 0.1}>
                 <div style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)", borderRadius: 12, padding: 32, position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'DM Serif Display', serif", fontSize: 80, color: "rgba(38,69,200,.2)", lineHeight: 1 }}>"</div>
+                  <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'Montserrat', sans-serif", fontSize: 80, color: "rgba(38,69,200,.2)", lineHeight: 1 }}>"</div>
                   <div style={{ color: "#F5C518", fontSize: 12, marginBottom: 16, letterSpacing: 2 }}>★★★★★</div>
                   <p style={{ fontSize: 15, color: "rgba(255,255,255,.7)", lineHeight: 1.75, marginBottom: 24, position: "relative", zIndex: 1 }}>{t.text}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 14, color: "#fff" }}>{t.initials}</div>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 14, color: "#fff" }}>{t.initials}</div>
                     <div>
-                      <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: "#fff" }}>{t.name}</div>
-                      <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "rgba(255,255,255,.35)", letterSpacing: ".06em" }}>{t.role}</div>
+                      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, color: "#fff" }}>{t.name}</div>
+                      <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, color: "rgba(255,255,255,.35)", letterSpacing: ".06em" }}>{t.role}</div>
                     </div>
                   </div>
                 </div>
@@ -651,10 +651,10 @@ export default function HomePage() {
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }} className="contact-grid">
             <RevealDiv>
-              <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Find Us
               </div>
-              <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", marginBottom: 16 }}>
+              <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", marginBottom: 16 }}>
                 Visit or <span style={{ color: "var(--blue)" }}>Get in Touch.</span>
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 36 }}>
@@ -669,14 +669,14 @@ export default function HomePage() {
                 ))}
               </div>
               <div style={{ background: "var(--navy)", borderRadius: 12, padding: 28, marginTop: 24, color: "#fff" }}>
-                <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#fff" }}>Business Hours</h4>
+                <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 16, marginBottom: 16, color: "#fff" }}>Business Hours</h4>
                 {[
                   { day: "MON – FRI", time: "8:00 AM – 6:00 PM" },
                   { day: "SATURDAY", time: "9:00 AM – 2:00 PM" },
                   { day: "SUNDAY", time: "Closed" },
                 ].map(h => (
                   <div key={h.day} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,.06)", fontSize: 13 }}>
-                    <span style={{ color: "rgba(255,255,255,.5)", fontFamily: "'Space Mono', monospace", fontSize: 11 }}>{h.day}</span>
+                    <span style={{ color: "rgba(255,255,255,.5)", fontFamily: "'Open Sans', sans-serif", fontSize: 11 }}>{h.day}</span>
                     <span style={{ color: h.time === "Closed" ? "rgba(255,255,255,.4)" : "rgba(255,255,255,.85)", fontWeight: 500 }}>{h.time}</span>
                   </div>
                 ))}
@@ -686,22 +686,22 @@ export default function HomePage() {
               <div style={{ background: "#fff", border: "1.5px solid var(--light-grey)", borderRadius: 12, overflow: "hidden" }}>
                 <div style={{ height: 320, background: "linear-gradient(135deg, #e8ecf2, #d0daf0)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
                   <div style={{ fontSize: 48, opacity: .4 }}>📍</div>
-                  <p style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 18, color: "var(--navy)" }}>Karuruma, Kigali</p>
-                  <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 11, textAlign: "center", color: "var(--grey)", letterSpacing: ".06em", lineHeight: 1.8 }}>4344+JVF, Karuruma<br />Kigali, Rwanda · P.O. Box 6332</p>
+                  <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 18, color: "var(--navy)" }}>Karuruma, Kigali</p>
+                  <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, textAlign: "center", color: "var(--grey)", letterSpacing: ".06em", lineHeight: 1.8 }}>4344+JVF, Karuruma<br />Kigali, Rwanda · P.O. Box 6332</p>
                 </div>
                 <div style={{ padding: 20, display: "flex", gap: 12 }}>
                   <a href="https://maps.google.com/?q=Karuruma,Kigali,Rwanda" target="_blank" rel="noreferrer"
-                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "var(--blue)", color: "#fff", textDecoration: "none", fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13 }}>
+                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "var(--blue)", color: "#fff", textDecoration: "none", fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13 }}>
                     📍 Get Directions
                   </a>
                   <a href="https://wa.me/250788355226?text=Hi!%20I%27d%20like%20to%20visit." target="_blank" rel="noreferrer"
-                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "#25D366", color: "#fff", textDecoration: "none", fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13 }}>
+                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "#25D366", color: "#fff", textDecoration: "none", fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13 }}>
                     💬 Chat First
                   </a>
                 </div>
               </div>
               <div style={{ marginTop: 24, background: "#fff", border: "1.5px solid var(--light-grey)", borderRadius: 12, padding: 24 }}>
-                <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "var(--grey)", marginBottom: 16 }}>Follow Us</p>
+                <p style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "var(--grey)", marginBottom: 16 }}>Follow Us</p>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   {[
                     { label: "📸 Instagram", href: "https://instagram.com/duplicatorltd" },
@@ -709,7 +709,7 @@ export default function HomePage() {
                     { label: "𝕏 Twitter/X", href: "https://twitter.com/duplicatorltd" },
                   ].map(s => (
                     <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
-                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 16px", border: "1.5px solid var(--light-grey)", borderRadius: 6, textDecoration: "none", color: "var(--ink)", fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, transition: "all .2s" }}
+                      style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 16px", border: "1.5px solid var(--light-grey)", borderRadius: 6, textDecoration: "none", color: "var(--ink)", fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, transition: "all .2s" }}
                       onMouseEnter={e => { e.currentTarget.style.borderColor = "#2645C8"; e.currentTarget.style.color = "#2645C8"; }}
                       onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--light-grey)"; e.currentTarget.style.color = "var(--ink)"; }}
                     >{s.label}</a>
@@ -732,7 +732,7 @@ export default function HomePage() {
               <path d="M3 12L12 4l9 8"/>
               <path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/>
             </svg>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "#00C6FF" }}>HOME</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "#00C6FF" }}>HOME</span>
           </a>
 
           {/* PRODUCTS — flat-top hexagon */}
@@ -740,7 +740,7 @@ export default function HomePage() {
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
               <polygon points="12,3 19.8,7.5 19.8,16.5 12,21 4.2,16.5 4.2,7.5"/>
             </svg>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>PRODUCTS</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>PRODUCTS</span>
           </a>
 
           {/* ORDER — elevated green WhatsApp button */}
@@ -755,7 +755,7 @@ export default function HomePage() {
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
               </svg>
             </span>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "#25D366" }}>ORDER</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "#25D366" }}>ORDER</span>
           </a>
 
           {/* QUOTE — clipboard with oval clip tab */}
@@ -764,7 +764,7 @@ export default function HomePage() {
               <rect x="8" y="2" width="8" height="4" rx="2"/>
               <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/>
             </svg>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>QUOTE</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>QUOTE</span>
           </a>
 
           {/* FIND US — teardrop map pin with inner circle */}
@@ -773,7 +773,7 @@ export default function HomePage() {
               <path d="M12 22s7-6.5 7-12A7 7 0 005 10c0 5.5 7 12 7 12z"/>
               <circle cx="12" cy="10" r="2.5"/>
             </svg>
-            <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>FIND US</span>
+            <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 8, textTransform: "uppercase", letterSpacing: ".08em", color: "rgba(255,255,255,.45)" }}>FIND US</span>
           </a>
 
         </div>
@@ -794,15 +794,15 @@ function ProductCard({ emoji, title, desc, sku, msg, cat }: { emoji: string; tit
       style={{ background: "var(--off-white)", borderRadius: 8, overflow: "hidden", border: `1.5px solid ${hovered ? "var(--blue)" : "transparent"}`, transition: "all .3s", transform: hovered ? "translateY(-4px)" : "none", boxShadow: hovered ? "0 16px 40px rgba(38,69,200,.12)" : "none" }}>
       <div style={{ height: 200, background: "linear-gradient(135deg, var(--light-grey), #e0e8f8)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
         <span style={{ fontSize: 72, opacity: .12 }}>{emoji}</span>
-        <span style={{ position: "absolute", top: 12, left: 12, fontFamily: "'Space Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", padding: "4px 10px", background: "var(--blue)", color: "#fff", borderRadius: 2 }}>{catLabel}</span>
+        <span style={{ position: "absolute", top: 12, left: 12, fontFamily: "'Open Sans', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", padding: "4px 10px", background: "var(--blue)", color: "#fff", borderRadius: 2 }}>{catLabel}</span>
       </div>
       <div style={{ padding: 24 }}>
-        <h4 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 17, color: "var(--ink)", marginBottom: 8 }}>{title}</h4>
+        <h4 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 17, color: "var(--ink)", marginBottom: 8 }}>{title}</h4>
         <p style={{ fontSize: 13, color: "var(--grey)", lineHeight: 1.6, marginBottom: 20 }}>{desc}</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-          <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, color: "rgba(0,0,0,.25)", textTransform: "uppercase", letterSpacing: ".06em" }}>{sku}</span>
+          <span style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, color: "rgba(0,0,0,.25)", textTransform: "uppercase", letterSpacing: ".06em" }}>{sku}</span>
           <a href={`https://wa.me/250788355226?text=Hi!%20I'm%20interested%20in%20${msg}.%20Please%20quote%20me.`} target="_blank" rel="noreferrer"
-            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 12, textDecoration: "none", transition: "background .2s" }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, textDecoration: "none", transition: "background .2s" }}
             onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
             onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
           >
@@ -822,7 +822,7 @@ function IndustryCard({ icon, name, delay }: { icon: string; name: string; delay
       <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
         style={{ background: hovered ? "var(--navy)" : "#fff", border: `1.5px solid ${hovered ? "var(--navy)" : "var(--light-grey)"}`, borderRadius: 8, padding: "28px 20px", textAlign: "center", transition: "all .3s", cursor: "default", transform: hovered ? "translateY(-4px)" : "none" }}>
         <div style={{ fontSize: 32, marginBottom: 12, color: hovered ? "#00C6FF" : "var(--blue)", transition: "color .3s" }}>{icon}</div>
-        <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: hovered ? "#fff" : "var(--ink)", transition: "color .3s" }}>{name}</div>
+        <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, color: hovered ? "#fff" : "var(--ink)", transition: "color .3s" }}>{name}</div>
       </div>
     </RevealDiv>
   );
@@ -834,8 +834,8 @@ function ContactCard({ icon, label, value, href, green }: { icon: string; label:
     <>
       <div style={{ width: 44, height: 44, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: green ? "#DCFCE7" : "#EEF2FF", fontSize: 20 }}>{icon}</div>
       <div>
-        <div style={{ fontFamily: "'Space Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--grey)", marginBottom: 2 }}>{label}</div>
-        <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 14, color: "var(--ink)" }}>{value}</div>
+        <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--grey)", marginBottom: 2 }}>{label}</div>
+        <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, color: "var(--ink)" }}>{value}</div>
       </div>
     </>
   );
@@ -870,28 +870,28 @@ function QuoteForm() {
 
   const inputStyle: React.CSSProperties = {
     width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.12)",
-    borderRadius: 6, padding: "13px 16px", color: "#fff", fontFamily: "'Plus Jakarta Sans', sans-serif",
+    borderRadius: 6, padding: "13px 16px", color: "#fff", fontFamily: "'Open Sans', sans-serif",
     fontSize: 14, outline: "none", transition: "border .2s"
   };
 
   return (
     <div style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)", borderRadius: 12, padding: 40 }}>
-      <div style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff", marginBottom: 28 }}>Request a Quote</div>
+      <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff", marginBottom: 28 }}>Request a Quote</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }} className="form-row-grid">
         <div>
-          <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Your Name</label>
+          <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Your Name</label>
           <input value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" style={inputStyle}
             onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
         </div>
         <div>
-          <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Phone / WhatsApp</label>
+          <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Phone / WhatsApp</label>
           <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+250 7XX XXX XXX" type="tel" style={inputStyle}
             onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
         </div>
       </div>
       <style>{`@media (max-width: 768px) { .form-row-grid { grid-template-columns: 1fr !important; } }`}</style>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Category</label>
+        <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Category</label>
         <select value={cat} onChange={e => setCat(e.target.value)} style={{ ...inputStyle, appearance: "none" }}
           onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")}>
           <option value="">Select a service category</option>
@@ -903,23 +903,23 @@ function QuoteForm() {
         </select>
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Products Needed</label>
+        <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Products Needed</label>
         <textarea value={products} onChange={e => setProducts(e.target.value)} placeholder="Describe what you need..." rows={3}
           style={{ ...inputStyle, resize: "vertical", minHeight: 80 }}
           onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Quantity</label>
+        <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Quantity</label>
         <input value={qty} onChange={e => setQty(e.target.value)} placeholder="e.g. 500 pieces" style={inputStyle}
           onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Additional Notes</label>
+        <label style={{ display: "block", fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Additional Notes</label>
         <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Deadline, special requirements, artwork details..." rows={2}
           style={{ ...inputStyle, resize: "vertical", minHeight: 60 }}
           onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
       </div>
-      <button onClick={submit} style={{ width: "100%", padding: 16, background: "#00C6FF", color: "var(--ink)", border: "none", borderRadius: 6, fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
+      <button onClick={submit} style={{ width: "100%", padding: 16, background: "#00C6FF", color: "var(--ink)", border: "none", borderRadius: 6, fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
         onMouseEnter={e => { e.currentTarget.style.background = "#fff"; (e.currentTarget.style as any).color = "var(--navy)"; }}
         onMouseLeave={e => { e.currentTarget.style.background = "#00C6FF"; e.currentTarget.style.color = "var(--ink)"; }}>
         Send Quote Request via WhatsApp →
