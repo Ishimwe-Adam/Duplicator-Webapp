@@ -243,10 +243,12 @@ export default function HomePage() {
             opacity: 0, animation: "wordReveal .8s .1s forwards"
           }}>🇷🇼 Kigali · Rwanda · Est. 2008+</div>
 
-          <h1 style={{ fontFamily: "'Inter', sans-serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: "#fff", marginBottom: 32 }}>
+          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: "#fff", marginBottom: 32 }}>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .1s forwards" }}>Switch Your</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .25s forwards" }}>Brand</span>
-            <span style={{ display: "block", color: "#00C6FF", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .4s forwards" }}>ON.</span>
+            <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .4s forwards" }}>
+              <span style={{ color: "#00C6FF" }}>O</span><span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.08em" }}>N.</span>
+            </span>
           </h1>
 
           <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 480, marginBottom: 40, lineHeight: 1.7, opacity: 0, animation: "wordReveal .8s .55s forwards" }}>
@@ -368,7 +370,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> What We Do
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                We Don't Just Print.<br />We Build <span style={{ color: "var(--blue)" }}>Brands.</span>
+                We Don't Just Print.<br />We Build <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Brands.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -395,7 +397,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> How It Works <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} />
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff", textAlign: "center" }}>
-              From Idea to <span style={{ color: "#00C6FF" }}>Delivered.</span>
+              From Idea to <span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Delivered.</span>
             </h2>
             <p style={{ color: "rgba(255,255,255,.5)", maxWidth: 480, margin: "16px auto 0", fontSize: 16 }}>Four simple steps from your first message to finished product in your hands.</p>
           </RevealDiv>
@@ -461,7 +463,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Product Catalogue
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                Everything Your<br />Brand <span style={{ color: "var(--blue)" }}>Needs.</span>
+                Everything Your<br />Brand <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Needs.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -553,7 +555,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Industries We Serve
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", textAlign: "center" }}>
-              Trusted Across <span style={{ color: "var(--blue)" }}>Every Sector.</span>
+              Trusted Across <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Every Sector.</span>
             </h2>
             <p style={{ fontSize: 17, color: "var(--grey)", maxWidth: 520, margin: "16px auto 0", textAlign: "center" }}>From government to startups — if you have a brand, we make it visible.</p>
           </RevealDiv>
@@ -622,7 +624,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Client Stories
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", color: "#fff" }}>
-              What Clients <span style={{ color: "#00C6FF" }}>Say.</span>
+              What Clients <span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Say.</span>
             </h2>
           </RevealDiv>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24, marginTop: 56 }}>
@@ -655,7 +657,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Find Us
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", marginBottom: 16 }}>
-                Visit or <span style={{ color: "var(--blue)" }}>Get in Touch.</span>
+                Visit or <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Get in Touch.</span>
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 36 }}>
                 {[

@@ -758,8 +758,9 @@ export default function ProductsPage() {
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", padding: "6px 16px", borderRadius: 100, border: "1px solid rgba(0,198,255,.3)", background: "rgba(0,198,255,.08)", color: "#00C6FF", marginBottom: 24 }}>
             Products & Services — Duplicator Ltd
           </div>
-          <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
-            More Than a Printer.<br /><span style={{ color: "#00C6FF" }}>We Are Manufacturers.</span>
+          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
+            More Than a Printer.<br />
+            <span style={{ color: "#00C6FF" }}>We Are </span><span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Manufacturers.</span>
           </h1>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 580, marginBottom: 16, lineHeight: 1.75 }}>
             For over 15 years, Duplicator Ltd has delivered end-to-end branding, print, and manufacturing solutions for Rwanda's leading organisations. From graphic design to final delivery — everything under one roof.

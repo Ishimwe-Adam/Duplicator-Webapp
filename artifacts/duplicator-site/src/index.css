@@ -73,9 +73,9 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --radius: 0.5rem;
-  --app-font-sans: 'Inter', system-ui, sans-serif;
-  --app-font-serif: 'Inter', system-ui, sans-serif;
-  --app-font-mono: 'Inter', system-ui, sans-serif;
+  --app-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --app-font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --app-font-mono: 'Inter', ui-monospace, monospace;
 }
 
 /* ── GLOBAL BASE ───────────────────────────────────────────────────────── */
@@ -84,14 +84,15 @@
   html { scroll-behavior: smooth; font-size: 16px; }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    /* Blurred mix of White and Blue — cinematic dark background */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    /* Blurred White 70% + Blue 30% — cinematic dark background */
     background-color: #04091A;
     background-image:
-      radial-gradient(ellipse 90% 70% at 15% -5%,  rgba(38, 69, 200, 0.50) 0%, transparent 60%),
-      radial-gradient(ellipse 70% 55% at 88%  8%,  rgba(160, 195, 255, 0.13) 0%, transparent 55%),
-      radial-gradient(ellipse 100% 40% at 50% 105%, rgba(38, 69, 200, 0.22) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 60% at 0%  80%,  rgba(20, 50, 160, 0.20) 0%, transparent 55%);
+      radial-gradient(ellipse 110% 80% at 8%  -10%, rgba(255, 255, 255, 0.11) 0%, transparent 58%),
+      radial-gradient(ellipse 60%  50% at 92%  12%, rgba(38,  69,  200, 0.28) 0%, transparent 52%),
+      radial-gradient(ellipse 80%  55% at 50% -5%,  rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 55%  70% at 2%   80%, rgba(255, 255, 255, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 90%  40% at 55% 108%, rgba(38,  69,  200, 0.18) 0%, transparent 60%);
     background-attachment: fixed;
     color: #FFFFFF;
     overflow-x: hidden;
@@ -103,12 +104,20 @@
   ::-webkit-scrollbar-thumb { background: rgba(38,69,200,0.6); border-radius: 3px; }
 }
 
-/* ── TYPOGRAPHY: Inter — tight-tracked headings ────────────────────────── */
+/* ── TYPOGRAPHY: Inter primary + Instrument Serif accent ───────────────── */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', system-ui, sans-serif !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif !important;
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.1;
+}
+
+/* Instrument Serif italic — for accent words inside headings */
+.serif-accent {
+  font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif !important;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* ── GLASS SURFACE UTILITIES ───────────────────────────────────────────── */
