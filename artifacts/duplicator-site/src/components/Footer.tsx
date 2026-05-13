@@ -11,7 +11,7 @@ const Logo = () => (
 
 export default function Footer() {
   return (
-    <footer style={{ background: "var(--ink)", padding: "80px 0 40px" }}>
+    <footer style={{ background: "rgba(4,9,26,0.92)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderTop: "1px solid rgba(255,255,255,0.07)", padding: "80px 0 40px" }}>
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: 48, marginBottom: 64 }} className="footer-top-grid">
           <div>
