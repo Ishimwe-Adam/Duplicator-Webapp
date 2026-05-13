@@ -26,20 +26,20 @@ export default function WhatsAppFAB() {
         transform: menuOpen ? "translateY(0) scale(1)" : "translateY(10px) scale(.97)",
         transition: "all .25s"
       }}>
-        <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--ink)", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--light-grey)" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--ink)", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--light-grey)" }}>
           Chat with Sales
         </div>
         {messages.map(m => (
           <a key={m.label} href={`https://wa.me/250788355226?text=${m.text}`} target="_blank" rel="noreferrer"
             style={{
               display: "block", fontSize: 13, color: "var(--grey)", padding: "10px 12px", borderRadius: 6,
-              textDecoration: "none", transition: "background .15s", fontFamily: "'Open Sans', sans-serif"
+              textDecoration: "none", transition: "background .15s", fontFamily: "'Inter', sans-serif"
             }}
             onMouseEnter={e => { e.currentTarget.style.background = "var(--off-white)"; e.currentTarget.style.color = "var(--blue)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--grey)"; }}
           >{m.label}</a>
         ))}
-        <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--light-grey)", fontFamily: "'Open Sans', sans-serif", fontSize: 10, color: "var(--grey)", textAlign: "center", letterSpacing: ".06em" }}>
+        <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--light-grey)", fontFamily: "'Inter', sans-serif", fontSize: 10, color: "var(--grey)", textAlign: "center", letterSpacing: ".06em" }}>
           +250 788 355 226
         </div>
       </div>

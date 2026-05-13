@@ -18,12 +18,12 @@ export default function Footer() {
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
               <Logo />
               <div>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 15, color: "#fff" }}>DUPLICATOR LTD.</div>
-                <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, color: "rgba(255,255,255,.3)", letterSpacing: ".12em", textTransform: "uppercase" }}>Kigali, Rwanda</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 15, color: "#fff" }}>DUPLICATOR LTD.</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,.3)", letterSpacing: ".12em", textTransform: "uppercase" }}>Kigali, Rwanda</div>
               </div>
             </div>
-            <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontStyle: "italic", fontSize: 20, color: "rgba(255,255,255,.7)", lineHeight: 1.3, marginBottom: 16 }}>"Switch Your Brand ON."</p>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.4)", lineHeight: 1.9, fontFamily: "'Open Sans', sans-serif" }}>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontStyle: "italic", fontSize: 20, color: "rgba(255,255,255,.7)", lineHeight: 1.3, marginBottom: 16 }}>"Switch Your Brand ON."</p>
+            <div style={{ fontSize: 13, color: "rgba(255,255,255,.4)", lineHeight: 1.9, fontFamily: "'Inter', sans-serif" }}>
               <a href="tel:+250788978879" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>+250 788 978 879</a>
               <a href="https://wa.me/250788355226" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>+250 788 355 226 (WhatsApp)</a>
               <a href="mailto:duplicator10@gmail.com" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>duplicator10@gmail.com</a>
@@ -63,11 +63,11 @@ export default function Footer() {
             }
           ].map(col => (
             <div key={col.title} className="footer-col">
-              <h5 style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.3)", marginBottom: 20 }}>{col.title}</h5>
+              <h5 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.3)", marginBottom: 20 }}>{col.title}</h5>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
                 {col.links.map(l => (
                   <li key={l.label}>
-                    <a href={l.href} style={{ fontSize: 14, color: "rgba(255,255,255,.5)", textDecoration: "none", transition: "color .2s", fontFamily: "'Open Sans', sans-serif" }}
+                    <a href={l.href} style={{ fontSize: 14, color: "rgba(255,255,255,.5)", textDecoration: "none", transition: "color .2s", fontFamily: "'Inter', sans-serif" }}
                       onMouseEnter={e => (e.currentTarget.style.color = "#00C6FF")}
                       onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,.5)")}
                     >{l.label}</a>
@@ -79,7 +79,7 @@ export default function Footer() {
         </div>
 
         <div style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 32, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, color: "rgba(255,255,255,.25)", letterSpacing: ".06em" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,.25)", letterSpacing: ".06em" }}>
             © 2026 Duplicator Ltd. All rights reserved. · Kigali, Rwanda
           </div>
           <div style={{ display: "flex", gap: 12 }}>
@@ -94,7 +94,7 @@ export default function Footer() {
                   width: 38, height: 38, border: s.green ? "none" : "1px solid rgba(255,255,255,.12)",
                   borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
                   color: s.green ? "#fff" : "rgba(255,255,255,.5)", textDecoration: "none",
-                  fontFamily: "'Montserrat', sans-serif", fontSize: 11, fontWeight: 700,
+                  fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700,
                   background: s.green ? "#25D366" : "transparent", transition: "all .2s"
                 }}
                 onMouseEnter={e => { if (!s.green) { e.currentTarget.style.background = "#2645C8"; e.currentTarget.style.borderColor = "#2645C8"; e.currentTarget.style.color = "#fff"; } }}

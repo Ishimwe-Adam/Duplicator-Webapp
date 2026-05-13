@@ -502,11 +502,13 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: "#fff", borderRadius: 16, overflow: "hidden",
-        border: `2px solid ${hovered ? catColor : "#E8ECF2"}`,
+        background: hovered ? "rgba(12,24,65,0.75)" : "rgba(8,16,50,0.55)",
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        borderRadius: 16, overflow: "hidden",
+        border: `1px solid ${hovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.08)"}`,
         transition: "all .3s cubic-bezier(.4,0,.2,1)",
         transform: hovered ? "translateY(-6px)" : "none",
-        boxShadow: hovered ? `0 24px 56px ${catColor}28` : "0 2px 12px rgba(0,0,0,.06)",
+        boxShadow: hovered ? `0 24px 56px rgba(0,0,0,.5), 0 0 0 1px ${catColor}40` : "0 4px 24px rgba(0,0,0,.25)",
         display: "flex", flexDirection: "column"
       }}
     >
@@ -535,7 +537,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         {/* Subcategory pill badge */}
         <div style={{ position: "absolute", top: 12, left: 12 }}>
           <span style={{
-            fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: 11,
+            fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 11,
             textTransform: "uppercase", letterSpacing: ".06em",
             padding: "5px 14px", borderRadius: 50,
             border: "2px solid rgba(255,255,255,.55)",
@@ -547,7 +549,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         {(product.badge || product.featured) && (
           <div style={{ position: "absolute", top: 12, right: 12 }}>
             <span style={{
-              fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 11,
+              fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11,
               textTransform: "uppercase", letterSpacing: ".06em",
               padding: "5px 14px", borderRadius: 50,
               background: badgeBg || "rgba(255,255,255,.9)",
@@ -563,12 +565,12 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
       <div style={{ padding: "20px 20px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Product name */}
         <h4 style={{
-          fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 20,
-          color: "#0D1117", marginBottom: 3, lineHeight: 1.2
+          fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 20,
+          color: "#ffffff", marginBottom: 3, lineHeight: 1.2
         }}>{product.name}</h4>
         {/* Tagline */}
         <p style={{
-          fontFamily: "'Montserrat', sans-serif", fontStyle: "italic",
+          fontFamily: "'Inter', sans-serif", fontStyle: "italic",
           fontSize: 14, color: catColor, marginBottom: 14, lineHeight: 1.35
         }}>{product.tagline}</p>
 
@@ -577,12 +579,12 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
           {(["overview", "specs"] as const).map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               style={{
-                fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: 12,
+                fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 12,
                 textTransform: "uppercase", letterSpacing: ".06em",
                 padding: "6px 18px", borderRadius: 50,
-                border: `2px solid ${activeTab === tab ? catColor : "#E0E5EF"}`,
-                background: activeTab === tab ? catColor : "transparent",
-                color: activeTab === tab ? "#fff" : "#6B7280",
+                border: `1.5px solid ${activeTab === tab ? catColor : "rgba(255,255,255,.15)"}`,
+                background: activeTab === tab ? catColor : "rgba(255,255,255,.04)",
+                color: activeTab === tab ? "#fff" : "rgba(255,255,255,.5)",
                 cursor: "pointer", transition: "all .2s"
               }}
             >{tab === "overview" ? "Overview" : "Specs"}</button>
@@ -596,8 +598,8 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         }}>
           {activeTab === "overview" ? (
             <p style={{
-              fontSize: 13, color: "#4B5563", lineHeight: 1.7,
-              fontFamily: "'Open Sans', sans-serif"
+              fontSize: 13, color: "rgba(255,255,255,.6)", lineHeight: 1.7,
+              fontFamily: "'Inter', sans-serif"
             }}>{product.desc}</p>
           ) : (
             <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
@@ -609,8 +611,8 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
                     display: "inline-block"
                   }} />
                   <span style={{
-                    fontFamily: "'Open Sans', sans-serif",
-                    fontSize: 13, color: "#374151", lineHeight: 1.5
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: 13, color: "rgba(255,255,255,.65)", lineHeight: 1.5
                   }}>{s}</span>
                 </li>
               ))}
@@ -627,7 +629,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
             padding: "12px 20px",
             background: "#25D366", color: "#fff",
             borderRadius: 50, border: "2px solid #25D366",
-            fontFamily: "'Montserrat', sans-serif", fontWeight: 600, fontSize: 14,
+            fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 14,
             textDecoration: "none", transition: "all .2s",
             letterSpacing: ".06em", textTransform: "uppercase"
           }}
@@ -653,8 +655,9 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
     <div style={{ marginBottom: 96 }} id={`cat-${category.id}`}>
       {/* Category header */}
       <div className="cat-section-header" style={{
-        background: `linear-gradient(135deg, ${category.color}0a, ${category.color}04)`,
-        borderRadius: 16, border: `1px solid ${category.color}20`,
+        background: `linear-gradient(135deg, rgba(8,16,50,0.65), ${category.color}18)`,
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        borderRadius: 16, border: `1px solid ${category.color}35`,
         padding: "36px 40px", marginBottom: 32
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 24, flexWrap: "wrap" }}>
@@ -666,14 +669,14 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
             {category.icon}
           </div>
           <div style={{ flex: 1, minWidth: 260 }}>
-            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".14em", color: category.color, marginBottom: 6 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".14em", color: category.color, marginBottom: 6 }}>
               {catProducts.length} product{catProducts.length !== 1 ? "s" : ""}
             </div>
-            <h2 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(22px,3vw,30px)", color: "#0D1117", marginBottom: 6, lineHeight: 1.15 }}>{category.label}</h2>
-            <p style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, color: category.color, marginBottom: 12, fontStyle: "italic" }}>{category.tagline}</p>
-            <p style={{ fontSize: 14, color: "#374151", lineHeight: 1.7, maxWidth: 620, marginBottom: 16 }}>{category.desc}</p>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(22px,3vw,30px)", color: "#ffffff", marginBottom: 6, lineHeight: 1.15 }}>{category.label}</h2>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, color: category.color, marginBottom: 12, fontStyle: "italic" }}>{category.tagline}</p>
+            <p style={{ fontSize: 14, color: "rgba(255,255,255,.6)", lineHeight: 1.7, maxWidth: 620, marginBottom: 16 }}>{category.desc}</p>
             {category.capability && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#5A6478", fontFamily: "'Open Sans', sans-serif" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,.45)", fontFamily: "'Inter', sans-serif" }}>
                 <div style={{ width: 3, height: 3, borderRadius: "50%", background: category.color }} />
                 <span style={{ textTransform: "uppercase", letterSpacing: ".06em" }}><strong style={{ color: category.color }}>Capabilities:</strong> {category.capability}</span>
               </div>
@@ -685,10 +688,10 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 24, paddingTop: 20, borderTop: `1px solid ${category.color}18` }}>
           <button onClick={() => onSubcat(null)}
             style={{
-              fontFamily: "'Open Sans', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
-              padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${!activeSubcat ? category.color : "#E8ECF2"}`,
-              background: !activeSubcat ? category.color : "transparent",
-              color: !activeSubcat ? "#fff" : "#5A6478", cursor: "pointer", transition: "all .2s"
+              fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
+              padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${!activeSubcat ? category.color : "rgba(255,255,255,.15)"}`,
+              background: !activeSubcat ? category.color : "rgba(255,255,255,.04)",
+              color: !activeSubcat ? "#fff" : "rgba(255,255,255,.5)", cursor: "pointer", transition: "all .2s"
             }}>All</button>
           {category.subcategories.map(sub => {
             const count = catProducts.filter(p => p.subcategory === sub).length;
@@ -697,10 +700,10 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
             return (
               <button key={sub} onClick={() => onSubcat(active ? null : sub)}
                 style={{
-                  fontFamily: "'Open Sans', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
-                  padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${active ? category.color : "#E8ECF2"}`,
-                  background: active ? category.color : "transparent",
-                  color: active ? "#fff" : "#5A6478", cursor: "pointer", transition: "all .2s"
+                  fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
+                  padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${active ? category.color : "rgba(255,255,255,.15)"}`,
+                  background: active ? category.color : "rgba(255,255,255,.04)",
+                  color: active ? "#fff" : "rgba(255,255,255,.5)", cursor: "pointer", transition: "all .2s"
                 }}
               >{sub} ({count})</button>
             );
@@ -740,11 +743,11 @@ export default function ProductsPage() {
     : categories;
 
   return (
-    <div style={{ background: "#F7F8FC", minHeight: "100vh" }}>
+    <div style={{ background: "transparent", minHeight: "100vh" }}>
       <Header />
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <div style={{ background: "var(--ink)", paddingTop: 120, paddingBottom: 96, position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "transparent", paddingTop: 120, paddingBottom: 96, position: "relative", overflow: "hidden" }}>
         <div style={{
           position: "absolute", inset: 0,
           backgroundImage: "linear-gradient(rgba(38,69,200,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(38,69,200,.06) 1px, transparent 1px)",
@@ -752,26 +755,26 @@ export default function ProductsPage() {
         }} />
         <div style={{ position: "absolute", right: "-4%", top: 0, bottom: 0, width: "42%", background: "linear-gradient(135deg, #1B2B8A, #2645C8)", clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0% 100%)", opacity: .55 }} />
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'Open Sans', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", padding: "6px 16px", borderRadius: 100, border: "1px solid rgba(0,198,255,.3)", background: "rgba(0,198,255,.08)", color: "#00C6FF", marginBottom: 24 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", padding: "6px 16px", borderRadius: 100, border: "1px solid rgba(0,198,255,.3)", background: "rgba(0,198,255,.08)", color: "#00C6FF", marginBottom: 24 }}>
             Products & Services — Duplicator Ltd
           </div>
-          <h1 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
+          <h1 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
             More Than a Printer.<br /><span style={{ color: "#00C6FF" }}>We Are Manufacturers.</span>
           </h1>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 580, marginBottom: 16, lineHeight: 1.75 }}>
             For over 15 years, Duplicator Ltd has delivered end-to-end branding, print, and manufacturing solutions for Rwanda's leading organisations. From graphic design to final delivery — everything under one roof.
           </p>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.4)", maxWidth: 520, marginBottom: 44, lineHeight: 1.65, fontFamily: "'Open Sans', sans-serif", letterSpacing: ".02em" }}>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,.4)", maxWidth: 520, marginBottom: 44, lineHeight: 1.65, fontFamily: "'Inter', sans-serif", letterSpacing: ".02em" }}>
             In-house capabilities: Graphic Design · Offset & Digital Print · Laser/CNC Cutting · Sewing Factory · Large Format · Distribution
           </p>
           <div className="hero-cta" style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20Please%20send%20me%20your%20full%20product%20and%20services%20brochure." target="_blank" rel="noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "background .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "background .2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
               onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
             ><WaIcon size={16} /> Request a Quotation</a>
             <a href="/duplicator-catalogue.pdf" download="Duplicator-Ltd-Catalogue.pdf"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,.35)", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,.35)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.borderColor = "#fff"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.35)"; }}
             >
@@ -783,7 +786,7 @@ export default function ProductsPage() {
       </div>
 
       {/* ── Trust / Differentiator Bar ────────────────────────────────── */}
-      <div style={{ background: "#0D1117", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+      <div style={{ background: "rgba(6,14,44,0.75)", backdropFilter: "blur(12px)", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
         <div className="stats-bar" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", flexWrap: "wrap" }}>
           {[
             { icon: "✦", stat: "15+", label: "Years of Experience" },
@@ -793,15 +796,15 @@ export default function ProductsPage() {
             { icon: "✦", stat: "500+", label: "Active Client Organisations" },
           ].map((item, i) => (
             <div key={i} style={{ flex: "1 1 180px", padding: "22px 20px", borderRight: i < 4 ? "1px solid rgba(255,255,255,.05)" : "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 800, fontSize: 18, color: "#00C6FF" }}>{item.stat}</div>
-              <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.4)", textAlign: "center" }}>{item.label}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 18, color: "#00C6FF" }}>{item.stat}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.4)", textAlign: "center" }}>{item.label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* ── Category Nav Bar ─────────────────────────────────────────────── */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #E8ECF2", position: "sticky", top: 70, zIndex: 100 }}>
+      <div style={{ background: "rgba(4,9,26,0.85)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,0.08)", position: "sticky", top: 70, zIndex: 100 }}>
         <div className="cat-nav" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", overflowX: "auto", gap: 0 }}>
           {categories.map(cat => {
             const count = products.filter(p => p.category === cat.id).length;
@@ -812,18 +815,18 @@ export default function ProductsPage() {
                   display: "flex", alignItems: "center", gap: 8, padding: "16px 22px",
                   background: "transparent", border: "none",
                   borderBottom: active ? `3px solid ${cat.color}` : "3px solid transparent",
-                  color: active ? cat.color : "#374151",
-                  fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13,
+                  color: active ? cat.color : "rgba(255,255,255,.6)",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13,
                   cursor: "pointer", transition: "all .2s", whiteSpace: "nowrap", flexShrink: 0
                 }}
                 onMouseEnter={e => { if (!active) e.currentTarget.style.color = cat.color; }}
-                onMouseLeave={e => { if (!active) e.currentTarget.style.color = "#374151"; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.color = "rgba(255,255,255,.6)"; }}
               >
                 {cat.label}
                 <span style={{
-                  fontFamily: "'Open Sans', sans-serif", fontSize: 10,
-                  background: active ? cat.color : "#F0F2F8",
-                  color: active ? "#fff" : "#5A6478",
+                  fontFamily: "'Inter', sans-serif", fontSize: 10,
+                  background: active ? cat.color : "rgba(255,255,255,.1)",
+                  color: active ? "#fff" : "rgba(255,255,255,.5)",
                   padding: "2px 8px", borderRadius: 100, transition: "all .2s"
                 }}>{count}</span>
               </button>
@@ -847,20 +850,20 @@ export default function ProductsPage() {
               placeholder="Search products, finishes, or item types..."
               style={{
                 width: "100%", padding: "13px 16px 13px 42px",
-                background: "#fff", border: "1.5px solid #E8ECF2", borderRadius: 8,
-                fontFamily: "'Open Sans', sans-serif", fontSize: 14, color: "#0D1117", outline: "none",
+                background: "rgba(10,20,55,0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10,
+                fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#fff", outline: "none",
                 transition: "border .2s", boxSizing: "border-box"
               }}
               onFocus={e => (e.target.style.borderColor = "#2645C8")}
-              onBlur={e => (e.target.style.borderColor = "#E8ECF2")}
+              onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")}
             />
           </div>
-          <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 11, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: ".1em" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: ".1em" }}>
             {filteredBySearch ? `${filteredBySearch.length} results` : `${products.length} products`}
           </div>
           {(activeCategory || searchQuery) && (
             <button onClick={() => { setActiveCategory(null); setSearchQuery(""); }}
-              style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 12, color: "#2645C8", background: "rgba(38,69,200,.07)", border: "1px solid rgba(38,69,200,.18)", padding: "9px 18px", borderRadius: 6, cursor: "pointer" }}>
+              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 12, color: "#2645C8", background: "rgba(38,69,200,.07)", border: "1px solid rgba(38,69,200,.18)", padding: "9px 18px", borderRadius: 6, cursor: "pointer" }}>
               Clear ×
             </button>
           )}
@@ -869,15 +872,15 @@ export default function ProductsPage() {
         {/* Search results */}
         {filteredBySearch ? (
           <div>
-            <div style={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 20, color: "#0D1117", marginBottom: 28 }}>
-              Search results for "<span style={{ color: "#2645C8" }}>{searchQuery}</span>"
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff", marginBottom: 28 }}>
+              Search results for "<span style={{ color: "#00C6FF" }}>{searchQuery}</span>"
             </div>
             {filteredBySearch.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px 24px" }}>
-                <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 22, color: "#0D1117", marginBottom: 10 }}>No products found</div>
-                <p style={{ color: "#5A6478", fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Try different keywords or browse categories above. If you need something specific, ask us directly on WhatsApp.</p>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, color: "#fff", marginBottom: 10 }}>No products found</div>
+                <p style={{ color: "rgba(255,255,255,.5)", fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Try different keywords or browse categories above. If you need something specific, ask us directly on WhatsApp.</p>
                 <a href="https://wa.me/250788355226?text=Hi!%20I%27m%20looking%20for%20a%20specific%20product%20and%20couldn%27t%20find%20it." target="_blank" rel="noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, textDecoration: "none" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, textDecoration: "none" }}>
                   <WaIcon size={16} /> Ask on WhatsApp
                 </a>
               </div>
@@ -909,8 +912,8 @@ export default function ProductsPage() {
           display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 36
         }}>
           <div style={{ maxWidth: 520 }}>
-            <div style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 10, color: "#00C6FF", textTransform: "uppercase", letterSpacing: ".16em", marginBottom: 12 }}>Ready to get started?</div>
-            <h3 style={{ fontFamily: "'Montserrat', sans-serif", fontSize: "clamp(24px,4vw,40px)", color: "#fff", lineHeight: 1.1, marginBottom: 14 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "#00C6FF", textTransform: "uppercase", letterSpacing: ".16em", marginBottom: 12 }}>Ready to get started?</div>
+            <h3 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(24px,4vw,40px)", color: "#fff", lineHeight: 1.1, marginBottom: 14 }}>
               Tell us what you need.<br />We'll handle the rest.
             </h3>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,.5)", lineHeight: 1.75 }}>
@@ -919,12 +922,12 @@ export default function ProductsPage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, flexShrink: 0 }}>
             <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I'd%20like%20to%20discuss%20a%20project." target="_blank" rel="noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "17px 34px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", transition: "background .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "17px 34px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", transition: "background .2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
               onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
             ><WaIcon size={18} /> Get a Free Quote</a>
             <a href="/#quote"
-              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "15px 34px", background: "rgba(255,255,255,.07)", color: "rgba(255,255,255,.8)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, fontFamily: "'Montserrat', sans-serif", fontWeight: 700, fontSize: 13, textDecoration: "none", transition: "all .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "15px 34px", background: "rgba(255,255,255,.07)", color: "rgba(255,255,255,.8)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13, textDecoration: "none", transition: "all .2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.12)"; e.currentTarget.style.color = "#fff"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.color = "rgba(255,255,255,.8)"; }}
             >Use the Quote Form →</a>
