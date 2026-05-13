@@ -247,7 +247,7 @@ export default function HomePage() {
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .1s forwards" }}>Switch Your</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .25s forwards" }}>Brand</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .4s forwards" }}>
-              <span style={{ color: "#00C6FF" }}>O</span><span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.08em" }}>N.</span>
+              <span style={{ color: "#fff" }}>O</span><span className="serif-accent" style={{ color: "#fff", fontSize: "1.08em" }}>N.</span>
             </span>
           </h1>
 
@@ -259,12 +259,12 @@ export default function HomePage() {
             <a href="#quote" onClick={e => { e.preventDefault(); document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" }); }}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
-                borderRadius: 4, background: "#00C6FF", color: "var(--ink)",
+                borderRadius: 4, background: "#fff", color: "#04091A",
                 fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#00C6FF"; e.currentTarget.style.transform = ""; }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.85)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = ""; }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
               Get a Free Quote
@@ -316,7 +316,7 @@ export default function HomePage() {
             {[{ target: 15, suffix: "+", label: "Years in Business" }, { target: 500, suffix: "+", label: "Happy Clients" }, { target: 5000, suffix: "+", label: "Orders Completed" }, { target: 12, suffix: "", label: "Product Categories" }].map(s => (
               <div key={s.label}>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px,4vw,40px)", fontWeight: 400, color: "#fff", lineHeight: 1 }}>
-                  <Counter target={s.target} /><span style={{ color: "#00C6FF" }}>{s.suffix}</span>
+                  <Counter target={s.target} /><span style={{ color: "#fff" }}>{s.suffix}</span>
                 </div>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,.4)", letterSpacing: ".1em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
               </div>
@@ -370,7 +370,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> What We Do
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                We Don't Just Print.<br />We Build <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Brands.</span>
+                We Don't Just Print.<br />We Build <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Brands.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -397,7 +397,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> How It Works <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} />
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: "#fff", textAlign: "center" }}>
-              From Idea to <span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Delivered.</span>
+              From Idea to <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Delivered.</span>
             </h2>
             <p style={{ color: "rgba(255,255,255,.5)", maxWidth: 480, margin: "16px auto 0", fontSize: 16 }}>Four simple steps from your first message to finished product in your hands.</p>
           </RevealDiv>
@@ -412,7 +412,7 @@ export default function HomePage() {
             ].map((step, i) => (
               <RevealDiv key={step.num} delay={i * 0.1} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 24px", position: "relative", zIndex: 1 }}>
                 <div style={{ width: 72, height: 72, borderRadius: "50%", border: "2px solid var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, background: "var(--ink)", position: "relative" }}>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 22, color: "#00C6FF" }}>{step.num}</span>
+                  <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 22, color: "#fff" }}>{step.num}</span>
                 </div>
                 <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 16, color: "#fff", marginBottom: 10 }}>{step.title}</h4>
                 <p style={{ fontSize: 13, color: "rgba(255,255,255,.45)", lineHeight: 1.65 }}>{step.desc}</p>
@@ -444,7 +444,7 @@ export default function HomePage() {
             {[{ target: 15, suffix: "+", label: "Years Experience" }, { target: 500, suffix: "+", label: "Business Clients" }, { target: 5000, suffix: "+", label: "Orders Delivered" }, { target: 12, suffix: "", label: "Product Categories" }].map(s => (
               <RevealDiv key={s.label} style={{ textAlign: "center", color: "#fff" }}>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(48px,7vw,80px)", lineHeight: 1, color: "#fff" }}>
-                  <Counter target={s.target} /><span style={{ color: "#00C6FF", fontSize: ".7em" }}>{s.suffix}</span>
+                  <Counter target={s.target} /><span style={{ color: "#fff", fontSize: ".7em" }}>{s.suffix}</span>
                 </div>
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.6)", marginTop: 8 }}>{s.label}</div>
                 <div style={{ width: 40, height: 3, background: "#00C6FF", borderRadius: 2, margin: "12px auto 0" }} />
@@ -463,7 +463,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Product Catalogue
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                Everything Your<br />Brand <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Needs.</span>
+                Everything Your<br />Brand <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Needs.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -555,7 +555,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Industries We Serve
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", textAlign: "center" }}>
-              Trusted Across <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Every Sector.</span>
+              Trusted Across <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Every Sector.</span>
             </h2>
             <p style={{ fontSize: 17, color: "var(--grey)", maxWidth: 520, margin: "16px auto 0", textAlign: "center" }}>From government to startups — if you have a brand, we make it visible.</p>
           </RevealDiv>
@@ -624,7 +624,7 @@ export default function HomePage() {
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Client Stories
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: "#fff" }}>
-              What Clients <span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Say.</span>
+              What Clients <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Say.</span>
             </h2>
           </RevealDiv>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24, marginTop: 56 }}>
@@ -657,7 +657,7 @@ export default function HomePage() {
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Find Us
               </div>
               <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", marginBottom: 16 }}>
-                Visit or <span className="serif-accent" style={{ color: "var(--blue)", fontSize: "1.05em" }}>Get in Touch.</span>
+                Visit or <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Get in Touch.</span>
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 36 }}>
                 {[
@@ -693,7 +693,7 @@ export default function HomePage() {
                 </div>
                 <div style={{ padding: 20, display: "flex", gap: 12 }}>
                   <a href="https://maps.google.com/?q=Karuruma,Kigali,Rwanda" target="_blank" rel="noreferrer"
-                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "var(--blue)", color: "#fff", textDecoration: "none", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13 }}>
+                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "rgba(255,255,255,0.12)", color: "#fff", textDecoration: "none", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, border: "1px solid rgba(255,255,255,0.2)" }}>
                     📍 Get Directions
                   </a>
                   <a href="https://wa.me/250788355226?text=Hi!%20I%27d%20like%20to%20visit." target="_blank" rel="noreferrer"
@@ -924,9 +924,9 @@ function QuoteForm() {
           style={{ ...inputStyle, resize: "vertical", minHeight: 60 }}
           onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
       </div>
-      <button onClick={submit} style={{ width: "100%", padding: 16, background: "#00C6FF", color: "var(--ink)", border: "none", borderRadius: 6, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
-        onMouseEnter={e => { e.currentTarget.style.background = "#fff"; (e.currentTarget.style as any).color = "var(--navy)"; }}
-        onMouseLeave={e => { e.currentTarget.style.background = "#00C6FF"; e.currentTarget.style.color = "var(--ink)"; }}>
+      <button onClick={submit} style={{ width: "100%", padding: 16, background: "#fff", color: "#04091A", border: "none", borderRadius: 6, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
+        onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.85)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "#fff"; }}>
         Send Quote Request via WhatsApp →
       </button>
     </div>

@@ -760,7 +760,7 @@ export default function ProductsPage() {
           </div>
           <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
             More Than a Printer.<br />
-            <span style={{ color: "#00C6FF" }}>We Are </span><span className="serif-accent" style={{ color: "#00C6FF", fontSize: "1.05em" }}>Manufacturers.</span>
+            <span style={{ color: "#fff" }}>We Are </span><span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Manufacturers.</span>
           </h1>
           <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 580, marginBottom: 16, lineHeight: 1.75 }}>
             For over 15 years, Duplicator Ltd has delivered end-to-end branding, print, and manufacturing solutions for Rwanda's leading organisations. From graphic design to final delivery — everything under one roof.
@@ -797,7 +797,7 @@ export default function ProductsPage() {
             { icon: "✦", stat: "500+", label: "Active Client Organisations" },
           ].map((item, i) => (
             <div key={i} style={{ flex: "1 1 180px", padding: "22px 20px", borderRight: i < 4 ? "1px solid rgba(255,255,255,.05)" : "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#00C6FF" }}>{item.stat}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#fff" }}>{item.stat}</div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.4)", textAlign: "center" }}>{item.label}</div>
             </div>
           ))}
