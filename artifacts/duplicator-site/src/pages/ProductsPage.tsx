@@ -537,7 +537,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         {/* Subcategory pill badge */}
         <div style={{ position: "absolute", top: 12, left: 12 }}>
           <span style={{
-            fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 11,
+            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 11,
             textTransform: "uppercase", letterSpacing: ".06em",
             padding: "5px 14px", borderRadius: 50,
             border: "2px solid rgba(255,255,255,.55)",
@@ -549,7 +549,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         {(product.badge || product.featured) && (
           <div style={{ position: "absolute", top: 12, right: 12 }}>
             <span style={{
-              fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 11,
+              fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 11,
               textTransform: "uppercase", letterSpacing: ".06em",
               padding: "5px 14px", borderRadius: 50,
               background: badgeBg || "rgba(255,255,255,.9)",
@@ -565,7 +565,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
       <div style={{ padding: "20px 20px 18px", flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Product name */}
         <h4 style={{
-          fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 20,
+          fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20,
           color: "#ffffff", marginBottom: 3, lineHeight: 1.2
         }}>{product.name}</h4>
         {/* Tagline */}
@@ -579,7 +579,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
           {(["overview", "specs"] as const).map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               style={{
-                fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 12,
+                fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 12,
                 textTransform: "uppercase", letterSpacing: ".06em",
                 padding: "6px 18px", borderRadius: 50,
                 border: `1.5px solid ${activeTab === tab ? catColor : "rgba(255,255,255,.15)"}`,
@@ -629,7 +629,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
             padding: "12px 20px",
             background: "#25D366", color: "#fff",
             borderRadius: 50, border: "2px solid #25D366",
-            fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 14,
+            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14,
             textDecoration: "none", transition: "all .2s",
             letterSpacing: ".06em", textTransform: "uppercase"
           }}
@@ -673,7 +673,7 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
               {catProducts.length} product{catProducts.length !== 1 ? "s" : ""}
             </div>
             <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(22px,3vw,30px)", color: "#ffffff", marginBottom: 6, lineHeight: 1.15 }}>{category.label}</h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, color: category.color, marginBottom: 12, fontStyle: "italic" }}>{category.tagline}</p>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: category.color, marginBottom: 12, fontStyle: "italic" }}>{category.tagline}</p>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,.6)", lineHeight: 1.7, maxWidth: 620, marginBottom: 16 }}>{category.desc}</p>
             {category.capability && (
               <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,.45)", fontFamily: "'Inter', sans-serif" }}>
@@ -770,12 +770,12 @@ export default function ProductsPage() {
           </p>
           <div className="hero-cta" style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
             <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20Please%20send%20me%20your%20full%20product%20and%20services%20brochure." target="_blank" rel="noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "background .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, textDecoration: "none", transition: "background .2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
               onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
             ><WaIcon size={16} /> Request a Quotation</a>
             <a href="/duplicator-catalogue.pdf" download="Duplicator-Ltd-Catalogue.pdf"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,.35)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,.35)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.borderColor = "#fff"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.35)"; }}
             >
@@ -797,7 +797,7 @@ export default function ProductsPage() {
             { icon: "✦", stat: "500+", label: "Active Client Organisations" },
           ].map((item, i) => (
             <div key={i} style={{ flex: "1 1 180px", padding: "22px 20px", borderRight: i < 4 ? "1px solid rgba(255,255,255,.05)" : "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 18, color: "#00C6FF" }}>{item.stat}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#00C6FF" }}>{item.stat}</div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.4)", textAlign: "center" }}>{item.label}</div>
             </div>
           ))}
@@ -817,7 +817,7 @@ export default function ProductsPage() {
                   background: "transparent", border: "none",
                   borderBottom: active ? `3px solid ${cat.color}` : "3px solid transparent",
                   color: active ? cat.color : "rgba(255,255,255,.6)",
-                  fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13,
+                  fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
                   cursor: "pointer", transition: "all .2s", whiteSpace: "nowrap", flexShrink: 0
                 }}
                 onMouseEnter={e => { if (!active) e.currentTarget.style.color = cat.color; }}
@@ -864,7 +864,7 @@ export default function ProductsPage() {
           </div>
           {(activeCategory || searchQuery) && (
             <button onClick={() => { setActiveCategory(null); setSearchQuery(""); }}
-              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 12, color: "#2645C8", background: "rgba(38,69,200,.07)", border: "1px solid rgba(38,69,200,.18)", padding: "9px 18px", borderRadius: 6, cursor: "pointer" }}>
+              style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 12, color: "#2645C8", background: "rgba(38,69,200,.07)", border: "1px solid rgba(38,69,200,.18)", padding: "9px 18px", borderRadius: 6, cursor: "pointer" }}>
               Clear ×
             </button>
           )}
@@ -873,7 +873,7 @@ export default function ProductsPage() {
         {/* Search results */}
         {filteredBySearch ? (
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 20, color: "#fff", marginBottom: 28 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: "#fff", marginBottom: 28 }}>
               Search results for "<span style={{ color: "#00C6FF" }}>{searchQuery}</span>"
             </div>
             {filteredBySearch.length === 0 ? (
@@ -881,7 +881,7 @@ export default function ProductsPage() {
                 <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, color: "#fff", marginBottom: 10 }}>No products found</div>
                 <p style={{ color: "rgba(255,255,255,.5)", fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Try different keywords or browse categories above. If you need something specific, ask us directly on WhatsApp.</p>
                 <a href="https://wa.me/250788355226?text=Hi!%20I%27m%20looking%20for%20a%20specific%20product%20and%20couldn%27t%20find%20it." target="_blank" rel="noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, textDecoration: "none" }}>
+                  style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, textDecoration: "none" }}>
                   <WaIcon size={16} /> Ask on WhatsApp
                 </a>
               </div>
@@ -923,12 +923,12 @@ export default function ProductsPage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, flexShrink: 0 }}>
             <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I'd%20like%20to%20discuss%20a%20project." target="_blank" rel="noreferrer"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "17px 34px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", transition: "background .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "17px 34px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, textDecoration: "none", whiteSpace: "nowrap", transition: "background .2s" }}
               onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
               onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
             ><WaIcon size={18} /> Get a Free Quote</a>
             <a href="/#quote"
-              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "15px 34px", background: "rgba(255,255,255,.07)", color: "rgba(255,255,255,.8)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13, textDecoration: "none", transition: "all .2s" }}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "15px 34px", background: "rgba(255,255,255,.07)", color: "rgba(255,255,255,.8)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, textDecoration: "none", transition: "all .2s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.12)"; e.currentTarget.style.color = "#fff"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.07)"; e.currentTarget.style.color = "rgba(255,255,255,.8)"; }}
             >Use the Quote Form →</a>

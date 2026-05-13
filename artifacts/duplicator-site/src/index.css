@@ -107,7 +107,7 @@
 /* ── TYPOGRAPHY: Inter primary + Instrument Serif accent ───────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif !important;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: -0.03em;
   line-height: 1.1;
 }

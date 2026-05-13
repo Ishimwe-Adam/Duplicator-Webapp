@@ -26,7 +26,7 @@ export default function WhatsAppFAB() {
         transform: menuOpen ? "translateY(0) scale(1)" : "translateY(10px) scale(.97)",
         transition: "all .25s"
       }}>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 13, color: "var(--ink)", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--light-grey)" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, color: "var(--ink)", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--light-grey)" }}>
           Chat with Sales
         </div>
         {messages.map(m => (

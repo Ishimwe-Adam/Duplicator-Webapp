@@ -64,7 +64,7 @@ export default function Header() {
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 48 }}>
           <Logo />
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 15, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(0,198,255,.7)", letterSpacing: ".1em" }}>•PRINTING •BRANDING •SEWING</div>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function Header() {
             href={l.href}
             onClick={(e) => { e.preventDefault(); handleNavClick(l.href); }}
             style={{
-              fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 32,
+              fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 32,
               letterSpacing: "-.04em", lineHeight: 1.2,
               color: "rgba(255,255,255,.75)", textDecoration: "none", display: "block",
               padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,.06)",
@@ -92,7 +92,7 @@ export default function Header() {
             marginTop: 36, display: "inline-flex", alignItems: "center", gap: 10,
             padding: "14px 28px", borderRadius: 10,
             background: "#25D366", color: "#fff",
-            fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 15,
+            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15,
             textDecoration: "none", width: "fit-content"
           }}>
           <WaIcon /> Order via WhatsApp
@@ -117,7 +117,7 @@ export default function Header() {
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}>
           <Logo />
           <div style={{ lineHeight: 1.2 }} className="hide-mobile">
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 800, fontSize: 14, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(0,198,255,.7)", letterSpacing: ".1em" }}>•PRINTING •BRANDING •SEWING</div>
           </div>
         </a>
@@ -147,7 +147,7 @@ export default function Header() {
               display: "inline-flex", alignItems: "center", gap: 8,
               padding: "9px 18px", borderRadius: 999,
               background: "#fff", color: "#000",
-              fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 13,
+              fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
               textDecoration: "none", transition: "transform .15s, filter .15s",
               whiteSpace: "nowrap"
             }}
