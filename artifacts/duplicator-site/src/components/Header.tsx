@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
+import { useTheme } from "@/context/ThemeContext";
 
 const WaIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
@@ -18,9 +19,30 @@ const Logo = () => (
   </svg>
 );
 
+const SunIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+);
+
+const MoonIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+);
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [location] = useLocation();
+  const { isDark, toggle, c } = useTheme();
 
   const navLinks = [
     { href: "/#home", label: "Home" },
@@ -48,7 +70,7 @@ export default function Header() {
       {/* ── MOBILE FULLSCREEN NAV ────────────────────────────────────── */}
       <div style={{
         position: "fixed", inset: 0,
-        background: "rgba(4, 9, 26, 0.97)",
+        background: c.mobileNavBg,
         backdropFilter: "blur(24px)",
         zIndex: 999,
         display: "flex", flexDirection: "column", justifyContent: "center",
@@ -58,13 +80,13 @@ export default function Header() {
       }}>
         <button
           onClick={() => setMobileOpen(false)}
-          style={{ position: "absolute", top: 28, right: 28, background: "none", border: "none", color: "rgba(255,255,255,.6)", fontSize: 26, cursor: "pointer", lineHeight: 1 }}
+          style={{ position: "absolute", top: 28, right: 28, background: "none", border: "none", color: c.textMuted, fontSize: 26, cursor: "pointer", lineHeight: 1 }}
         >✕</button>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 48 }}>
           <Logo />
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, color: c.textPrimary, letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(0,198,255,.7)", letterSpacing: ".1em" }}>•PRINTING •BRANDING •SEWING</div>
           </div>
         </div>
@@ -77,13 +99,13 @@ export default function Header() {
             style={{
               fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 32,
               letterSpacing: "-.04em", lineHeight: 1.2,
-              color: "rgba(255,255,255,.75)", textDecoration: "none", display: "block",
-              padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,.06)",
+              color: c.textSecondary, textDecoration: "none", display: "block",
+              padding: "14px 0", borderBottom: `1px solid ${c.border}`,
               transition: "color .2s",
               opacity: 0, animation: mobileOpen ? `wordReveal .4s ${i * 0.06 + 0.1}s forwards` : "none"
             }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#00C6FF")}
-            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,.75)")}
+            onMouseEnter={e => (e.currentTarget.style.color = "#2645C8")}
+            onMouseLeave={e => (e.currentTarget.style.color = c.textSecondary)}
           >{l.label}</a>
         ))}
 
@@ -104,21 +126,24 @@ export default function Header() {
         position: "fixed", top: 18, left: "50%", transform: "translateX(-50%)",
         zIndex: 1000,
         width: "calc(100% - 40px)", maxWidth: 1100,
-        background: "rgba(4, 9, 26, 0.72)",
+        background: c.navBg,
         backdropFilter: "blur(24px) saturate(180%)",
         WebkitBackdropFilter: "blur(24px) saturate(180%)",
         borderRadius: 999,
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: `1px solid ${c.navBorder}`,
         padding: "10px 14px 10px 18px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)"
+        boxShadow: isDark
+          ? "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)"
+          : "0 8px 32px rgba(38,69,200,0.12), inset 0 1px 0 rgba(255,255,255,0.8)",
+        transition: "background .3s, border-color .3s, box-shadow .3s"
       }}>
         {/* Logo */}
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", flexShrink: 0 }}>
           <Logo />
           <div style={{ lineHeight: 1.2 }} className="hide-mobile">
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "#fff", letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(0,198,255,.7)", letterSpacing: ".1em" }}>•PRINTING •BRANDING •SEWING</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: c.textPrimary, letterSpacing: "-.01em" }}>DUPLICATOR LTD.</div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, color: "rgba(0,198,255,.8)", letterSpacing: ".1em" }}>•PRINTING •BRANDING •SEWING</div>
           </div>
         </a>
 
@@ -129,24 +154,50 @@ export default function Header() {
               onClick={(e) => { if (l.href.startsWith("/#")) { e.preventDefault(); handleNavClick(l.href); } }}
               style={{
                 fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 13,
-                color: "rgba(255,255,255,.65)", textDecoration: "none",
+                color: c.navText, textDecoration: "none",
                 padding: "6px 14px", borderRadius: 999,
                 transition: "color .15s, background .15s"
               }}
-              onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.background = "rgba(255,255,255,.07)"; }}
-              onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,.65)"; e.currentTarget.style.background = "transparent"; }}
+              onMouseEnter={e => { e.currentTarget.style.color = c.navTextHover; e.currentTarget.style.background = c.navTextHoverBg; }}
+              onMouseLeave={e => { e.currentTarget.style.color = c.navText; e.currentTarget.style.background = "transparent"; }}
             >{l.label}</a>
           ))}
         </nav>
 
-        {/* CTA — right */}
+        {/* Right controls */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+          {/* Theme toggle */}
+          <button
+            onClick={toggle}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              width: 36, height: 36, borderRadius: 999, cursor: "pointer",
+              border: `1px solid ${c.navBorder}`,
+              background: isDark ? "rgba(255,255,255,.07)" : "rgba(38,69,200,.08)",
+              color: isDark ? "rgba(255,255,255,.75)" : "#2645C8",
+              transition: "all .25s",
+              flexShrink: 0
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = isDark ? "rgba(255,255,255,.14)" : "rgba(38,69,200,.16)";
+              e.currentTarget.style.transform = "rotate(20deg) scale(1.08)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = isDark ? "rgba(255,255,255,.07)" : "rgba(38,69,200,.08)";
+              e.currentTarget.style.transform = "";
+            }}
+          >
+            {isDark ? <SunIcon /> : <MoonIcon />}
+          </button>
+
           <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!" target="_blank" rel="noreferrer"
             className="hide-mobile"
             style={{
               display: "inline-flex", alignItems: "center", gap: 8,
               padding: "9px 18px", borderRadius: 999,
-              background: "#fff", color: "#000",
+              background: isDark ? "#fff" : "#2645C8",
+              color: isDark ? "#000" : "#fff",
               fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
               textDecoration: "none", transition: "transform .15s, filter .15s",
               whiteSpace: "nowrap"
@@ -160,11 +211,11 @@ export default function Header() {
           <button
             className="show-mobile"
             onClick={() => setMobileOpen(true)}
-            style={{ display: "none", flexDirection: "column", gap: 4.5, cursor: "pointer", padding: "8px", background: "rgba(255,255,255,.08)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10 }}
+            style={{ display: "none", flexDirection: "column", gap: 4.5, cursor: "pointer", padding: "8px", background: isDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)", border: `1px solid ${c.navBorder}`, borderRadius: 10 }}
           >
-            <span style={{ width: 20, height: 1.5, background: "#fff", borderRadius: 2, display: "block" }} />
-            <span style={{ width: 20, height: 1.5, background: "#fff", borderRadius: 2, display: "block" }} />
-            <span style={{ width: 20, height: 1.5, background: "#fff", borderRadius: 2, display: "block" }} />
+            <span style={{ width: 20, height: 1.5, background: c.textPrimary, borderRadius: 2, display: "block" }} />
+            <span style={{ width: 20, height: 1.5, background: c.textPrimary, borderRadius: 2, display: "block" }} />
+            <span style={{ width: 20, height: 1.5, background: c.textPrimary, borderRadius: 2, display: "block" }} />
           </button>
         </div>
       </div>

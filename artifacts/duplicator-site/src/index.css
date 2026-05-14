@@ -78,6 +78,18 @@
   --app-font-mono: 'Inter', ui-monospace, monospace;
 }
 
+/* ── LIGHT MODE VARIABLE OVERRIDES ─────────────────────────────────────── */
+html[data-theme="light"] {
+  --ink: #04091A;
+  --grey: rgba(4,9,26,0.58);
+  --light-grey: rgba(38,69,200,0.10);
+  --border-subtle: rgba(38,69,200,0.12);
+  --border-hover: rgba(38,69,200,0.38);
+  --surface-0: rgba(255,255,255,0.0);
+  --surface-1: rgba(255,255,255,0.70);
+  --surface-2: rgba(255,255,255,0.85);
+}
+
 /* ── GLOBAL BASE ───────────────────────────────────────────────────────── */
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -85,7 +97,6 @@
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-    /* Blurred White 70% + Blue 30% — cinematic dark background */
     background-color: #04091A;
     background-image:
       radial-gradient(ellipse 110% 80% at 8%  -10%, rgba(255, 255, 255, 0.11) 0%, transparent 58%),
@@ -97,11 +108,26 @@
     color: #FFFFFF;
     overflow-x: hidden;
     line-height: 1.6;
+    transition: background-color .4s ease, color .3s ease;
+  }
+
+  /* ── LIGHT MODE BODY BACKGROUND ─────────────────────────────────────── */
+  html[data-theme="light"] body {
+    background-color: #EFF6FF;
+    background-image:
+      radial-gradient(ellipse 120% 85% at 6%  -8%,  rgba(38,  69, 200, 0.32) 0%, transparent 55%),
+      radial-gradient(ellipse 75%  60% at 96%  10%,  rgba(0,  198, 255, 0.24) 0%, transparent 50%),
+      radial-gradient(ellipse 90%  70% at 50% -12%,  rgba(255,255,255,0.90) 0%, transparent 62%),
+      radial-gradient(ellipse 55%  80% at 2%   92%,  rgba(38,  69, 200, 0.16) 0%, transparent 55%),
+      radial-gradient(ellipse 80%  50% at 56% 110%,  rgba(0,  198, 255, 0.12) 0%, transparent 60%);
+    color: #04091A;
   }
 
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #04091A; }
   ::-webkit-scrollbar-thumb { background: rgba(38,69,200,0.6); border-radius: 3px; }
+  html[data-theme="light"] ::-webkit-scrollbar-track { background: #EFF6FF; }
+  html[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(38,69,200,0.45); }
 }
 
 /* ── TYPOGRAPHY: Inter primary + Instrument Serif accent ───────────────── */

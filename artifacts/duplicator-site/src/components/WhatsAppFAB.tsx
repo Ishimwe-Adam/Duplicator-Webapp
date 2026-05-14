@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "@/context/ThemeContext";
 
 const WaIcon = () => (
   <svg viewBox="0 0 24 24" fill="white" width="30" height="30">
@@ -8,6 +9,7 @@ const WaIcon = () => (
 
 export default function WhatsAppFAB() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { c, isDark } = useTheme();
 
   const messages = [
     { label: "I need a price list", text: "Hi!%20I%20need%20a%20price%20list." },
@@ -20,26 +22,30 @@ export default function WhatsAppFAB() {
     <div className="wa-fab" style={{ position: "fixed", bottom: 28, right: 28, zIndex: 900, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
       {/* Menu */}
       <div style={{
-        background: "#fff", borderRadius: 12, boxShadow: "0 20px 60px rgba(0,0,0,.2)",
+        background: isDark ? "rgba(13,20,50,0.97)" : "#fff",
+        backdropFilter: "blur(16px)",
+        border: `1px solid ${c.border}`,
+        borderRadius: 12,
+        boxShadow: isDark ? "0 20px 60px rgba(0,0,0,.5)" : "0 20px 60px rgba(0,0,0,.15)",
         padding: 16, minWidth: 240, opacity: menuOpen ? 1 : 0,
         pointerEvents: menuOpen ? "all" : "none",
         transform: menuOpen ? "translateY(0) scale(1)" : "translateY(10px) scale(.97)",
         transition: "all .25s"
       }}>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, color: "var(--ink)", marginBottom: 12, paddingBottom: 10, borderBottom: "1px solid var(--light-grey)" }}>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, color: c.textPrimary, marginBottom: 12, paddingBottom: 10, borderBottom: `1px solid ${c.border}` }}>
           Chat with Sales
         </div>
         {messages.map(m => (
           <a key={m.label} href={`https://wa.me/250788355226?text=${m.text}`} target="_blank" rel="noreferrer"
             style={{
-              display: "block", fontSize: 13, color: "var(--grey)", padding: "10px 12px", borderRadius: 6,
+              display: "block", fontSize: 13, color: c.textSecondary, padding: "10px 12px", borderRadius: 6,
               textDecoration: "none", transition: "background .15s", fontFamily: "'Inter', sans-serif"
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = "var(--off-white)"; e.currentTarget.style.color = "var(--blue)"; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--grey)"; }}
+            onMouseEnter={e => { e.currentTarget.style.background = isDark ? "rgba(38,69,200,.1)" : "rgba(38,69,200,.06)"; e.currentTarget.style.color = "#2645C8"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = c.textSecondary; }}
           >{m.label}</a>
         ))}
-        <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--light-grey)", fontFamily: "'Inter', sans-serif", fontSize: 10, color: "var(--grey)", textAlign: "center", letterSpacing: ".06em" }}>
+        <div style={{ marginTop: 12, paddingTop: 10, borderTop: `1px solid ${c.border}`, fontFamily: "'Inter', sans-serif", fontSize: 10, color: c.textFaint, textAlign: "center", letterSpacing: ".06em" }}>
           +250 788 355 226
         </div>
       </div>

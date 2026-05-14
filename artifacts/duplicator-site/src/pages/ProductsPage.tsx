@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import { useTheme } from "@/context/ThemeContext";
 
 const WaIcon = ({ size = 14 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" width={size} height={size}>
@@ -488,6 +489,7 @@ function getVisualEmoji(subcategory: string): string {
 function ProductCard({ product, catColor }: { product: Product; catColor: string }) {
   const [activeTab, setActiveTab] = useState<"overview" | "specs">("overview");
   const [hovered, setHovered] = useState(false);
+  const { c, isDark } = useTheme();
 
   const badgeBg = product.badge === "Premium" || product.badge === "Luxury"
     ? "#F5C518" : product.badge === "Healthcare"
@@ -502,13 +504,13 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: hovered ? "rgba(12,24,65,0.75)" : "rgba(8,16,50,0.55)",
+        background: hovered ? c.bgCardHover : c.bgCard,
         backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
         borderRadius: 16, overflow: "hidden",
-        border: `1px solid ${hovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.08)"}`,
+        border: `1px solid ${hovered ? c.borderHover : c.border}`,
         transition: "all .3s cubic-bezier(.4,0,.2,1)",
         transform: hovered ? "translateY(-6px)" : "none",
-        boxShadow: hovered ? `0 24px 56px rgba(0,0,0,.5), 0 0 0 1px ${catColor}40` : "0 4px 24px rgba(0,0,0,.25)",
+        boxShadow: hovered ? `0 24px 56px ${isDark ? "rgba(0,0,0,.5)" : "rgba(38,69,200,.15)"}, 0 0 0 1px ${catColor}40` : isDark ? "0 4px 24px rgba(0,0,0,.25)" : "0 2px 16px rgba(38,69,200,.08)",
         display: "flex", flexDirection: "column"
       }}
     >
@@ -566,7 +568,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         {/* Product name */}
         <h4 style={{
           fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20,
-          color: "#ffffff", marginBottom: 3, lineHeight: 1.2
+          color: c.textPrimary, marginBottom: 3, lineHeight: 1.2
         }}>{product.name}</h4>
         {/* Tagline */}
         <p style={{
@@ -582,9 +584,9 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
                 fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 12,
                 textTransform: "uppercase", letterSpacing: ".06em",
                 padding: "6px 18px", borderRadius: 50,
-                border: `1.5px solid ${activeTab === tab ? catColor : "rgba(255,255,255,.15)"}`,
-                background: activeTab === tab ? catColor : "rgba(255,255,255,.04)",
-                color: activeTab === tab ? "#fff" : "rgba(255,255,255,.5)",
+                border: `1.5px solid ${activeTab === tab ? catColor : c.border}`,
+                background: activeTab === tab ? catColor : isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.04)",
+                color: activeTab === tab ? "#fff" : c.textMuted,
                 cursor: "pointer", transition: "all .2s"
               }}
             >{tab === "overview" ? "Overview" : "Specs"}</button>
@@ -598,7 +600,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
         }}>
           {activeTab === "overview" ? (
             <p style={{
-              fontSize: 13, color: "rgba(255,255,255,.6)", lineHeight: 1.7,
+              fontSize: 13, color: c.textSecondary, lineHeight: 1.7,
               fontFamily: "'Inter', sans-serif"
             }}>{product.desc}</p>
           ) : (
@@ -612,7 +614,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
                   }} />
                   <span style={{
                     fontFamily: "'Inter', sans-serif",
-                    fontSize: 13, color: "rgba(255,255,255,.65)", lineHeight: 1.5
+                    fontSize: 13, color: c.textSecondary, lineHeight: 1.5
                   }}>{s}</span>
                 </li>
               ))}
@@ -647,6 +649,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
 function CategorySection({ category, products: catProducts, activeSubcat, onSubcat }: {
   category: Category; products: Product[]; activeSubcat: string | null; onSubcat: (s: string | null) => void;
 }) {
+  const { c, isDark } = useTheme();
   const displayed = activeSubcat
     ? catProducts.filter(p => p.subcategory === activeSubcat)
     : catProducts;
@@ -655,10 +658,10 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
     <div style={{ marginBottom: 96 }} id={`cat-${category.id}`}>
       {/* Category header */}
       <div className="cat-section-header" style={{
-        background: `linear-gradient(135deg, rgba(8,16,50,0.65), ${category.color}18)`,
+        background: isDark ? `linear-gradient(135deg, rgba(8,16,50,0.65), ${category.color}18)` : `linear-gradient(135deg, rgba(230,242,255,0.85), ${category.color}12)`,
         backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
         borderRadius: 16, border: `1px solid ${category.color}35`,
-        padding: "36px 40px", marginBottom: 32
+        padding: "36px 40px", marginBottom: 32, transition: "background .3s"
       }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 24, flexWrap: "wrap" }}>
           <div style={{
@@ -672,11 +675,11 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".14em", color: category.color, marginBottom: 6 }}>
               {catProducts.length} product{catProducts.length !== 1 ? "s" : ""}
             </div>
-            <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(22px,3vw,30px)", color: "#ffffff", marginBottom: 6, lineHeight: 1.15 }}>{category.label}</h2>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(22px,3vw,30px)", color: c.textPrimary, marginBottom: 6, lineHeight: 1.15 }}>{category.label}</h2>
             <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: category.color, marginBottom: 12, fontStyle: "italic" }}>{category.tagline}</p>
-            <p style={{ fontSize: 14, color: "rgba(255,255,255,.6)", lineHeight: 1.7, maxWidth: 620, marginBottom: 16 }}>{category.desc}</p>
+            <p style={{ fontSize: 14, color: c.textSecondary, lineHeight: 1.7, maxWidth: 620, marginBottom: 16 }}>{category.desc}</p>
             {category.capability && (
-              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "rgba(255,255,255,.45)", fontFamily: "'Inter', sans-serif" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: c.textMuted, fontFamily: "'Inter', sans-serif" }}>
                 <div style={{ width: 3, height: 3, borderRadius: "50%", background: category.color }} />
                 <span style={{ textTransform: "uppercase", letterSpacing: ".06em" }}><strong style={{ color: category.color }}>Capabilities:</strong> {category.capability}</span>
               </div>
@@ -689,9 +692,9 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
           <button onClick={() => onSubcat(null)}
             style={{
               fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
-              padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${!activeSubcat ? category.color : "rgba(255,255,255,.15)"}`,
-              background: !activeSubcat ? category.color : "rgba(255,255,255,.04)",
-              color: !activeSubcat ? "#fff" : "rgba(255,255,255,.5)", cursor: "pointer", transition: "all .2s"
+              padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${!activeSubcat ? category.color : c.border}`,
+              background: !activeSubcat ? category.color : isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.04)",
+              color: !activeSubcat ? "#fff" : c.textMuted, cursor: "pointer", transition: "all .2s"
             }}>All</button>
           {category.subcategories.map(sub => {
             const count = catProducts.filter(p => p.subcategory === sub).length;
@@ -701,9 +704,9 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
               <button key={sub} onClick={() => onSubcat(active ? null : sub)}
                 style={{
                   fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
-                  padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${active ? category.color : "rgba(255,255,255,.15)"}`,
-                  background: active ? category.color : "rgba(255,255,255,.04)",
-                  color: active ? "#fff" : "rgba(255,255,255,.5)", cursor: "pointer", transition: "all .2s"
+                  padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${active ? category.color : c.border}`,
+                  background: active ? category.color : isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.04)",
+                  color: active ? "#fff" : c.textMuted, cursor: "pointer", transition: "all .2s"
                 }}
               >{sub} ({count})</button>
             );
@@ -724,6 +727,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [subcatFilters, setSubcatFilters] = useState<Record<string, string | null>>({});
+  const { c, isDark } = useTheme();
 
   const setSubcat = (catId: string, sub: string | null) => {
     setSubcatFilters(prev => ({ ...prev, [catId]: sub }));
@@ -750,22 +754,22 @@ export default function ProductsPage() {
       <div style={{ background: "transparent", paddingTop: 120, paddingBottom: 96, position: "relative", overflow: "hidden" }}>
         <div style={{
           position: "absolute", inset: 0,
-          backgroundImage: "linear-gradient(rgba(38,69,200,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(38,69,200,.06) 1px, transparent 1px)",
+          backgroundImage: `linear-gradient(${isDark ? "rgba(38,69,200,.06)" : "rgba(38,69,200,.05)"} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? "rgba(38,69,200,.06)" : "rgba(38,69,200,.05)"} 1px, transparent 1px)`,
           backgroundSize: "60px 60px"
         }} />
-        <div style={{ position: "absolute", right: "-4%", top: 0, bottom: 0, width: "42%", background: "linear-gradient(135deg, #1B2B8A, #2645C8)", clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0% 100%)", opacity: .55 }} />
+        <div style={{ position: "absolute", right: "-4%", top: 0, bottom: 0, width: "42%", background: "linear-gradient(135deg, #1B2B8A, #2645C8)", clipPath: "polygon(18% 0, 100% 0, 100% 100%, 0% 100%)", opacity: isDark ? .55 : .7 }} />
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 2 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", padding: "6px 16px", borderRadius: 100, border: "1px solid rgba(0,198,255,.3)", background: "rgba(0,198,255,.08)", color: "#00C6FF", marginBottom: 24 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".12em", padding: "6px 16px", borderRadius: 100, border: "1px solid rgba(38,69,200,.4)", background: "rgba(38,69,200,.08)", color: "#2645C8", marginBottom: 24 }}>
             Products & Services — Duplicator Ltd
           </div>
-          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: "clamp(38px,6vw,72px)", color: "#fff", lineHeight: .96, marginBottom: 24 }}>
+          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", fontSize: "clamp(38px,6vw,72px)", color: c.textPrimary, lineHeight: .96, marginBottom: 24 }}>
             More Than a Printer.<br />
-            <span style={{ color: "#fff" }}>We Are </span><span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Manufacturers.</span>
+            <span style={{ color: c.textPrimary }}>We Are </span><span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Manufacturers.</span>
           </h1>
-          <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 580, marginBottom: 16, lineHeight: 1.75 }}>
+          <p style={{ fontSize: 18, color: c.textSecondary, maxWidth: 580, marginBottom: 16, lineHeight: 1.75 }}>
             For over 15 years, Duplicator Ltd has delivered end-to-end branding, print, and manufacturing solutions for Rwanda's leading organisations. From graphic design to final delivery — everything under one roof.
           </p>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,.4)", maxWidth: 520, marginBottom: 44, lineHeight: 1.65, fontFamily: "'Inter', sans-serif", letterSpacing: ".02em" }}>
+          <p style={{ fontSize: 14, color: c.textMuted, maxWidth: 520, marginBottom: 44, lineHeight: 1.65, fontFamily: "'Inter', sans-serif", letterSpacing: ".02em" }}>
             In-house capabilities: Graphic Design · Offset & Digital Print · Laser/CNC Cutting · Sewing Factory · Large Format · Distribution
           </p>
           <div className="hero-cta" style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
@@ -775,9 +779,9 @@ export default function ProductsPage() {
               onMouseLeave={e => (e.currentTarget.style.background = "#25D366")}
             ><WaIcon size={16} /> Request a Quotation</a>
             <a href="/duplicator-catalogue.pdf" download="Duplicator-Ltd-Catalogue.pdf"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: "#fff", border: "1.5px solid rgba(255,255,255,.35)", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.borderColor = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.35)"; }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "transparent", color: c.textPrimary, border: `1.5px solid ${c.borderHover}`, borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, textDecoration: "none", transition: "all .2s" }}
+              onMouseEnter={e => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)"; e.currentTarget.style.borderColor = isDark ? "#fff" : "#2645C8"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = c.borderHover; }}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" width="15" height="15"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Download Catalogue
@@ -787,7 +791,7 @@ export default function ProductsPage() {
       </div>
 
       {/* ── Trust / Differentiator Bar ────────────────────────────────── */}
-      <div style={{ background: "rgba(6,14,44,0.75)", backdropFilter: "blur(12px)", borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+      <div style={{ background: c.bgSection, backdropFilter: "blur(12px)", borderTop: `1px solid ${c.border}`, borderBottom: `1px solid ${c.border}`, transition: "background .3s" }}>
         <div className="stats-bar" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", flexWrap: "wrap" }}>
           {[
             { icon: "✦", stat: "15+", label: "Years of Experience" },
@@ -796,16 +800,16 @@ export default function ProductsPage() {
             { icon: "✦", stat: "End-to-End", label: "Design to Delivery" },
             { icon: "✦", stat: "500+", label: "Active Client Organisations" },
           ].map((item, i) => (
-            <div key={i} style={{ flex: "1 1 180px", padding: "22px 20px", borderRight: i < 4 ? "1px solid rgba(255,255,255,.05)" : "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#fff" }}>{item.stat}</div>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.4)", textAlign: "center" }}>{item.label}</div>
+            <div key={i} style={{ flex: "1 1 180px", padding: "22px 20px", borderRight: i < 4 ? `1px solid ${c.border}` : "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: c.textPrimary }}>{item.stat}</div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: c.textFaint, textAlign: "center" }}>{item.label}</div>
             </div>
           ))}
         </div>
       </div>
 
       {/* ── Category Nav Bar ─────────────────────────────────────────────── */}
-      <div style={{ background: "rgba(4,9,26,0.85)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: "1px solid rgba(255,255,255,0.08)", position: "sticky", top: 70, zIndex: 100 }}>
+      <div style={{ background: c.navBg, backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderBottom: `1px solid ${c.border}`, position: "sticky", top: 70, zIndex: 100, transition: "background .3s" }}>
         <div className="cat-nav" style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", display: "flex", overflowX: "auto", gap: 0 }}>
           {categories.map(cat => {
             const count = products.filter(p => p.category === cat.id).length;
@@ -816,18 +820,18 @@ export default function ProductsPage() {
                   display: "flex", alignItems: "center", gap: 8, padding: "16px 22px",
                   background: "transparent", border: "none",
                   borderBottom: active ? `3px solid ${cat.color}` : "3px solid transparent",
-                  color: active ? cat.color : "rgba(255,255,255,.6)",
+                  color: active ? cat.color : c.navText,
                   fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
                   cursor: "pointer", transition: "all .2s", whiteSpace: "nowrap", flexShrink: 0
                 }}
                 onMouseEnter={e => { if (!active) e.currentTarget.style.color = cat.color; }}
-                onMouseLeave={e => { if (!active) e.currentTarget.style.color = "rgba(255,255,255,.6)"; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.color = c.navText; }}
               >
                 {cat.label}
                 <span style={{
                   fontFamily: "'Inter', sans-serif", fontSize: 10,
-                  background: active ? cat.color : "rgba(255,255,255,.1)",
-                  color: active ? "#fff" : "rgba(255,255,255,.5)",
+                  background: active ? cat.color : isDark ? "rgba(255,255,255,.1)" : "rgba(38,69,200,.1)",
+                  color: active ? "#fff" : c.textMuted,
                   padding: "2px 8px", borderRadius: 100, transition: "all .2s"
                 }}>{count}</span>
               </button>
@@ -851,15 +855,15 @@ export default function ProductsPage() {
               placeholder="Search products, finishes, or item types..."
               style={{
                 width: "100%", padding: "13px 16px 13px 42px",
-                background: "rgba(10,20,55,0.6)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10,
-                fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#fff", outline: "none",
+                background: c.inputBg, backdropFilter: "blur(12px)", border: `1px solid ${c.inputBorder}`, borderRadius: 10,
+                fontFamily: "'Inter', sans-serif", fontSize: 14, color: c.textPrimary, outline: "none",
                 transition: "border .2s", boxSizing: "border-box"
               }}
               onFocus={e => (e.target.style.borderColor = "#2645C8")}
-              onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")}
+              onBlur={e => (e.target.style.borderColor = c.inputBorder)}
             />
           </div>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: ".1em" }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.textMuted, textTransform: "uppercase", letterSpacing: ".1em" }}>
             {filteredBySearch ? `${filteredBySearch.length} results` : `${products.length} products`}
           </div>
           {(activeCategory || searchQuery) && (
@@ -873,13 +877,13 @@ export default function ProductsPage() {
         {/* Search results */}
         {filteredBySearch ? (
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: "#fff", marginBottom: 28 }}>
-              Search results for "<span style={{ color: "#00C6FF" }}>{searchQuery}</span>"
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: c.textPrimary, marginBottom: 28 }}>
+              Search results for "<span style={{ color: "#2645C8" }}>{searchQuery}</span>"
             </div>
             {filteredBySearch.length === 0 ? (
               <div style={{ textAlign: "center", padding: "80px 24px" }}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, color: "#fff", marginBottom: 10 }}>No products found</div>
-                <p style={{ color: "rgba(255,255,255,.5)", fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Try different keywords or browse categories above. If you need something specific, ask us directly on WhatsApp.</p>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 22, color: c.textPrimary, marginBottom: 10 }}>No products found</div>
+                <p style={{ color: c.textSecondary, fontSize: 15, marginBottom: 28, maxWidth: 400, margin: "0 auto 28px" }}>Try different keywords or browse categories above. If you need something specific, ask us directly on WhatsApp.</p>
                 <a href="https://wa.me/250788355226?text=Hi!%20I%27m%20looking%20for%20a%20specific%20product%20and%20couldn%27t%20find%20it." target="_blank" rel="noreferrer"
                   style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, textDecoration: "none" }}>
                   <WaIcon size={16} /> Ask on WhatsApp

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import { useTheme } from "@/context/ThemeContext";
 
 const WaIcon = ({ size = 16 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" width={size} height={size}>
@@ -73,19 +74,25 @@ function RevealDiv({ children, delay = 0, style = {} }: { children: React.ReactN
   );
 }
 
-// Service card — inverted = starts dark, hovers to white
 function ServiceCard({ num, title, desc, items, icon, inverted = false }: {
   num: string; title: string; desc: string; items: string[]; icon: React.ReactNode; inverted?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
-  const isDark = inverted ? !hovered : hovered;
+  const { c: tc, isDark: globalDark } = useTheme();
+  const isActive = inverted ? !hovered : hovered;
+
+  const bgNormal  = globalDark ? "rgba(8,16,50,0.55)"    : "rgba(255,255,255,0.70)";
+  const bgActive  = globalDark ? "rgba(22,48,140,0.75)"  : "rgba(235,244,255,0.95)";
+  const numColor  = globalDark ? "rgba(255,255,255,.2)"  : "rgba(4,9,26,.2)";
+  const iconBg    = isActive ? "var(--electric)" : (globalDark ? "rgba(255,255,255,.06)" : "rgba(38,69,200,.08)");
+  const iconColor = isActive ? "#fff" : "#2645C8";
 
   return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        background: isDark ? "rgba(22,48,140,0.75)" : "rgba(8,16,50,0.55)",
+        background: isActive ? bgActive : bgNormal,
         padding: "40px 36px",
         position: "relative",
         overflow: "hidden",
@@ -96,27 +103,27 @@ function ServiceCard({ num, title, desc, items, icon, inverted = false }: {
       <div style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: 3,
         background: "linear-gradient(90deg, var(--blue), var(--electric))",
-        transform: isDark ? "scaleX(1)" : "scaleX(0)",
+        transform: isActive ? "scaleX(1)" : "scaleX(0)",
         transition: "transform .3s",
         transformOrigin: "left"
       }} />
-      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: isDark ? "rgba(255,255,255,.25)" : "rgba(255,255,255,.2)", letterSpacing: ".1em", marginBottom: 8, transition: "color .3s" }}>{num}</div>
+      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: numColor, letterSpacing: ".1em", marginBottom: 8, transition: "color .3s" }}>{num}</div>
       <div style={{
-        width: 52, height: 52, background: isDark ? "var(--electric)" : "rgba(255,255,255,.06)",
+        width: 52, height: 52, background: iconBg,
         borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
         marginBottom: 24, transition: "background .3s, color .3s",
-        color: isDark ? "#fff" : "#00C6FF"
+        color: iconColor
       }}>
         {icon}
       </div>
-      <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: isDark ? "#fff" : "var(--ink)", marginBottom: 12, transition: "color .3s" }}>{title}</h3>
-      <p style={{ fontSize: 14, color: isDark ? "rgba(255,255,255,.6)" : "var(--grey)", lineHeight: 1.65, marginBottom: 20, transition: "color .3s" }}>{desc}</p>
+      <h3 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: tc.textPrimary, marginBottom: 12, transition: "color .3s" }}>{title}</h3>
+      <p style={{ fontSize: 14, color: tc.textSecondary, lineHeight: 1.65, marginBottom: 20, transition: "color .3s" }}>{desc}</p>
       <ul style={{ listStyle: "none", display: "flex", flexWrap: "wrap", gap: 6 }}>
         {items.map(item => (
           <li key={item} style={{
             fontFamily: "'Inter', sans-serif", fontSize: 10, padding: "4px 10px",
-            background: isDark ? "rgba(255,255,255,.08)" : "var(--light-grey)",
-            borderRadius: 3, color: isDark ? "rgba(255,255,255,.5)" : "var(--grey)",
+            background: globalDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)",
+            borderRadius: 3, color: tc.textMuted,
             textTransform: "uppercase", letterSpacing: ".06em", transition: "color .3s, background .3s"
           }}>{item}</li>
         ))}
@@ -205,6 +212,7 @@ const catLabels: Record<string, string> = { all: "All Products", printing: "Prin
 
 export default function HomePage() {
   const [activeCat, setActiveCat] = useState("all");
+  const { c, isDark } = useTheme();
 
   const filtered = activeCat === "all" ? products : products.filter(p => p.cat === activeCat);
 
@@ -219,18 +227,19 @@ export default function HomePage() {
         <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
           <div style={{
             position: "absolute", right: "-5%", top: 0, bottom: 0, width: "55%",
-            background: "linear-gradient(135deg, var(--navy) 0%, var(--blue) 40%, var(--light-blue) 100%)",
-            clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0% 100%)", opacity: .9
+            background: c.heroOverlayRight,
+            clipPath: "polygon(20% 0, 100% 0, 100% 100%, 0% 100%)", opacity: .9,
+            transition: "background .4s ease"
           }} />
           <div style={{
             position: "absolute", inset: 0,
-            backgroundImage: "linear-gradient(rgba(38,69,200,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(38,69,200,.08) 1px, transparent 1px)",
+            backgroundImage: `linear-gradient(${isDark ? "rgba(38,69,200,.08)" : "rgba(38,69,200,.06)"} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? "rgba(38,69,200,.08)" : "rgba(38,69,200,.06)"} 1px, transparent 1px)`,
             backgroundSize: "60px 60px"
           }} />
           <div style={{
             position: "absolute", right: "8%", top: "50%", transform: "translateY(-50%)",
             fontFamily: "'Inter', sans-serif", fontSize: "clamp(300px,35vw,520px)", lineHeight: 1,
-            color: "rgba(255,255,255,.04)", pointerEvents: "none", userSelect: "none"
+            color: isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.06)", pointerEvents: "none", userSelect: "none"
           }}>D</div>
         </div>
 
@@ -243,28 +252,28 @@ export default function HomePage() {
             opacity: 0, animation: "wordReveal .8s .1s forwards"
           }}>🇷🇼 Kigali · Rwanda · Est. 2008+</div>
 
-          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: "#fff", marginBottom: 32 }}>
+          <h1 style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", lineHeight: .95, fontSize: "clamp(64px,9vw,118px)", color: c.textPrimary, marginBottom: 32, transition: "color .3s" }}>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .1s forwards" }}>Switch Your</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .25s forwards" }}>Brand</span>
             <span style={{ display: "block", opacity: 0, transform: "translateY(20px)", animation: "wordReveal .6s .4s forwards" }}>
-              <span style={{ color: "#fff" }}>O</span><span className="serif-accent" style={{ color: "#fff", fontSize: "1.08em" }}>N.</span>
+              <span style={{ color: c.textPrimary }}>O</span><span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.08em" }}>N.</span>
             </span>
           </h1>
 
-          <p style={{ fontSize: 18, color: "rgba(255,255,255,.65)", maxWidth: 480, marginBottom: 40, lineHeight: 1.7, opacity: 0, animation: "wordReveal .8s .55s forwards" }}>
+          <p style={{ fontSize: 18, color: c.textSecondary, maxWidth: 480, marginBottom: 40, lineHeight: 1.7, opacity: 0, animation: "wordReveal .8s .55s forwards" }}>
             Premium printing, branding and sewing solutions for businesses that demand to be noticed. Serving Rwanda and East Africa.
           </p>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 64, opacity: 0, animation: "wordReveal .8s .7s forwards" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 16, marginBottom: 64, opacity: 0, animation: "wordReveal .8s .7s forwards" }} className="hero-cta">
             <a href="#quote" onClick={e => { e.preventDefault(); document.getElementById("quote")?.scrollIntoView({ behavior: "smooth" }); }}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
-                borderRadius: 4, background: "#fff", color: "#04091A",
+                borderRadius: 4, background: c.ctaBg, color: c.ctaText,
                 fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.85)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.transform = ""; }}
+              onMouseEnter={e => { e.currentTarget.style.filter = "brightness(0.92)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+              onMouseLeave={e => { e.currentTarget.style.filter = ""; e.currentTarget.style.transform = ""; }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
               Get a Free Quote
@@ -284,24 +293,24 @@ export default function HomePage() {
             <a href="#services" onClick={e => { e.preventDefault(); document.getElementById("services")?.scrollIntoView({ behavior: "smooth" }); }}
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
-                borderRadius: 4, background: "transparent", color: "#fff",
-                border: "1.5px solid rgba(255,255,255,.4)",
+                borderRadius: 4, background: "transparent", color: c.textPrimary,
+                border: `1.5px solid ${c.borderHover}`,
                 fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.1)"; e.currentTarget.style.borderColor = "#fff"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.4)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,.1)" : "rgba(38,69,200,.08)"; e.currentTarget.style.borderColor = isDark ? "#fff" : "#2645C8"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = c.borderHover; }}
             >Explore Services →</a>
             <a href="/duplicator-catalogue.pdf" download="Duplicator-Ltd-Official-Catalogue.pdf"
               style={{
                 display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 28px",
-                borderRadius: 4, background: "rgba(255,255,255,.08)", color: "rgba(255,255,255,.85)",
-                border: "1.5px solid rgba(255,255,255,.2)",
+                borderRadius: 4, background: isDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)", color: c.textSecondary,
+                border: `1.5px solid ${c.border}`,
                 fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, letterSpacing: ".05em",
                 textDecoration: "none", transition: "all .25s"
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,.15)"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,.4)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,.08)"; e.currentTarget.style.color = "rgba(255,255,255,.85)"; e.currentTarget.style.borderColor = "rgba(255,255,255,.2)"; }}
+              onMouseEnter={e => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,.15)" : "rgba(38,69,200,.14)"; e.currentTarget.style.color = c.textPrimary; e.currentTarget.style.borderColor = c.borderHover; }}
+              onMouseLeave={e => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)"; e.currentTarget.style.color = c.textSecondary; e.currentTarget.style.borderColor = c.border; }}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
@@ -312,13 +321,13 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 40, borderTop: "1px solid rgba(255,255,255,.08)", paddingTop: 40 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 40, borderTop: `1px solid ${c.border}`, paddingTop: 40, transition: "border-color .3s" }}>
             {[{ target: 15, suffix: "+", label: "Years in Business" }, { target: 500, suffix: "+", label: "Happy Clients" }, { target: 5000, suffix: "+", label: "Orders Completed" }, { target: 12, suffix: "", label: "Product Categories" }].map(s => (
               <div key={s.label}>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px,4vw,40px)", fontWeight: 400, color: "#fff", lineHeight: 1 }}>
-                  <Counter target={s.target} /><span style={{ color: "#fff" }}>{s.suffix}</span>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(28px,4vw,40px)", fontWeight: 400, color: c.textPrimary, lineHeight: 1, transition: "color .3s" }}>
+                  <Counter target={s.target} /><span style={{ color: c.textPrimary }}>{s.suffix}</span>
                 </div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,.4)", letterSpacing: ".1em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.textFaint, letterSpacing: ".1em", textTransform: "uppercase", marginTop: 4 }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -332,10 +341,12 @@ export default function HomePage() {
             { icon: "⚡", text: "Fast Turnaround Guaranteed", color: "#00C6FF" },
           ].map((b, i) => (
             <div key={b.text} style={{
-              background: "rgba(255,255,255,.08)", backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,.12)", borderRadius: 12, padding: "14px 18px",
-              color: "#fff", display: "flex", alignItems: "center", gap: 10, fontSize: 13, whiteSpace: "nowrap",
-              animation: `floatBadge 3s ease-in-out ${i * 1}s infinite`
+              background: isDark ? "rgba(255,255,255,.08)" : "rgba(255,255,255,0.82)",
+              backdropFilter: "blur(12px)",
+              border: `1px solid ${c.border}`, borderRadius: 12, padding: "14px 18px",
+              color: c.textPrimary, display: "flex", alignItems: "center", gap: 10, fontSize: 13, whiteSpace: "nowrap",
+              animation: `floatBadge 3s ease-in-out ${i * 1}s infinite`,
+              transition: "background .3s, border-color .3s"
             }}>
               <span>{b.icon}</span> {b.text}
             </div>
@@ -369,8 +380,8 @@ export default function HomePage() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> What We Do
               </div>
-              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                We Don't Just Print.<br />We Build <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Brands.</span>
+              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: c.textPrimary }}>
+                We Don't Just Print.<br />We Build <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Brands.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -379,7 +390,7 @@ export default function HomePage() {
           </div>
 
           <RevealDiv delay={0.1} style={{ marginTop: 64 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 1, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden", backdropFilter: "blur(8px)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 1, border: `1px solid ${c.border}`, borderRadius: 16, overflow: "hidden", backdropFilter: "blur(8px)", transition: "border-color .3s" }}>
               {services.map(s => (
                 <ServiceCard key={s.title} {...s} />
               ))}
@@ -389,17 +400,17 @@ export default function HomePage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how" style={{ background: "rgba(6,14,44,0.75)", color: "#fff", padding: "100px 0", position: "relative", overflow: "hidden", backdropFilter: "blur(8px)" }}>
-        <div style={{ position: "absolute", left: -80, top: "50%", transform: "translateY(-50%)", fontFamily: "'Inter', sans-serif", fontSize: 600, lineHeight: 1, color: "rgba(255,255,255,.02)", pointerEvents: "none", userSelect: "none" }}>D</div>
+      <section id="how" style={{ background: c.bgSection, color: c.textPrimary, padding: "100px 0", position: "relative", overflow: "hidden", backdropFilter: "blur(8px)", transition: "background .3s" }}>
+        <div style={{ position: "absolute", left: -80, top: "50%", transform: "translateY(-50%)", fontFamily: "'Inter', sans-serif", fontSize: 600, lineHeight: 1, color: isDark ? "rgba(255,255,255,.02)" : "rgba(38,69,200,.03)", pointerEvents: "none", userSelect: "none" }}>D</div>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
           <RevealDiv style={{ textAlign: "center", marginBottom: 0 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
-              <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> How It Works <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} />
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#2645C8", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+              <span style={{ width: 32, height: 2, background: "#2645C8", display: "inline-block" }} /> How It Works <span style={{ width: 32, height: 2, background: "#2645C8", display: "inline-block" }} />
             </div>
-            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: "#fff", textAlign: "center" }}>
-              From Idea to <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Delivered.</span>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: c.textPrimary, textAlign: "center" }}>
+              From Idea to <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Delivered.</span>
             </h2>
-            <p style={{ color: "rgba(255,255,255,.5)", maxWidth: 480, margin: "16px auto 0", fontSize: 16 }}>Four simple steps from your first message to finished product in your hands.</p>
+            <p style={{ color: c.textSecondary, maxWidth: 480, margin: "16px auto 0", fontSize: 16 }}>Four simple steps from your first message to finished product in your hands.</p>
           </RevealDiv>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 0, marginTop: 64, position: "relative" }}>
@@ -411,11 +422,11 @@ export default function HomePage() {
               { num: "04", title: "Receive & Brand On", desc: "Collection from Karuruma or delivery arranged. Your brand is switched ON and ready to go." },
             ].map((step, i) => (
               <RevealDiv key={step.num} delay={i * 0.1} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "0 24px", position: "relative", zIndex: 1 }}>
-                <div style={{ width: 72, height: 72, borderRadius: "50%", border: "2px solid var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, background: "var(--ink)", position: "relative" }}>
-                  <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 22, color: "#fff" }}>{step.num}</span>
+                <div style={{ width: 72, height: 72, borderRadius: "50%", border: "2px solid #2645C8", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24, background: isDark ? "rgba(6,14,44,0.9)" : "rgba(255,255,255,0.9)", position: "relative", transition: "background .3s" }}>
+                  <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 22, color: "#2645C8" }}>{step.num}</span>
                 </div>
-                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 16, color: "#fff", marginBottom: 10 }}>{step.title}</h4>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,.45)", lineHeight: 1.65 }}>{step.desc}</p>
+                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 16, color: c.textPrimary, marginBottom: 10 }}>{step.title}</h4>
+                <p style={{ fontSize: 13, color: c.textSecondary, lineHeight: 1.65 }}>{step.desc}</p>
               </RevealDiv>
             ))}
           </div>
@@ -462,8 +473,8 @@ export default function HomePage() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Product Catalogue
               </div>
-              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)" }}>
-                Everything Your<br />Brand <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Needs.</span>
+              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: c.textPrimary }}>
+                Everything Your<br />Brand <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Needs.</span>
               </h2>
             </RevealDiv>
             <RevealDiv delay={0.2}>
@@ -554,8 +565,8 @@ export default function HomePage() {
             <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
               <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Industries We Serve
             </div>
-            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", textAlign: "center" }}>
-              Trusted Across <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Every Sector.</span>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: c.textPrimary, textAlign: "center" }}>
+              Trusted Across <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Every Sector.</span>
             </h2>
             <p style={{ fontSize: 17, color: "var(--grey)", maxWidth: 520, margin: "16px auto 0", textAlign: "center" }}>From government to startups — if you have a brand, we make it visible.</p>
           </RevealDiv>
@@ -568,25 +579,25 @@ export default function HomePage() {
       </section>
 
       {/* GET QUOTE */}
-      <section id="quote" style={{ background: "rgba(12,24,72,0.8)", backdropFilter: "blur(12px)", borderTop: "1px solid rgba(255,255,255,0.07)", padding: "100px 0", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,198,255,.12) 0%, transparent 70%)" }} />
+      <section id="quote" style={{ background: c.bgSectionDeep, backdropFilter: "blur(12px)", borderTop: `1px solid ${c.border}`, padding: "100px 0", position: "relative", overflow: "hidden", transition: "background .3s" }}>
+        <div style={{ position: "absolute", top: -100, right: -100, width: 500, height: 500, borderRadius: "50%", background: "radial-gradient(circle, rgba(0,198,255,.1) 0%, transparent 70%)" }} />
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }} className="gq-grid">
             <RevealDiv>
-              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-                <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Get a Quote
+              <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#2645C8", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+                <span style={{ width: 32, height: 2, background: "#2645C8", display: "inline-block" }} /> Get a Quote
               </div>
-              <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(36px,5vw,56px)", color: "#fff", lineHeight: 1.1, marginBottom: 20 }}>
+              <h2 style={{ fontFamily: "'Inter', sans-serif", fontSize: "clamp(36px,5vw,56px)", color: c.textPrimary, lineHeight: 1.1, marginBottom: 20 }}>
                 Let's Talk About Your Project
               </h2>
-              <p style={{ fontSize: 16, color: "rgba(255,255,255,.55)", lineHeight: 1.7, marginBottom: 36 }}>
+              <p style={{ fontSize: 16, color: c.textSecondary, lineHeight: 1.7, marginBottom: 36 }}>
                 Tell us what you need and we'll send a clear, itemised quote within hours. WhatsApp or form — your choice.
               </p>
               <div style={{ background: "rgba(37,211,102,.08)", border: "1px solid rgba(37,211,102,.2)", borderRadius: 10, padding: 28, marginBottom: 24 }}>
-                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#fff", marginBottom: 8, display: "flex", alignItems: "center", gap: 10 }}>
+                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: c.textPrimary, marginBottom: 8, display: "flex", alignItems: "center", gap: 10 }}>
                   <WaIcon size={20} /> Fastest: WhatsApp Us
                 </h4>
-                <p style={{ fontSize: 14, color: "rgba(255,255,255,.55)", marginBottom: 20 }}>
+                <p style={{ fontSize: 14, color: c.textSecondary, marginBottom: 20 }}>
                   Send your brief directly and get a quote in minutes.
                 </p>
                 <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%20need%20a%20quote." target="_blank" rel="noreferrer"
@@ -601,8 +612,8 @@ export default function HomePage() {
               </div>
               <ul style={{ listStyle: "none", marginBottom: 24 }}>
                 {["Describe the product, quantity and deadline", "Share your logo or artwork file", "Specify size, material or special finishes", "We'll follow up same day"].map(tip => (
-                  <li key={tip} style={{ fontSize: 13, color: "rgba(255,255,255,.65)", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,.06)", display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ color: "#00C6FF", fontWeight: 400 }}>→</span> {tip}
+                  <li key={tip} style={{ fontSize: 13, color: c.textSecondary, padding: "8px 0", borderBottom: `1px solid ${c.border}`, display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ color: "#2645C8", fontWeight: 400 }}>→</span> {tip}
                   </li>
                 ))}
               </ul>
@@ -617,28 +628,28 @@ export default function HomePage() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section style={{ background: "rgba(6,14,44,0.65)", backdropFilter: "blur(8px)", padding: "100px 0" }}>
+      <section style={{ background: c.bgSectionAlt, backdropFilter: "blur(8px)", padding: "100px 0", transition: "background .3s" }}>
         <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
           <RevealDiv style={{ textAlign: "center", marginBottom: 0 }}>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#00C6FF", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
-              <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Client Stories
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "#2645C8", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 16 }}>
+              <span style={{ width: 32, height: 2, background: "#2645C8", display: "inline-block" }} /> Client Stories
             </div>
-            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: "#fff" }}>
-              What Clients <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Say.</span>
+            <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", color: c.textPrimary }}>
+              What Clients <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Say.</span>
             </h2>
           </RevealDiv>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 24, marginTop: 56 }}>
             {testimonials.map((t, i) => (
               <RevealDiv key={t.name} delay={i * 0.1}>
-                <div style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)", borderRadius: 12, padding: 32, position: "relative", overflow: "hidden" }}>
-                  <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'Inter', sans-serif", fontSize: 80, color: "rgba(38,69,200,.2)", lineHeight: 1 }}>"</div>
+                <div style={{ background: c.bgCard, border: `1px solid ${c.border}`, borderRadius: 12, padding: 32, position: "relative", overflow: "hidden", backdropFilter: "blur(8px)", transition: "background .3s" }}>
+                  <div style={{ position: "absolute", top: 16, right: 20, fontFamily: "'Inter', sans-serif", fontSize: 80, color: "rgba(38,69,200,.15)", lineHeight: 1 }}>"</div>
                   <div style={{ color: "#F5C518", fontSize: 12, marginBottom: 16, letterSpacing: 2 }}>★★★★★</div>
-                  <p style={{ fontSize: 15, color: "rgba(255,255,255,.7)", lineHeight: 1.75, marginBottom: 24, position: "relative", zIndex: 1 }}>{t.text}</p>
+                  <p style={{ fontSize: 15, color: c.textSecondary, lineHeight: 1.75, marginBottom: 24, position: "relative", zIndex: 1 }}>{t.text}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--blue)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "#fff" }}>{t.initials}</div>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#2645C8", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "#fff" }}>{t.initials}</div>
                     <div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "#fff" }}>{t.name}</div>
-                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,.35)", letterSpacing: ".06em" }}>{t.role}</div>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: c.textPrimary }}>{t.name}</div>
+                      <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: c.textFaint, letterSpacing: ".06em" }}>{t.role}</div>
                     </div>
                   </div>
                 </div>
@@ -656,8 +667,8 @@ export default function HomePage() {
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".14em", color: "var(--blue)", display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
                 <span style={{ width: 32, height: 2, background: "#00C6FF", display: "inline-block" }} /> Find Us
               </div>
-              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: "var(--ink)", marginBottom: 16 }}>
-                Visit or <span className="serif-accent" style={{ color: "#fff", fontSize: "1.05em" }}>Get in Touch.</span>
+              <h2 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "clamp(36px,5vw,58px)", lineHeight: 1.05, color: c.textPrimary, marginBottom: 16 }}>
+                Visit or <span className="serif-accent" style={{ color: c.textPrimary, fontSize: "1.05em" }}>Get in Touch.</span>
               </h2>
               <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 36 }}>
                 {[
@@ -666,34 +677,34 @@ export default function HomePage() {
                   { icon: "📞", label: "Secondary Line", value: "+250 785 177 044", href: "tel:+250785177044", green: false },
                   { icon: "✉️", label: "Email", value: "duplicator10@gmail.com", href: "mailto:duplicator10@gmail.com", green: false },
                   { icon: "📍", label: "Location", value: "Karuruma, Kigali–Rwanda", href: null, green: false },
-                ].map(c => (
-                  <ContactCard key={c.label} {...c} />
+                ].map(item => (
+                  <ContactCard key={item.label} {...item} />
                 ))}
               </div>
-              <div style={{ background: "var(--navy)", borderRadius: 12, padding: 28, marginTop: 24, color: "#fff" }}>
-                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 16, marginBottom: 16, color: "#fff" }}>Business Hours</h4>
+              <div style={{ background: c.hoursCardBg, backdropFilter: "blur(12px)", border: `1px solid ${c.border}`, borderRadius: 12, padding: 28, marginTop: 24, transition: "background .3s" }}>
+                <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 16, marginBottom: 16, color: c.textPrimary }}>Business Hours</h4>
                 {[
                   { day: "MON – FRI", time: "8:00 AM – 6:00 PM" },
                   { day: "SATURDAY", time: "9:00 AM – 2:00 PM" },
                   { day: "SUNDAY", time: "Closed" },
                 ].map(h => (
-                  <div key={h.day} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,.06)", fontSize: 13 }}>
-                    <span style={{ color: "rgba(255,255,255,.5)", fontFamily: "'Inter', sans-serif", fontSize: 11 }}>{h.day}</span>
-                    <span style={{ color: h.time === "Closed" ? "rgba(255,255,255,.4)" : "rgba(255,255,255,.85)", fontWeight: 500 }}>{h.time}</span>
+                  <div key={h.day} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${c.border}`, fontSize: 13 }}>
+                    <span style={{ color: c.textMuted, fontFamily: "'Inter', sans-serif", fontSize: 11 }}>{h.day}</span>
+                    <span style={{ color: h.time === "Closed" ? c.textFaint : c.textPrimary, fontWeight: 500 }}>{h.time}</span>
                   </div>
                 ))}
               </div>
             </RevealDiv>
             <RevealDiv delay={0.2}>
-              <div style={{ background: "rgba(10,20,55,0.5)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, overflow: "hidden" }}>
-                <div style={{ height: 320, background: "linear-gradient(135deg, rgba(12,24,72,0.95), rgba(38,69,200,0.5))", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
-                  <div style={{ fontSize: 48, opacity: .5 }}>📍</div>
+              <div style={{ background: c.bgCard, backdropFilter: "blur(12px)", border: `1px solid ${c.border}`, borderRadius: 16, overflow: "hidden", transition: "background .3s" }}>
+                <div style={{ height: 320, background: isDark ? "linear-gradient(135deg, rgba(12,24,72,0.95), rgba(38,69,200,0.5))" : "linear-gradient(135deg, rgba(199,222,255,0.95), rgba(38,69,200,0.7))", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12 }}>
+                  <div style={{ fontSize: 48, opacity: .6 }}>📍</div>
                   <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 18, color: "#fff" }}>Karuruma, Kigali</p>
-                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textAlign: "center", color: "rgba(255,255,255,.55)", letterSpacing: ".06em", lineHeight: 1.8 }}>4344+JVF, Karuruma<br />Kigali, Rwanda · P.O. Box 6332</p>
+                  <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, textAlign: "center", color: "rgba(255,255,255,.75)", letterSpacing: ".06em", lineHeight: 1.8 }}>4344+JVF, Karuruma<br />Kigali, Rwanda · P.O. Box 6332</p>
                 </div>
-                <div style={{ padding: 20, display: "flex", gap: 12 }}>
+                <div style={{ padding: 20, display: "flex", gap: 12, background: c.bgCard }}>
                   <a href="https://maps.google.com/?q=Karuruma,Kigali,Rwanda" target="_blank" rel="noreferrer"
-                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: "rgba(255,255,255,0.12)", color: "#fff", textDecoration: "none", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, border: "1px solid rgba(255,255,255,0.2)" }}>
+                    style={{ flex: 1, padding: 12, textAlign: "center", borderRadius: 6, background: isDark ? "rgba(255,255,255,0.08)" : "rgba(38,69,200,0.08)", color: c.textPrimary, textDecoration: "none", fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13, border: `1px solid ${c.border}` }}>
                     📍 Get Directions
                   </a>
                   <a href="https://wa.me/250788355226?text=Hi!%20I%27d%20like%20to%20visit." target="_blank" rel="noreferrer"
@@ -702,8 +713,8 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
-              <div style={{ marginTop: 24, background: "rgba(10,20,55,0.5)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 16, padding: 24 }}>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.4)", marginBottom: 16 }}>Follow Us</p>
+              <div style={{ marginTop: 24, background: c.bgCard, backdropFilter: "blur(12px)", border: `1px solid ${c.border}`, borderRadius: 16, padding: 24, transition: "background .3s" }}>
+                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: c.textFaint, marginBottom: 16 }}>Follow Us</p>
                 <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                   {[
                     { label: "📸 Instagram", href: "https://instagram.com/duplicatorltd" },
@@ -725,7 +736,7 @@ export default function HomePage() {
       </section>
 
       {/* Mobile bottom nav */}
-      <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "rgba(13,17,23,.97)", backdropFilter: "blur(16px)", borderTop: "1px solid rgba(255,255,255,.07)", zIndex: 800, display: "none" }} className="mobile-bottom">
+      <nav style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: c.mobileNavBg, backdropFilter: "blur(16px)", borderTop: `1px solid ${c.border}`, zIndex: 800, display: "none", transition: "background .3s" }} className="mobile-bottom">
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-around", paddingBottom: 8 }}>
 
           {/* HOME — house with peaked roof + door */}
@@ -790,19 +801,20 @@ export default function HomePage() {
 
 function ProductCard({ emoji, title, desc, sku, msg, cat }: { emoji: string; title: string; desc: string; sku: string; msg: string; cat: string; }) {
   const [hovered, setHovered] = useState(false);
+  const { c: tc, isDark: gd } = useTheme();
   const catLabel = { printing: "Printing", signage: "Signage", branding: "Branding", sewing: "Sewing", gifts: "Corporate Gifts" }[cat] || cat;
   return (
     <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-      style={{ background: hovered ? "rgba(15,28,80,0.75)" : "rgba(10,20,55,0.55)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 16, overflow: "hidden", border: `1px solid ${hovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.08)"}`, transition: "all .3s cubic-bezier(.4,0,.2,1)", transform: hovered ? "translateY(-4px)" : "none", boxShadow: hovered ? "0 24px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.1)" : "0 4px 24px rgba(0,0,0,.2)" }}>
+      style={{ background: hovered ? (gd ? "rgba(15,28,80,0.75)" : "rgba(235,244,255,0.95)") : tc.bgCard, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderRadius: 16, overflow: "hidden", border: `1px solid ${hovered ? tc.borderHover : tc.border}`, transition: "all .3s cubic-bezier(.4,0,.2,1)", transform: hovered ? "translateY(-4px)" : "none", boxShadow: hovered ? (gd ? "0 24px 60px rgba(0,0,0,.5)" : "0 24px 60px rgba(38,69,200,.15)") : "none" }}>
       <div style={{ height: 200, background: "linear-gradient(135deg, rgba(15,28,80,0.95), rgba(38,69,200,0.4))", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
         <span style={{ fontSize: 72, opacity: .12 }}>{emoji}</span>
         <span style={{ position: "absolute", top: 12, left: 12, fontFamily: "'Inter', sans-serif", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", padding: "4px 12px", background: "rgba(38,69,200,0.8)", backdropFilter: "blur(8px)", color: "rgba(255,255,255,.9)", borderRadius: 999, border: "1px solid rgba(255,255,255,.15)" }}>{catLabel}</span>
       </div>
       <div style={{ padding: 24 }}>
-        <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 17, color: "var(--ink)", marginBottom: 8 }}>{title}</h4>
-        <p style={{ fontSize: 13, color: "var(--grey)", lineHeight: 1.6, marginBottom: 20 }}>{desc}</p>
+        <h4 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 17, color: tc.textPrimary, marginBottom: 8 }}>{title}</h4>
+        <p style={{ fontSize: 13, color: tc.textSecondary, lineHeight: 1.6, marginBottom: 20 }}>{desc}</p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
-          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,.25)", textTransform: "uppercase", letterSpacing: ".06em" }}>{sku}</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: tc.textFaint, textTransform: "uppercase", letterSpacing: ".06em" }}>{sku}</span>
           <a href={`https://wa.me/250788355226?text=Hi!%20I'm%20interested%20in%20${msg}.%20Please%20quote%20me.`} target="_blank" rel="noreferrer"
             style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", background: "#25D366", color: "#fff", borderRadius: 4, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 12, textDecoration: "none", transition: "background .2s" }}
             onMouseEnter={e => (e.currentTarget.style.background = "#128C7E")}
@@ -819,12 +831,13 @@ function ProductCard({ emoji, title, desc, sku, msg, cat }: { emoji: string; tit
 
 function IndustryCard({ icon, name, delay }: { icon: string; name: string; delay: number; }) {
   const [hovered, setHovered] = useState(false);
+  const { c: tc, isDark: gd } = useTheme();
   return (
     <RevealDiv delay={delay}>
       <div onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
-        style={{ background: hovered ? "rgba(38,69,200,0.35)" : "rgba(10,20,55,0.5)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: `1px solid ${hovered ? "rgba(255,255,255,.22)" : "rgba(255,255,255,.08)"}`, borderRadius: 16, padding: "28px 20px", textAlign: "center", transition: "all .3s", cursor: "default", transform: hovered ? "translateY(-4px)" : "none", boxShadow: hovered ? "0 16px 40px rgba(0,0,0,.3)" : "none" }}>
-        <div style={{ fontSize: 32, marginBottom: 12, color: hovered ? "#00C6FF" : "rgba(0,198,255,0.7)", transition: "color .3s" }}>{icon}</div>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: hovered ? "#fff" : "rgba(255,255,255,.8)", transition: "color .3s" }}>{name}</div>
+        style={{ background: hovered ? (gd ? "rgba(38,69,200,0.35)" : "rgba(38,69,200,0.12)") : tc.bgCard, backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", border: `1px solid ${hovered ? tc.borderHover : tc.border}`, borderRadius: 16, padding: "28px 20px", textAlign: "center", transition: "all .3s", cursor: "default", transform: hovered ? "translateY(-4px)" : "none", boxShadow: hovered ? (gd ? "0 16px 40px rgba(0,0,0,.3)" : "0 16px 40px rgba(38,69,200,.15)") : "none" }}>
+        <div style={{ fontSize: 32, marginBottom: 12, color: hovered ? "#2645C8" : "#00C6FF", transition: "color .3s" }}>{icon}</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: tc.textPrimary, transition: "color .3s" }}>{name}</div>
       </div>
     </RevealDiv>
   );
@@ -832,23 +845,24 @@ function IndustryCard({ icon, name, delay }: { icon: string; name: string; delay
 
 function ContactCard({ icon, label, value, href, green }: { icon: string; label: string; value: string; href: string | null; green: boolean; }) {
   const [hovered, setHovered] = useState(false);
+  const { c: tc } = useTheme();
   const content = (
     <>
-      <div style={{ width: 44, height: 44, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: green ? "rgba(37,211,102,.15)" : "rgba(38,69,200,.2)", border: `1px solid ${green ? "rgba(37,211,102,.25)" : "rgba(38,69,200,.35)"}`, fontSize: 20 }}>{icon}</div>
+      <div style={{ width: 44, height: 44, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, background: green ? "rgba(37,211,102,.15)" : "rgba(38,69,200,.15)", border: `1px solid ${green ? "rgba(37,211,102,.25)" : "rgba(38,69,200,.3)"}`, fontSize: 20 }}>{icon}</div>
       <div>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--grey)", marginBottom: 2 }}>{label}</div>
-        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: "var(--ink)" }}>{value}</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 2 }}>{label}</div>
+        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14, color: tc.textPrimary }}>{value}</div>
       </div>
     </>
   );
   const style: React.CSSProperties = {
-    background: hovered ? "rgba(15,30,80,0.75)" : "rgba(10,20,55,0.5)",
+    background: hovered ? tc.bgCardHover : tc.contactCardBg,
     backdropFilter: "blur(12px)",
     WebkitBackdropFilter: "blur(12px)",
-    border: `1px solid ${hovered ? "rgba(255,255,255,.2)" : "rgba(255,255,255,.08)"}`,
+    border: `1px solid ${hovered ? tc.borderHover : tc.border}`,
     borderRadius: 12, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16,
     textDecoration: "none", transition: "all .25s",
-    boxShadow: hovered ? "0 12px 32px rgba(0,0,0,.3)" : "none"
+    boxShadow: hovered ? "0 12px 32px rgba(38,69,200,.12)" : "none"
   };
   return href ? (
     <a href={href} target={href.startsWith("https") ? "_blank" : undefined} rel="noreferrer" style={style}
@@ -867,6 +881,7 @@ function QuoteForm() {
   const [products, setProducts] = useState("");
   const [qty, setQty] = useState("");
   const [notes, setNotes] = useState("");
+  const { c: tc } = useTheme();
 
   const submit = () => {
     const msg = `Hi Duplicator Ltd!\n\n📋 QUOTE REQUEST\n\n👤 Name: ${name||"[Name not provided]"}\n📞 Phone: ${phone||"[Phone not provided]"}\n📦 Category: ${cat||"[Not selected]"}\n\n📝 Products Needed:\n${products||"[Not specified]"}\n\n🔢 Quantity: ${qty||"[Not specified]"}\n\n📌 Notes: ${notes}\n\nPlease send me a quote. Thank you!`;
@@ -874,31 +889,31 @@ function QuoteForm() {
   };
 
   const inputStyle: React.CSSProperties = {
-    width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.12)",
-    borderRadius: 6, padding: "13px 16px", color: "#fff", fontFamily: "'Inter', sans-serif",
+    width: "100%", background: tc.inputBg, border: `1px solid ${tc.inputBorder}`,
+    borderRadius: 6, padding: "13px 16px", color: tc.textPrimary, fontFamily: "'Inter', sans-serif",
     fontSize: 14, outline: "none", transition: "border .2s"
   };
 
   return (
-    <div style={{ background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.08)", borderRadius: 12, padding: 40 }}>
-      <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: "#fff", marginBottom: 28 }}>Request a Quote</div>
+    <div style={{ background: tc.bgCard, border: `1px solid ${tc.border}`, borderRadius: 12, padding: 40, backdropFilter: "blur(12px)" }}>
+      <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 20, color: tc.textPrimary, marginBottom: 28 }}>Request a Quote</div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }} className="form-row-grid">
         <div>
-          <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Your Name</label>
+          <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Your Name</label>
           <input value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" style={inputStyle}
-            onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
+            onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)} />
         </div>
         <div>
-          <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Phone / WhatsApp</label>
+          <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Phone / WhatsApp</label>
           <input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+250 7XX XXX XXX" type="tel" style={inputStyle}
-            onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
+            onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)} />
         </div>
       </div>
       <style>{`@media (max-width: 768px) { .form-row-grid { grid-template-columns: 1fr !important; } }`}</style>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Category</label>
+        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Category</label>
         <select value={cat} onChange={e => setCat(e.target.value)} style={{ ...inputStyle, appearance: "none" }}
-          onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")}>
+          onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)}>
           <option value="">Select a service category</option>
           <option>Printing & Stationery</option>
           <option>Large Format & Signage</option>
@@ -908,25 +923,25 @@ function QuoteForm() {
         </select>
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Products Needed</label>
+        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Products Needed</label>
         <textarea value={products} onChange={e => setProducts(e.target.value)} placeholder="Describe what you need..." rows={3}
           style={{ ...inputStyle, resize: "vertical", minHeight: 80 }}
-          onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
+          onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)} />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Quantity</label>
+        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Quantity</label>
         <input value={qty} onChange={e => setQty(e.target.value)} placeholder="e.g. 500 pieces" style={inputStyle}
-          onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
+          onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)} />
       </div>
       <div style={{ marginBottom: 20 }}>
-        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: "rgba(255,255,255,.5)", marginBottom: 8 }}>Additional Notes</label>
+        <label style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: ".1em", color: tc.textMuted, marginBottom: 8 }}>Additional Notes</label>
         <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Deadline, special requirements, artwork details..." rows={2}
           style={{ ...inputStyle, resize: "vertical", minHeight: 60 }}
-          onFocus={e => (e.target.style.borderColor = "#00C6FF")} onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,.12)")} />
+          onFocus={e => (e.target.style.borderColor = "#2645C8")} onBlur={e => (e.target.style.borderColor = tc.inputBorder)} />
       </div>
-      <button onClick={submit} style={{ width: "100%", padding: 16, background: "#fff", color: "#04091A", border: "none", borderRadius: 6, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
-        onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.85)"; }}
-        onMouseLeave={e => { e.currentTarget.style.background = "#fff"; }}>
+      <button onClick={submit} style={{ width: "100%", padding: 16, background: tc.ctaBg, color: tc.ctaText, border: "none", borderRadius: 6, fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, letterSpacing: ".05em", cursor: "pointer", transition: "all .2s", marginTop: 8 }}
+        onMouseEnter={e => { e.currentTarget.style.filter = "brightness(0.92)"; }}
+        onMouseLeave={e => { e.currentTarget.style.filter = ""; }}>
         Send Quote Request via WhatsApp →
       </button>
     </div>

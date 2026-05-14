@@ -1,3 +1,5 @@
+import { useTheme } from "@/context/ThemeContext";
+
 const Logo = () => (
   <svg width="36" height="36" viewBox="0 0 44 44" fill="none">
     <rect width="44" height="44" rx="6" fill="#2645C8"/>
@@ -10,23 +12,32 @@ const Logo = () => (
 );
 
 export default function Footer() {
+  const { c } = useTheme();
+
   return (
-    <footer style={{ background: "rgba(4,9,26,0.92)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", borderTop: "1px solid rgba(255,255,255,0.07)", padding: "80px 0 40px" }}>
+    <footer style={{
+      background: c.footerBg,
+      backdropFilter: "blur(24px)",
+      WebkitBackdropFilter: "blur(24px)",
+      borderTop: `1px solid ${c.footerBorder}`,
+      padding: "80px 0 40px",
+      transition: "background .3s, border-color .3s"
+    }}>
       <div style={{ maxWidth: 1320, margin: "0 auto", padding: "0 24px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr 1fr 1fr", gap: 48, marginBottom: 64 }} className="footer-top-grid">
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
               <Logo />
               <div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, color: "#fff" }}>DUPLICATOR LTD.</div>
-                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: "rgba(255,255,255,.3)", letterSpacing: ".12em", textTransform: "uppercase" }}>Kigali, Rwanda</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15, color: c.textPrimary }}>DUPLICATOR LTD.</div>
+                <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 10, color: c.textFaint, letterSpacing: ".12em", textTransform: "uppercase" }}>Kigali, Rwanda</div>
               </div>
             </div>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontStyle: "italic", fontSize: 20, color: "rgba(255,255,255,.7)", lineHeight: 1.3, marginBottom: 16 }}>"Switch Your Brand ON."</p>
-            <div style={{ fontSize: 13, color: "rgba(255,255,255,.4)", lineHeight: 1.9, fontFamily: "'Inter', sans-serif" }}>
-              <a href="tel:+250788978879" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>+250 788 978 879</a>
-              <a href="https://wa.me/250788355226" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>+250 788 355 226 (WhatsApp)</a>
-              <a href="mailto:duplicator10@gmail.com" style={{ color: "rgba(255,255,255,.5)", textDecoration: "none", display: "block" }}>duplicator10@gmail.com</a>
+            <p style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontStyle: "italic", fontSize: 20, color: c.textSecondary, lineHeight: 1.3, marginBottom: 16 }}>"Switch Your Brand ON."</p>
+            <div style={{ fontSize: 13, color: c.textMuted, lineHeight: 1.9, fontFamily: "'Inter', sans-serif" }}>
+              <a href="tel:+250788978879" style={{ color: c.textMuted, textDecoration: "none", display: "block" }}>+250 788 978 879</a>
+              <a href="https://wa.me/250788355226" style={{ color: c.textMuted, textDecoration: "none", display: "block" }}>+250 788 355 226 (WhatsApp)</a>
+              <a href="mailto:duplicator10@gmail.com" style={{ color: c.textMuted, textDecoration: "none", display: "block" }}>duplicator10@gmail.com</a>
               <span>Karuruma, 4344+JVF, Kigali–Rwanda</span>
             </div>
           </div>
@@ -63,13 +74,13 @@ export default function Footer() {
             }
           ].map(col => (
             <div key={col.title} className="footer-col">
-              <h5 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: "rgba(255,255,255,.3)", marginBottom: 20 }}>{col.title}</h5>
+              <h5 style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 10, textTransform: "uppercase", letterSpacing: ".12em", color: c.textFaint, marginBottom: 20 }}>{col.title}</h5>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
                 {col.links.map(l => (
                   <li key={l.label}>
-                    <a href={l.href} style={{ fontSize: 14, color: "rgba(255,255,255,.5)", textDecoration: "none", transition: "color .2s", fontFamily: "'Inter', sans-serif" }}
-                      onMouseEnter={e => (e.currentTarget.style.color = "#00C6FF")}
-                      onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,.5)")}
+                    <a href={l.href} style={{ fontSize: 14, color: c.textMuted, textDecoration: "none", transition: "color .2s", fontFamily: "'Inter', sans-serif" }}
+                      onMouseEnter={e => (e.currentTarget.style.color = "#2645C8")}
+                      onMouseLeave={e => (e.currentTarget.style.color = c.textMuted)}
                     >{l.label}</a>
                   </li>
                 ))}
@@ -78,8 +89,8 @@ export default function Footer() {
           ))}
         </div>
 
-        <div style={{ borderTop: "1px solid rgba(255,255,255,.06)", paddingTop: 32, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,.25)", letterSpacing: ".06em" }}>
+        <div style={{ borderTop: `1px solid ${c.footerBorder}`, paddingTop: 32, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
+          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.textFaint, letterSpacing: ".06em" }}>
             © 2026 Duplicator Ltd. All rights reserved. · Kigali, Rwanda
           </div>
           <div style={{ display: "flex", gap: 12 }}>
@@ -91,14 +102,15 @@ export default function Footer() {
             ].map(s => (
               <a key={s.label} href={s.href} target="_blank" rel="noreferrer"
                 style={{
-                  width: 38, height: 38, border: s.green ? "none" : "1px solid rgba(255,255,255,.12)",
+                  width: 38, height: 38,
+                  border: s.green ? "none" : `1px solid ${c.border}`,
                   borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center",
-                  color: s.green ? "#fff" : "rgba(255,255,255,.5)", textDecoration: "none",
+                  color: s.green ? "#fff" : c.textMuted, textDecoration: "none",
                   fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 400,
                   background: s.green ? "#25D366" : "transparent", transition: "all .2s"
                 }}
                 onMouseEnter={e => { if (!s.green) { e.currentTarget.style.background = "#2645C8"; e.currentTarget.style.borderColor = "#2645C8"; e.currentTarget.style.color = "#fff"; } }}
-                onMouseLeave={e => { if (!s.green) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,.12)"; e.currentTarget.style.color = "rgba(255,255,255,.5)"; } }}
+                onMouseLeave={e => { if (!s.green) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = c.border; e.currentTarget.style.color = c.textMuted; } }}
               >{s.label}</a>
             ))}
           </div>
