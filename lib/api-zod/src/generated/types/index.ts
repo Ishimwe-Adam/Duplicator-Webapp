@@ -6,6 +6,15 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from "./analyticsMonthlyRevenue";
+export * from "./analyticsOrderStatusCount";
+export * from "./analyticsRecentOrder";
+export * from "./analyticsSummary";
+export * from "./analyticsSummaryClients";
+export * from "./analyticsSummaryOrders";
+export * from "./analyticsSummaryReceivables";
+export * from "./analyticsSummaryRevenue";
+export * from "./analyticsTopClient";
 export * from "./authResponse";
 export * from "./authUser";
 export * from "./createInvoiceInput";

@@ -466,6 +466,77 @@ export const GetInvoiceResponse = zod.object({
 });
 
 /**
+ * @summary Aggregated business metrics (admin only)
+ */
+export const GetAnalyticsSummaryResponse = zod.object({
+  generatedAt: zod.coerce.date(),
+  revenue: zod.object({
+    thisMonth: zod.number(),
+    lastMonth: zod.number(),
+    last12Months: zod.array(
+      zod.object({
+        month: zod.string().describe("YYYY-MM"),
+        amount: zod.number(),
+      }),
+    ),
+  }),
+  receivables: zod.object({
+    outstandingAmount: zod.number(),
+    overdueCount: zod.number(),
+  }),
+  orders: zod.object({
+    active: zod.number(),
+    dueSoon: zod.number(),
+    byStatus: zod.array(
+      zod.object({
+        status: zod.enum([
+          "draft",
+          "quoted",
+          "approved",
+          "in_production",
+          "ready",
+          "delivered",
+          "cancelled",
+        ]),
+        count: zod.number(),
+      }),
+    ),
+  }),
+  clients: zod.object({
+    total: zod.number(),
+    newThisMonth: zod.number(),
+    top: zod.array(
+      zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+        revenue: zod.number(),
+        invoiceCount: zod.number(),
+      }),
+    ),
+  }),
+  recentOrders: zod.array(
+    zod.object({
+      id: zod.number(),
+      orderNumber: zod.string(),
+      title: zod.string(),
+      status: zod.enum([
+        "draft",
+        "quoted",
+        "approved",
+        "in_production",
+        "ready",
+        "delivered",
+        "cancelled",
+      ]),
+      subtotalAmount: zod.number(),
+      clientName: zod.string(),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
  * @summary Record a manual payment against an invoice (admin only)
  */
 export const RecordPaymentParams = zod.object({

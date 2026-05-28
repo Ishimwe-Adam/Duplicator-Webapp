@@ -263,6 +263,68 @@ export interface UpdateInvoiceStatusInput {
   status: InvoiceStatus;
 }
 
+export interface AnalyticsMonthlyRevenue {
+  /** YYYY-MM */
+  month: string;
+  amount: number;
+}
+
+export interface AnalyticsOrderStatusCount {
+  status: OrderStatus;
+  count: number;
+}
+
+export interface AnalyticsTopClient {
+  id: number;
+  name: string;
+  /** @nullable */
+  email?: string | null;
+  revenue: number;
+  invoiceCount: number;
+}
+
+export interface AnalyticsRecentOrder {
+  id: number;
+  orderNumber: string;
+  title: string;
+  status: OrderStatus;
+  subtotalAmount: number;
+  clientName: string;
+  createdAt: string;
+}
+
+export type AnalyticsSummaryRevenue = {
+  thisMonth: number;
+  lastMonth: number;
+  last12Months: AnalyticsMonthlyRevenue[];
+};
+
+export type AnalyticsSummaryReceivables = {
+  outstandingAmount: number;
+  overdueCount: number;
+};
+
+export type AnalyticsSummaryOrders = {
+  active: number;
+  dueSoon: number;
+  byStatus: AnalyticsOrderStatusCount[];
+};
+
+export type AnalyticsSummaryClients = {
+  total: number;
+  newThisMonth: number;
+  top: AnalyticsTopClient[];
+};
+
+export interface AnalyticsSummary {
+  generatedAt: string;
+  revenue: AnalyticsSummaryRevenue;
+  receivables: AnalyticsSummaryReceivables;
+  orders: AnalyticsSummaryOrders;
+  clients: AnalyticsSummaryClients;
+  recentOrders: AnalyticsRecentOrder[];
+}
+
 export interface RecordPaymentInput {
   /**
    * Amount in FRW. Must be > 0 and ≤ outstanding balance.

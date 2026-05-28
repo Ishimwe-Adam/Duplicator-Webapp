@@ -18,6 +18,8 @@ tags:
     description: Invoices generated from orders
   - name: payments
     description: Payments recorded against invoices
+  - name: analytics
+    description: Aggregated metrics for admin dashboards
 paths:
   /healthz:
     get:
@@ -355,6 +357,31 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /analytics/summary:
+    get:
+      operationId: getAnalyticsSummary
+      tags: [analytics]
+      summary: Aggregated business metrics (admin only)
+      responses:
+        "200":
+          description: Summary metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
           content:
             application/json:
               schema:
@@ -934,6 +961,108 @@ components:
         createdAt:
           type: string
           format: date-time
+
+    AnalyticsMonthlyRevenue:
+      type: object
+      required: [month, amount]
+      properties:
+        month:
+          type: string
+          description: YYYY-MM
+        amount:
+          type: integer
+
+    AnalyticsOrderStatusCount:
+      type: object
+      required: [status, count]
+      properties:
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        count:
+          type: integer
+
+    AnalyticsTopClient:
+      type: object
+      required: [id, name, revenue, invoiceCount]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: ["string", "null"]
+        revenue:
+          type: integer
+        invoiceCount:
+          type: integer
+
+    AnalyticsRecentOrder:
+      type: object
+      required: [id, orderNumber, title, status, subtotalAmount, clientName, createdAt]
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        subtotalAmount:
+          type: integer
+        clientName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    AnalyticsSummary:
+      type: object
+      required: [generatedAt, revenue, receivables, orders, clients, recentOrders]
+      properties:
+        generatedAt:
+          type: string
+          format: date-time
+        revenue:
+          type: object
+          required: [thisMonth, lastMonth, last12Months]
+          properties:
+            thisMonth: { type: integer }
+            lastMonth: { type: integer }
+            last12Months:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsMonthlyRevenue"
+        receivables:
+          type: object
+          required: [outstandingAmount, overdueCount]
+          properties:
+            outstandingAmount: { type: integer }
+            overdueCount: { type: integer }
+        orders:
+          type: object
+          required: [active, dueSoon, byStatus]
+          properties:
+            active: { type: integer }
+            dueSoon: { type: integer }
+            byStatus:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsOrderStatusCount"
+        clients:
+          type: object
+          required: [total, newThisMonth, top]
+          properties:
+            total: { type: integer }
+            newThisMonth: { type: integer }
+            top:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnalyticsTopClient"
+        recentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnalyticsRecentOrder"
 
     RecordPaymentInput:
       type: object

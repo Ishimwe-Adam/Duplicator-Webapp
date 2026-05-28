@@ -17,6 +17,7 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
+  AnalyticsSummary,
   AuthResponse,
   AuthUser,
   CreateInvoiceInput,
@@ -1018,6 +1019,81 @@ export function useGetInvoice<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetInvoiceQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Aggregated business metrics (admin only)
+ */
+export const getGetAnalyticsSummaryUrl = () => {
+  return `/api/analytics/summary`;
+};
+
+export const getAnalyticsSummary = async (
+  options?: RequestInit,
+): Promise<AnalyticsSummary> => {
+  return customFetch<AnalyticsSummary>(getGetAnalyticsSummaryUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAnalyticsSummaryQueryKey = () => {
+  return [`/api/analytics/summary`] as const;
+};
+
+export const getGetAnalyticsSummaryQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAnalyticsSummary>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAnalyticsSummary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAnalyticsSummaryQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getAnalyticsSummary>>
+  > = ({ signal }) => getAnalyticsSummary({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAnalyticsSummary>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAnalyticsSummaryQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAnalyticsSummary>>
+>;
+export type GetAnalyticsSummaryQueryError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Aggregated business metrics (admin only)
+ */
+
+export function useGetAnalyticsSummary<
+  TData = Awaited<ReturnType<typeof getAnalyticsSummary>>,
+  TError = ErrorType<ErrorResponse>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAnalyticsSummary>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAnalyticsSummaryQueryOptions(options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
