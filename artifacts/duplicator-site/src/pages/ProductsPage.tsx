@@ -3,6 +3,43 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import { useTheme } from "@/context/ThemeContext";
+import { formatFRW } from "@/lib/format";
+
+// Starting prices in FRW by subcategory. Real quotes vary by quantity, paper, finish.
+// Keys MUST exactly match `Product.subcategory` values declared below.
+const PRICE_BY_SUBCATEGORY: Record<string, { from: number; unit: string }> = {
+  // ── Corporate Stationery ──
+  "Business Cards":                 { from: 25_000,  unit: "per 100 cards" },
+  "Letterheads & Compliment Slips": { from: 35_000,  unit: "per 100 sheets" },
+  "Envelopes & Folders":            { from: 20_000,  unit: "per 100 units" },
+  "Notepads & Memo Pads":           { from: 18_000,  unit: "per 50-sheet pad" },
+  // ── Marketing Collateral ──
+  "Brochures & Flyers":             { from: 45_000,  unit: "per 500 prints" },
+  "Posters & Calendars":            { from: 8_000,   unit: "per A2 print" },
+  "Booklets & Catalogues":          { from: 150_000, unit: "per 100 copies" },
+  "Presentation Folders":           { from: 65_000,  unit: "per 100 folders" },
+  // ── Large Format Branding ──
+  "Pull-Up & Display Banners":      { from: 95_000,  unit: "per roll-up unit" },
+  "Outdoor & Indoor Signage":       { from: 80_000,  unit: "per m²" },
+  "Vehicle Graphics & Wraps":       { from: 350_000, unit: "starting per vehicle" },
+  "Exhibition Displays & Backdrops": { from: 280_000, unit: "starting" },
+  // ── Custom Apparel & Textiles ──
+  "Event T-Shirts & Polo Shirts":   { from: 8_500,   unit: "per piece (min. 25)" },
+  "Corporate & Office Uniforms":    { from: 28_000,  unit: "per set" },
+  "Workwear & Safety Gear":         { from: 35_000,  unit: "per piece" },
+  "Medical & Hospital Scrubs":      { from: 24_000,  unit: "per set" },
+  "Caps & Headwear":                { from: 6_500,   unit: "per piece" },
+  // ── Corporate Gifts & Recognition ──
+  "Branded Pens & Writing Sets":    { from: 3_500,   unit: "per piece (min. 50)" },
+  "Premium Notebooks":              { from: 11_000,  unit: "per piece" },
+  "Branded Tech Accessories":       { from: 18_000,  unit: "per piece" },
+  "Executive Gift Sets":            { from: 65_000,  unit: "per gift set" },
+  "Awards & Trophies":              { from: 45_000,  unit: "per piece" },
+};
+
+function getPrice(subcategory: string): { from: number; unit: string } {
+  return PRICE_BY_SUBCATEGORY[subcategory] ?? { from: 10_000, unit: "request quote" };
+}
 
 const WaIcon = ({ size = 14 }: { size?: number }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" width={size} height={size}>
@@ -622,23 +659,58 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
           )}
         </div>
 
-        {/* ── Enquire button ─────────────────────────────────── */}
+        {/* ── Pricing strip ──────────────────────────────────── */}
+        {(() => {
+          const price = getPrice(product.subcategory);
+          return (
+            <div style={{
+              display: "flex", alignItems: "baseline", justifyContent: "space-between",
+              gap: 10, padding: "12px 14px", marginBottom: 12,
+              background: isDark ? "rgba(0,198,255,0.06)" : "rgba(38,69,200,0.05)",
+              border: `1px solid ${isDark ? "rgba(0,198,255,0.18)" : "rgba(38,69,200,0.14)"}`,
+              borderRadius: 10,
+            }}>
+              <div>
+                <div style={{
+                  fontFamily: "'Inter', sans-serif", fontSize: 10,
+                  textTransform: "uppercase", letterSpacing: ".1em",
+                  color: c.textMuted, marginBottom: 2,
+                }}>
+                  Starting from
+                </div>
+                <div style={{
+                  fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 17,
+                  color: c.textPrimary, letterSpacing: "-0.01em", lineHeight: 1.1,
+                }}>
+                  {formatFRW(price.from)}
+                </div>
+              </div>
+              <div style={{
+                fontFamily: "'Inter', sans-serif", fontSize: 11,
+                color: c.textSecondary, textAlign: "right",
+              }}>
+                {price.unit}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Request quote button ───────────────────────────── */}
         <a
-          href={`https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!%20I%27m%20interested%20in%20${encodeURIComponent(product.name)}.%20Please%20send%20me%20pricing%20and%20availability.`}
-          target="_blank" rel="noreferrer"
+          href={`/login?product=${encodeURIComponent(product.id)}`}
           style={{
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             padding: "12px 20px",
-            background: "#25D366", color: "#fff",
-            borderRadius: 50, border: "2px solid #25D366",
-            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 14,
+            background: catColor, color: "#fff",
+            borderRadius: 50, border: `2px solid ${catColor}`,
+            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
             textDecoration: "none", transition: "all .2s",
             letterSpacing: ".06em", textTransform: "uppercase"
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = "#128C7E"; e.currentTarget.style.borderColor = "#128C7E"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "#25D366"; e.currentTarget.style.borderColor = "#25D366"; }}
+          onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
         >
-          <WaIcon size={16} /> Enquire via WhatsApp
+          Request Quote
         </a>
       </div>
     </div>

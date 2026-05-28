@@ -20,11 +20,21 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 
 ## Where things live
 
-- `artifacts/duplicator-site/src/pages/HomePage.tsx` — main landing page (hero, services, products preview, stats, industries, contact)
-- `artifacts/duplicator-site/src/pages/ProductsPage.tsx` — full product catalogue with category/subcategory filtering
-- `artifacts/duplicator-site/src/components/Header.tsx` — floating pill navbar
-- `artifacts/duplicator-site/src/components/Footer.tsx` — footer with links and contact info
-- `artifacts/duplicator-site/src/components/WhatsAppFAB.tsx` — WhatsApp floating action button
+- `artifacts/duplicator-site/src/pages/HomePage.tsx` — main landing page
+- `artifacts/duplicator-site/src/pages/ProductsPage.tsx` — full catalogue with FRW pricing per card
+- `artifacts/duplicator-site/src/pages/LoginPage.tsx` / `SignupPage.tsx` — branded auth screens
+- `artifacts/duplicator-site/src/pages/dashboards/{Admin,Staff,Client}Dashboard.tsx` — role homes (admin shared by admin + super_admin)
+- `artifacts/duplicator-site/src/context/AuthContext.tsx` — wraps generated `useGetCurrentUser`/`useLogin`/`useRegister`/`useLogout` hooks; exposes `useAuth()`
+- `artifacts/duplicator-site/src/components/ProtectedRoute.tsx` — auth + role guard with role-home redirect
+- `artifacts/duplicator-site/src/components/DashboardLayout.tsx` — sticky sidebar (role-aware nav) + topbar (theme toggle, collapse, sign out)
+- `artifacts/duplicator-site/src/components/AuthShell.tsx`, `DashboardKpi.tsx` — shared building blocks
+- `artifacts/duplicator-site/src/lib/format.ts` — `formatFRW()`
+- `artifacts/api-server/src/routes/auth.ts` — `/api/auth/{register,login,logout,me}`; atomic SQL CASE for failed-login lockout
+- `artifacts/api-server/src/lib/{auth,password}.ts` — scrypt hashing + 7-day session cookies (`duplicator_session`)
+- `artifacts/api-server/src/middlewares/requireAuth.ts` — `requireAuth` + `requireRole(...)`
+- `lib/db/src/schema/{users,sessions}.ts` — Drizzle schema (role enum: super_admin/admin/staff/client)
+- `lib/api-spec/openapi.yaml` — contract; regenerate with `pnpm --filter @workspace/api-spec run codegen`
+- `scripts/src/seed.ts` — idempotent demo-user seeder (`pnpm --filter @workspace/scripts run seed`)
 - `artifacts/duplicator-site/src/index.css` — CSS variables, dark theme, glass utilities, scroll animations
 
 ## Architecture decisions
@@ -37,9 +47,26 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 
 ## Product
 
-- Home page: hero + services grid + how-it-works + stats bar + product previews + industries served + quote form + testimonials + contact
-- Products page: full catalogue of 50+ products across 4 categories (Printing & Stationery, Large Format, Uniforms & Apparel, Corporate Gifts), with search, category nav, and subcategory filters
-- WhatsApp integration: all CTAs deep-link to wa.me/250788355226 with pre-filled messages
+- Public site: home, products (now with FRW starting prices per card + "Request Quote" CTA that funnels to /login)
+- Auth: `/login`, `/signup` (branded glass shell)
+- Dashboards (cookie-protected, role-gated):
+  - `/admin` — super_admin + admin (revenue, orders, invoices, tasks, CRM, analytics shells)
+  - `/staff` — staff (tasks, assigned orders, messages shells)
+  - `/portal` — client (orders, invoices, spending shells)
+- WhatsApp integration: homepage CTAs + global FAB retained; product-card "Enquire via WhatsApp" buttons replaced by "Request Quote".
+
+## Demo accounts (seeded)
+
+- `admin@duplicator.rw` / `Admin@2026` — super_admin
+- `manager@duplicator.rw` / `Manager@2026` — admin
+- `staff@duplicator.rw` / `Staff@2026` — staff
+- `client@example.com` / `Client@2026` — client
+
+## Phase status
+
+- **Phase 1 ✅** — Auth foundation (DB + API + UI), role-based dashboard shells, FRW pricing on Products, code-reviewed and hardened (atomic lockout, complete subcategory price coverage).
+- **Phase 2 (next)** — Orders module (create/list/track, status timeline).
+- Later phases — Invoices+PDF, Tasks/Kanban, CRM, Messaging (Socket.io), Analytics, Admin panel, Quotes+AI assist, MoMo/Airtel payments.
 
 ## User preferences
 
@@ -56,6 +83,10 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 - `var(--off-white)` is set to `transparent` in CSS to auto-darken any section that previously used a light off-white background
 - ServiceCard uses `isDark` state (toggled on hover) to flip between dark-glass and blue-glass styles
 - WhatsApp number: +250 788 355 226; email: duplicator10@gmail.com; location: Karuruma, Kigali
+- **API client codegen quirks**: Orval emits Zod values as `RegisterBody` / `LoginBody` (NOT `RegisterInput`); response types like `AuthResponse` / `AuthUser` are TS-only — cast, don't `.parse()`. Pass per-request fetch options under `request: {...}`, not `fetch: {...}`. `useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey(), ... } })` — `queryKey` is required when overriding query options.
+- **Auth lockout**: failed-attempt increment is one atomic SQL `UPDATE ... CASE` statement so concurrent bad logins can't clobber each other.
+- **Product pricing map**: keys in `PRICE_BY_SUBCATEGORY` MUST exactly match `Product.subcategory` strings — silent fallback price is intentionally distinct ("request quote" unit).
+- **Cookies are same-origin** (frontend `/`, api `/api` via shared proxy), but AuthContext explicitly passes `credentials: "include"` for clarity.
 
 ## Pointers
 
