@@ -14,6 +14,8 @@ tags:
     description: Authentication & sessions
   - name: orders
     description: Customer orders
+  - name: invoices
+    description: Invoices generated from orders
 paths:
   /healthz:
     get:
@@ -254,6 +256,158 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /invoices:
+    get:
+      operationId: listInvoices
+      tags: [invoices]
+      summary: List invoices (role-scoped — clients see own, admins see all; staff blocked)
+      responses:
+        "200":
+          description: Invoices list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceListResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createInvoice
+      tags: [invoices]
+      summary: Create an invoice from an existing order (admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInvoiceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetail"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /invoices/{id}:
+    get:
+      operationId: getInvoice
+      tags: [invoices]
+      summary: Get invoice detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Invoice detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetail"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /invoices/{id}/status:
+    patch:
+      operationId: updateInvoiceStatus
+      tags: [invoices]
+      summary: Update an invoice's status (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateInvoiceStatusInput"
+      responses:
+        "200":
+          description: Updated invoice
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetail"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Status conflict (raced)
           content:
             application/json:
               schema:
@@ -519,3 +673,163 @@ components:
         note:
           type: string
           maxLength: 500
+
+    InvoiceStatus:
+      type: string
+      enum: [draft, sent, paid, void]
+
+    InvoiceOrderRef:
+      type: object
+      required: [id, orderNumber, title]
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        title:
+          type: string
+
+    InvoiceSummary:
+      type: object
+      required:
+        - id
+        - invoiceNumber
+        - status
+        - subtotalAmount
+        - taxAmount
+        - totalAmount
+        - issueDate
+        - dueDate
+        - isOverdue
+        - client
+        - order
+        - createdAt
+      properties:
+        id:
+          type: integer
+        invoiceNumber:
+          type: string
+        status:
+          $ref: "#/components/schemas/InvoiceStatus"
+        subtotalAmount:
+          type: integer
+        taxRatePercent:
+          type: integer
+        taxAmount:
+          type: integer
+        totalAmount:
+          type: integer
+        issueDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        isOverdue:
+          type: boolean
+        client:
+          $ref: "#/components/schemas/OrderPartyRef"
+        order:
+          $ref: "#/components/schemas/InvoiceOrderRef"
+        createdAt:
+          type: string
+          format: date-time
+
+    InvoiceDetail:
+      type: object
+      required:
+        - id
+        - invoiceNumber
+        - status
+        - items
+        - subtotalAmount
+        - taxRatePercent
+        - taxAmount
+        - totalAmount
+        - issueDate
+        - dueDate
+        - isOverdue
+        - client
+        - order
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        invoiceNumber:
+          type: string
+        status:
+          $ref: "#/components/schemas/InvoiceStatus"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItemLine"
+        subtotalAmount:
+          type: integer
+        taxRatePercent:
+          type: integer
+        taxAmount:
+          type: integer
+        totalAmount:
+          type: integer
+        notes:
+          type: ["string", "null"]
+        issueDate:
+          type: string
+          format: date-time
+        dueDate:
+          type: string
+          format: date-time
+        sentAt:
+          type: ["string", "null"]
+          format: date-time
+        paidAt:
+          type: ["string", "null"]
+          format: date-time
+        isOverdue:
+          type: boolean
+        client:
+          $ref: "#/components/schemas/OrderPartyRef"
+        order:
+          $ref: "#/components/schemas/InvoiceOrderRef"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    InvoiceListResponse:
+      type: object
+      required: [invoices]
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoiceSummary"
+
+    CreateInvoiceInput:
+      type: object
+      required: [orderId, dueDate]
+      properties:
+        orderId:
+          type: integer
+        dueDate:
+          type: string
+          format: date-time
+          description: When payment is due.
+        taxRatePercent:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: VAT percent (e.g. 18). Defaults to 0.
+        notes:
+          type: string
+          maxLength: 2000
+
+    UpdateInvoiceStatusInput:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: "#/components/schemas/InvoiceStatus"

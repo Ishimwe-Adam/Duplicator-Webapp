@@ -337,3 +337,170 @@ export const UpdateOrderStatusResponse = zod.object({
     }),
   ),
 });
+
+/**
+ * @summary List invoices (role-scoped — clients see own, admins see all; staff blocked)
+ */
+export const ListInvoicesResponse = zod.object({
+  invoices: zod.array(
+    zod.object({
+      id: zod.number(),
+      invoiceNumber: zod.string(),
+      status: zod.enum(["draft", "sent", "paid", "void"]),
+      subtotalAmount: zod.number(),
+      taxRatePercent: zod.number().optional(),
+      taxAmount: zod.number(),
+      totalAmount: zod.number(),
+      issueDate: zod.coerce.date(),
+      dueDate: zod.coerce.date(),
+      isOverdue: zod.boolean(),
+      client: zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      order: zod.object({
+        id: zod.number(),
+        orderNumber: zod.string(),
+        title: zod.string(),
+      }),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create an invoice from an existing order (admin only)
+ */
+export const createInvoiceBodyTaxRatePercentMin = 0;
+export const createInvoiceBodyTaxRatePercentMax = 100;
+
+export const createInvoiceBodyNotesMax = 2000;
+
+export const CreateInvoiceBody = zod.object({
+  orderId: zod.number(),
+  dueDate: zod.coerce.date().describe("When payment is due."),
+  taxRatePercent: zod
+    .number()
+    .min(createInvoiceBodyTaxRatePercentMin)
+    .max(createInvoiceBodyTaxRatePercentMax)
+    .optional()
+    .describe("VAT percent (e.g. 18). Defaults to 0."),
+  notes: zod.string().max(createInvoiceBodyNotesMax).optional(),
+});
+
+/**
+ * @summary Get invoice detail
+ */
+export const GetInvoiceParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const getInvoiceResponseItemsItemDescriptionMax = 200;
+
+export const getInvoiceResponseItemsItemQtyMax = 100000;
+
+export const getInvoiceResponseItemsItemUnitPriceMin = 0;
+export const getInvoiceResponseItemsItemUnitPriceMax = 1000000000;
+
+export const GetInvoiceResponse = zod.object({
+  id: zod.number(),
+  invoiceNumber: zod.string(),
+  status: zod.enum(["draft", "sent", "paid", "void"]),
+  items: zod.array(
+    zod.object({
+      description: zod
+        .string()
+        .min(1)
+        .max(getInvoiceResponseItemsItemDescriptionMax),
+      qty: zod.number().min(1).max(getInvoiceResponseItemsItemQtyMax),
+      unitPrice: zod
+        .number()
+        .min(getInvoiceResponseItemsItemUnitPriceMin)
+        .max(getInvoiceResponseItemsItemUnitPriceMax)
+        .describe("Unit price in RWF (integer)"),
+    }),
+  ),
+  subtotalAmount: zod.number(),
+  taxRatePercent: zod.number(),
+  taxAmount: zod.number(),
+  totalAmount: zod.number(),
+  notes: zod.string().nullish(),
+  issueDate: zod.coerce.date(),
+  dueDate: zod.coerce.date(),
+  sentAt: zod.coerce.date().nullish(),
+  paidAt: zod.coerce.date().nullish(),
+  isOverdue: zod.boolean(),
+  client: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string().nullish(),
+  }),
+  order: zod.object({
+    id: zod.number(),
+    orderNumber: zod.string(),
+    title: zod.string(),
+  }),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Update an invoice's status (admin only)
+ */
+export const UpdateInvoiceStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateInvoiceStatusBody = zod.object({
+  status: zod.enum(["draft", "sent", "paid", "void"]),
+});
+
+export const updateInvoiceStatusResponseItemsItemDescriptionMax = 200;
+
+export const updateInvoiceStatusResponseItemsItemQtyMax = 100000;
+
+export const updateInvoiceStatusResponseItemsItemUnitPriceMin = 0;
+export const updateInvoiceStatusResponseItemsItemUnitPriceMax = 1000000000;
+
+export const UpdateInvoiceStatusResponse = zod.object({
+  id: zod.number(),
+  invoiceNumber: zod.string(),
+  status: zod.enum(["draft", "sent", "paid", "void"]),
+  items: zod.array(
+    zod.object({
+      description: zod
+        .string()
+        .min(1)
+        .max(updateInvoiceStatusResponseItemsItemDescriptionMax),
+      qty: zod.number().min(1).max(updateInvoiceStatusResponseItemsItemQtyMax),
+      unitPrice: zod
+        .number()
+        .min(updateInvoiceStatusResponseItemsItemUnitPriceMin)
+        .max(updateInvoiceStatusResponseItemsItemUnitPriceMax)
+        .describe("Unit price in RWF (integer)"),
+    }),
+  ),
+  subtotalAmount: zod.number(),
+  taxRatePercent: zod.number(),
+  taxAmount: zod.number(),
+  totalAmount: zod.number(),
+  notes: zod.string().nullish(),
+  issueDate: zod.coerce.date(),
+  dueDate: zod.coerce.date(),
+  sentAt: zod.coerce.date().nullish(),
+  paidAt: zod.coerce.date().nullish(),
+  isOverdue: zod.boolean(),
+  client: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string().nullish(),
+  }),
+  order: zod.object({
+    id: zod.number(),
+    orderNumber: zod.string(),
+    title: zod.string(),
+  }),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});

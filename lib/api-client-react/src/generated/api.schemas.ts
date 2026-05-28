@@ -157,3 +157,80 @@ export interface UpdateOrderStatusInput {
   /** @maxLength 500 */
   note?: string;
 }
+
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus];
+
+export const InvoiceStatus = {
+  draft: "draft",
+  sent: "sent",
+  paid: "paid",
+  void: "void",
+} as const;
+
+export interface InvoiceOrderRef {
+  id: number;
+  orderNumber: string;
+  title: string;
+}
+
+export interface InvoiceSummary {
+  id: number;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  subtotalAmount: number;
+  taxRatePercent?: number;
+  taxAmount: number;
+  totalAmount: number;
+  issueDate: string;
+  dueDate: string;
+  isOverdue: boolean;
+  client: OrderPartyRef;
+  order: InvoiceOrderRef;
+  createdAt: string;
+}
+
+export interface InvoiceDetail {
+  id: number;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  items: OrderItemLine[];
+  subtotalAmount: number;
+  taxRatePercent: number;
+  taxAmount: number;
+  totalAmount: number;
+  /** @nullable */
+  notes?: string | null;
+  issueDate: string;
+  dueDate: string;
+  /** @nullable */
+  sentAt?: string | null;
+  /** @nullable */
+  paidAt?: string | null;
+  isOverdue: boolean;
+  client: OrderPartyRef;
+  order: InvoiceOrderRef;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface InvoiceListResponse {
+  invoices: InvoiceSummary[];
+}
+
+export interface CreateInvoiceInput {
+  orderId: number;
+  /** When payment is due. */
+  dueDate: string;
+  /**
+   * VAT percent (e.g. 18). Defaults to 0.
+   * @minimum 0
+   * @maximum 100
+   */
+  taxRatePercent?: number;
+  /** @maxLength 2000 */
+  notes?: string;
+}
+
+export interface UpdateInvoiceStatusInput {
+  status: InvoiceStatus;
+}

@@ -37,7 +37,7 @@ function navForRole(role: string): NavItem[] {
     return [
       { href: "/portal", label: "Overview", icon: LayoutDashboard },
       { href: "/portal/orders", label: "My Orders", icon: ShoppingBag },
-      { href: "/portal/invoices", label: "My Invoices", icon: FileText, badge: "Soon" },
+      { href: "/portal/invoices", label: "My Invoices", icon: FileText },
       { href: "/portal/quotes", label: "Quote Requests", icon: ListChecks, badge: "Soon" },
       { href: "/portal/profile", label: "Profile", icon: Settings, badge: "Soon" },
     ];
@@ -55,7 +55,7 @@ function navForRole(role: string): NavItem[] {
   return [
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
-    { href: "/admin/invoices", label: "Invoices", icon: FileText, badge: "Soon" },
+    { href: "/admin/invoices", label: "Invoices", icon: FileText },
     { href: "/admin/tasks", label: "Tasks", icon: ListChecks, badge: "Soon" },
     { href: "/admin/clients", label: "Clients (CRM)", icon: Users, badge: "Soon" },
     { href: "/admin/messages", label: "Messages", icon: MessageSquare, badge: "Soon" },
