@@ -1,0 +1,405 @@
+# 🚀 DUPLICATOR LTD — FULL-STACK WEB APPLICATION BUILD PROMPT
+
+---
+
+## 🎯 PROJECT OVERVIEW
+
+You are a world-class senior full-stack engineer and UI/UX designer. Your mission is to transform the existing **Duplicator Ltd** marketing website (https://ecom-site-builder--ishimweadam0.replit.app/) into a **complete, production-grade, fully responsive web application** — a powerful internal company platform combined with a client-facing portal. This must be so impressive that it stands out globally.
+
+**Company:** Duplicator Ltd  
+**Industry:** Premium Printing · Branding · Sewing Solutions  
+**Location:** Kigali, Rwanda  
+**Tagline:** *Switch Your Brand ON*  
+**Currency:** All prices must be displayed in **FRW (Rwandan Francs)** — research realistic market pricing for each product/service category and apply it. Remove any WhatsApp icons or chat badges from product cards entirely.
+
+---
+
+## 🏗️ TECH STACK (Use Best Practices)
+
+**Frontend:**
+- React.js (with TypeScript) or Next.js 14+ (App Router preferred)
+- Tailwind CSS + shadcn/ui components
+- Framer Motion for animations
+- React Query / TanStack Query for data fetching
+- Recharts or Chart.js for analytics dashboards
+
+**Backend:**
+- Node.js + Express.js OR Next.js API routes
+- PostgreSQL (primary database via Prisma ORM)
+- Redis (for caching and session management)
+- JWT + Refresh Token authentication
+- Bcrypt for password hashing
+- Nodemailer (email notifications)
+- Multer + Cloudinary (file/image uploads)
+
+**Infrastructure:**
+- RESTful API architecture (fully documented)
+- Role-Based Access Control (RBAC)
+- Input validation (Zod or Joi)
+- Rate limiting and security middleware (Helmet, CORS, express-rate-limit)
+- Environment variables via `.env`
+- Responsive on all devices: mobile, tablet, desktop
+
+---
+
+## 🎨 DESIGN DIRECTION
+
+**Aesthetic:** Luxury-Industrial. Think bold typography, deep navy/charcoal backgrounds with vibrant accent colors (electric blue `#0066FF` and warm gold `#FFB800`). Clean geometric layouts with sharp shadows. Premium feel — like a global brand agency.
+
+- **Fonts:** Use `Syne` (display/headings) + `DM Sans` (body) from Google Fonts
+- **Color Palette:**
+  - Primary: `#0A0F2C` (deep navy)
+  - Accent: `#0066FF` (electric blue)
+  - Gold: `#FFB800`
+  - Surface: `#F5F7FF`
+  - Text: `#1A1A2E`
+- Smooth page transitions, hover micro-interactions, skeleton loaders
+- Sidebar navigation with collapsible menu for dashboards
+- Glassmorphism cards for stats/KPIs
+- Dark mode toggle (localStorage persisted)
+
+---
+
+## 👤 USER ROLES & ACCESS CONTROL
+
+Build a complete **Role-Based Access Control (RBAC)** system with these roles:
+
+| Role | Description |
+|------|-------------|
+| `super_admin` | Full system access — Duplicator Ltd owner/CEO |
+| `admin` | Company manager — full staff management |
+| `staff` | Regular employee — work tools, tasks, communication |
+| `client` | External customer — order portal and account |
+
+Each role has its own dedicated **dashboard view** after login.
+
+---
+
+## 🔐 MODULE 1 — AUTHENTICATION SYSTEM
+
+Build a complete, secure authentication system:
+
+- **Registration:** Name, email, phone, password, role assignment (admins assign roles)
+- **Login:** Email + password with JWT access token (15min) + refresh token (7 days, HttpOnly cookie)
+- **Multi-factor Authentication (MFA):** Optional TOTP (Google Authenticator compatible)
+- **Password Reset:** Email OTP flow with 10-minute expiry
+- **Session Management:** Active sessions list with ability to revoke
+- **Account Lock:** Lock after 5 failed login attempts (30-min cooldown)
+- **Audit Log:** Every login attempt logged with IP, timestamp, device
+- Beautiful, branded login/signup pages matching Duplicator Ltd identity
+- "Remember Me" functionality
+- Profile picture upload
+
+---
+
+## 🏢 MODULE 2 — STAFF DASHBOARD (Internal Company Portal)
+
+### 2.1 Home / Overview
+- Welcome banner with staff name and current date
+- KPI cards: Total Orders, Pending Tasks, Revenue This Month (FRW), New Clients
+- Animated charts: Monthly revenue trend, Order status breakdown (doughnut), Top services
+- Quick action buttons: New Invoice, New Task, New Message, New Quote
+- Recent activity feed
+
+### 2.2 📋 Task Management
+- Kanban board (To Do → In Progress → Review → Done)
+- Create tasks with: title, description, assignee, priority (Low/Medium/High/Urgent), due date, attachments
+- Task comments and activity log
+- Filter by assignee, status, priority, date
+- Email notification when task assigned or updated
+- My Tasks view vs All Tasks view (admin)
+- Deadline warnings (highlighted in red when overdue)
+
+### 2.3 💬 Internal Messaging / Communication
+- Real-time internal chat (use Socket.io)
+- Direct Messages (1-on-1) between staff
+- Group channels (e.g., #design-team, #orders, #general, #management)
+- File sharing inside chats (images, PDFs, documents)
+- Message read receipts and online presence indicators
+- Message search
+- Pin important messages
+- @mentions with notifications
+- Emoji reactions
+
+### 2.4 📄 Invoice & Proforma Builder
+- Create **Proforma Invoices** and **Tax Invoices** from scratch
+- Auto-populate: Company letterhead (Duplicator Ltd branding), invoice number (auto-incremented), date
+- Add line items: service/product name, quantity, unit price (FRW), tax (18% VAT Rwanda), discount
+- Live subtotal, VAT, and grand total calculation in FRW
+- Client selector (pull from client database)
+- Invoice status: Draft → Sent → Paid → Overdue → Cancelled
+- Export to **PDF** with Duplicator Ltd branded template
+- Email invoice directly to client from the app
+- Invoice history with search and filter
+- Duplicate invoice feature
+- Payment tracking — mark as paid with payment date and method
+
+### 2.5 📦 Order Management
+- Full order lifecycle: New → Processing → Production → Quality Check → Ready → Delivered
+- Order details: client, product/service, quantity, specs, deadline, assigned staff, price (FRW)
+- Attach files to orders (design files, reference images)
+- Order notes and internal comments
+- Order status update notifications to clients automatically
+- Bulk order actions
+- Order calendar view (see all deadlines visually)
+- Production timeline tracker
+
+### 2.6 👥 Client Relationship Management (CRM)
+- Client directory: name, company, email, phone, address, registration date
+- Client profile page: full order history, invoices, communication log, notes
+- Client tagging (VIP, Regular, New, Inactive)
+- Add internal notes to clients
+- Client onboarding checklist
+- Quick actions: Send email, create invoice, create order
+- Export client list to CSV/Excel
+
+### 2.7 📊 Analytics & Reports
+- Revenue reports by: day, week, month, year (in FRW)
+- Top performing services/products
+- Staff performance metrics (tasks completed, orders handled)
+- Client acquisition trend
+- Invoice aging report (unpaid invoices by age)
+- Export all reports to PDF or Excel
+- Date range filter on all reports
+
+### 2.8 📁 Document Management
+- Upload and organize company documents (contracts, templates, policies)
+- Folder structure with drag-and-drop organization
+- Version history for documents
+- Document sharing with clients or between staff
+- Search documents by name, tag, date
+
+### 2.9 🗓️ Company Calendar
+- Shared team calendar
+- Events: deadlines, meetings, deliveries, public holidays (Rwanda official holidays pre-loaded)
+- Color-coded by type
+- Sync with order deadlines automatically
+- Add personal events (only visible to the creator)
+
+### 2.10 📢 Announcements Board
+- Admin/management can post company announcements
+- Staff see announcements on dashboard
+- Mark as read
+- Pin urgent announcements
+
+---
+
+## 🛍️ MODULE 3 — PRODUCT / SERVICE CATALOG (Updated)
+
+Rebuild the product and service pages with:
+
+- **Remove all WhatsApp icons/badges** from product cards — completely
+- **Display realistic FRW prices** on all products/services based on the Rwandan market for printing, branding, and sewing services. Research and apply appropriate prices. Examples:
+  - Business Cards (500 pcs): ~FRW 15,000–25,000
+  - Branded T-Shirts: ~FRW 8,000–20,000 each
+  - Large Format Banners (per sqm): ~FRW 5,000–12,000
+  - Letterheads (100 pcs): ~FRW 10,000–18,000
+  - Embroidered Polo Shirts: ~FRW 25,000–45,000
+  - Custom Packaging: ~FRW 500–3,000 per unit
+  - (Apply research-based pricing to all other products shown on the site)
+- Price displayed as: `FRW 15,000` format (no dollar signs, no WhatsApp)
+- "Request Quote" button for bulk/custom orders
+- Product detail page with: description, specifications, delivery time, minimum order quantity
+- Filter and search products by category
+- Related products suggestions
+
+---
+
+## 🧑‍💼 MODULE 4 — CLIENT PORTAL (External Dashboard)
+
+Clients get their own dedicated portal after logging in:
+
+### Client Dashboard Home
+- Welcome with their company name
+- Summary cards: Active Orders, Pending Invoices, Total Spent (FRW), Last Order Date
+
+### Client: My Orders
+- View all orders with real-time status updates
+- Order progress tracker (visual step-by-step)
+- Download delivery notes and order confirmations
+- Reorder previous orders with one click
+- Upload design files or brief documents for their orders
+- Comment/message on their specific order (goes to staff)
+
+### Client: My Invoices
+- View all invoices (Proforma and Tax)
+- Download invoices as PDF
+- See payment status
+- Pay online (integrate **MTN Mobile Money** and **Airtel Money** payment buttons — Rwanda's primary payment methods)
+- Request invoice correction
+
+### Client: Request a Quote
+- Smart quote request form: select service category, describe requirements, upload reference files, set deadline, set quantity
+- Quote history — view all past quotes and their status (Pending / Quoted / Accepted / Declined)
+- Accept or decline a quote online
+
+### Client: My Profile
+- Edit contact information
+- Change password
+- Upload company logo
+- View account activity log
+- Manage notification preferences (email on: new invoice, order update, quote response)
+
+### Client: Support
+- Open support tickets
+- Chat with a staff member (linked to internal messaging)
+- FAQ section with answers to common questions about Duplicator Ltd services
+
+---
+
+## 🔔 MODULE 5 — NOTIFICATION SYSTEM
+
+- In-app notification bell (real-time, Socket.io powered)
+- Email notifications via Nodemailer for:
+  - New order created
+  - Order status changed
+  - Invoice sent
+  - Invoice overdue
+  - New message received
+  - Quote response ready
+  - Account login from new device
+- Notification preferences page (users choose what they receive)
+- Mark all as read / delete notifications
+
+---
+
+## ⚙️ MODULE 6 — ADMIN CONTROL PANEL
+
+(Super Admin and Admin only)
+
+- **User Management:** Create, edit, deactivate, assign roles to staff and clients
+- **System Settings:** Company info (name, logo, address, VAT number, contact), Invoice template branding, email templates
+- **Audit Logs:** Full log of every action taken in the system (who did what, when, from what IP)
+- **Backup System:** Manual database export (JSON/CSV)
+- **Announcement Management:** Create/edit/delete company announcements
+- **Access Control:** Toggle module access per role
+- **Pricing Management:** Update product/service prices without code changes
+- **Email Configuration:** SMTP settings for notifications
+
+---
+
+## 💡 BONUS FEATURES (Surprise & Delight)
+
+Include these additional creative features:
+
+1. **AI Quote Assistant** — A simple AI-powered chat widget (using OpenAI API or hardcoded intelligent decision tree) that helps clients estimate the cost of their order before submitting a quote request. Asks questions and gives a ballpark FRW estimate.
+
+2. **Digital Business Card Generator** — Staff can generate a branded Duplicator Ltd digital business card (beautiful HTML card with QR code) that can be downloaded or shared via link.
+
+3. **Brand Asset Library** — Upload and organize brand assets (logos, color palettes, fonts, templates) for internal use or to share with clients.
+
+4. **Print Job Calculator** — A smart tool on the public site where visitors input (paper size, quantity, color/BW, finish) and get an instant price estimate in FRW.
+
+5. **Staff Attendance / Work Log** — Simple clock-in/clock-out feature. Staff log work hours. Admins see attendance reports.
+
+6. **Production Board** — Physical production floor view: see which jobs are on press/in sewing/in finishing in real time. Assign production stages to physical equipment or departments.
+
+7. **Client Onboarding Wizard** — When a new client registers, a guided onboarding flow walks them through uploading their logo, setting preferences, and placing their first order.
+
+8. **WhatsApp Business Integration (optional)** — Connect a WhatsApp Business API number so clients can send order inquiries via WhatsApp and they appear inside the staff messaging dashboard.
+
+---
+
+## 📱 RESPONSIVENESS REQUIREMENTS
+
+- **Mobile-first design** — all features must work on smartphones
+- Sidebar nav collapses to bottom tab bar on mobile
+- Touch-friendly components (large tap targets, swipeable lists)
+- Tables convert to card layouts on small screens
+- PDF exports formatted for A4 printing
+- Test and confirm on: 375px (iPhone SE), 768px (iPad), 1280px (Laptop), 1920px (Desktop)
+
+---
+
+## 🔒 SECURITY REQUIREMENTS
+
+- All API endpoints protected with JWT middleware
+- SQL injection prevention via Prisma parameterized queries
+- XSS protection via input sanitization
+- CSRF protection on forms
+- Secure HttpOnly cookies for refresh tokens
+- Rate limiting on auth endpoints (max 10 requests/min)
+- File upload validation (type, size limit 10MB)
+- HTTPS enforced
+- Environment secrets never exposed to client
+
+---
+
+## 📂 PROJECT STRUCTURE
+
+```
+duplicator-ltd/
+├── client/                    # React/Next.js frontend
+│   ├── app/
+│   │   ├── (auth)/            # Login, register, forgot-password pages
+│   │   ├── (staff)/           # Staff dashboard and all staff modules
+│   │   ├── (client)/          # Client portal pages
+│   │   ├── (admin)/           # Admin panel pages
+│   │   └── (public)/          # Public website pages (home, products, about)
+│   ├── components/            # Reusable UI components
+│   ├── hooks/                 # Custom React hooks
+│   ├── lib/                   # API client, utils, constants
+│   └── styles/                # Global styles, Tailwind config
+├── server/                    # Express.js backend
+│   ├── controllers/           # Route handlers
+│   ├── middleware/            # Auth, validation, error handling
+│   ├── models/                # Prisma schema models
+│   ├── routes/                # API route definitions
+│   ├── services/              # Business logic (email, PDF, etc.)
+│   ├── sockets/               # Socket.io real-time handlers
+│   └── utils/                 # Helpers
+├── prisma/
+│   └── schema.prisma          # Database schema
+├── .env.example
+└── README.md
+```
+
+---
+
+## 📋 DATABASE MODELS (Prisma Schema)
+
+Design and implement all models including:
+- `User` (id, name, email, password, role, phone, avatar, isActive, createdAt)
+- `Client` (extends User with company details)
+- `Order` (id, clientId, serviceType, status, specs, deadline, assignedTo, totalPrice, files)
+- `Invoice` (id, invoiceNumber, clientId, lineItems, vatAmount, total, status, paidAt)
+- `Task` (id, title, description, assigneeId, priority, status, dueDate, createdBy)
+- `Message` (id, senderId, receiverId, channelId, content, attachments, readAt)
+- `Channel` (id, name, type, members)
+- `Notification` (id, userId, type, message, readAt, link)
+- `Quote` (id, clientId, description, files, estimatedPrice, status, respondedAt)
+- `Document` (id, name, url, folderId, uploadedBy, sharedWith)
+- `AuditLog` (id, userId, action, entity, entityId, ipAddress, createdAt)
+- `Product` (id, name, category, description, priceFRW, minQty, deliveryDays, images)
+- `Announcement` (id, title, body, priority, authorId, createdAt)
+
+---
+
+## ✅ FINAL DELIVERABLES CHECKLIST
+
+Ensure the following before submission:
+
+- [ ] All pages fully responsive (mobile, tablet, desktop)
+- [ ] Authentication working end-to-end (register, login, refresh, logout)
+- [ ] All dashboards functional with real data flow
+- [ ] Invoice PDF generation working
+- [ ] Real-time chat functional
+- [ ] Email notifications sending
+- [ ] All product prices in FRW (no WhatsApp badges)
+- [ ] Role-based access strictly enforced
+- [ ] Database seeded with realistic demo data
+- [ ] `.env.example` file with all required variables documented
+- [ ] README with setup instructions
+- [ ] No console errors in production build
+- [ ] Loading states and error states handled on all screens
+- [ ] 404 and 500 error pages branded
+
+---
+
+## 🌍 VISION STATEMENT (Remind yourself as you build)
+
+> This is not just a website upgrade. This is a **digital headquarters** for Duplicator Ltd — one of Rwanda's leading branding companies. Build it like it's going to be shown at a tech conference. Build it like clients from London, Dubai, and Nairobi will open it and immediately trust Duplicator Ltd with their brand. Every pixel, every interaction, every line of code should say: **"This company is world-class."**
+
+---
+
+*Built for Duplicator Ltd — Kigali, Rwanda. Switch Your Brand ON.* 🇷🇼
