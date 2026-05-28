@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useTheme } from "@/context/ThemeContext";
+import { useAuth } from "@/context/AuthContext";
 
 const WaIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
@@ -39,10 +40,17 @@ const MoonIcon = () => (
   </svg>
 );
 
+function roleHome(role: string) {
+  if (role === "super_admin" || role === "admin") return "/admin";
+  if (role === "staff") return "/staff";
+  return "/portal";
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [location] = useLocation();
   const { isDark, toggle, c } = useTheme();
+  const { user } = useAuth();
 
   const navLinks = [
     { href: "/#home", label: "Home" },
@@ -109,16 +117,57 @@ export default function Header() {
           >{l.label}</a>
         ))}
 
-        <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!" target="_blank" rel="noreferrer"
-          style={{
-            marginTop: 36, display: "inline-flex", alignItems: "center", gap: 10,
-            padding: "14px 28px", borderRadius: 10,
-            background: "#25D366", color: "#fff",
-            fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15,
-            textDecoration: "none", width: "fit-content"
-          }}>
-          <WaIcon /> Order via WhatsApp
-        </a>
+        <div style={{ marginTop: 36, display: "flex", flexDirection: "column", gap: 12, alignItems: "flex-start" }}>
+          {user ? (
+            <a href={roleHome(user.role)}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "inline-flex", alignItems: "center",
+                padding: "14px 28px", borderRadius: 10,
+                background: "#2645C8", color: "#fff",
+                fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 15,
+                textDecoration: "none"
+              }}>
+              Dashboard →
+            </a>
+          ) : (
+            <>
+              <a href="/login"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "inline-flex", alignItems: "center",
+                  padding: "14px 28px", borderRadius: 10,
+                  border: "1px solid rgba(255,255,255,.2)", background: "transparent",
+                  color: "rgba(255,255,255,.85)",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 15,
+                  textDecoration: "none"
+                }}>
+                Log In
+              </a>
+              <a href="/signup"
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  display: "inline-flex", alignItems: "center",
+                  padding: "14px 28px", borderRadius: 10,
+                  background: "#2645C8", color: "#fff",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 15,
+                  textDecoration: "none"
+                }}>
+                Sign Up
+              </a>
+            </>
+          )}
+          <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!" target="_blank" rel="noreferrer"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              padding: "14px 28px", borderRadius: 10,
+              background: "#25D366", color: "#fff",
+              fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 15,
+              textDecoration: "none"
+            }}>
+            <WaIcon /> Order via WhatsApp
+          </a>
+        </div>
       </div>
 
       {/* ── FLOATING PILL NAVBAR ─────────────────────────────────────── */}
@@ -191,22 +240,51 @@ export default function Header() {
             {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          <a href="https://wa.me/250788355226?text=Hi%20Duplicator%20Ltd!" target="_blank" rel="noreferrer"
-            className="hide-mobile"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              padding: "9px 18px", borderRadius: 999,
-              background: isDark ? "#fff" : "#2645C8",
-              color: isDark ? "#000" : "#fff",
-              fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: 13,
-              textDecoration: "none", transition: "transform .15s, filter .15s",
-              whiteSpace: "nowrap"
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.03)"; e.currentTarget.style.filter = "brightness(1.05)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.filter = ""; }}
-          >
-            <WaIcon /> Order via WhatsApp
-          </a>
+          {/* Auth buttons — desktop */}
+          {user ? (
+            <a href={roleHome(user.role)}
+              className="hide-mobile"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "9px 18px", borderRadius: 999,
+                background: "#2645C8", color: "#fff",
+                fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 13,
+                textDecoration: "none", transition: "filter .15s",
+                whiteSpace: "nowrap"
+              }}
+              onMouseEnter={e => { e.currentTarget.style.filter = "brightness(1.12)"; }}
+              onMouseLeave={e => { e.currentTarget.style.filter = ""; }}
+            >Dashboard →</a>
+          ) : (
+            <div className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <a href="/login"
+                style={{
+                  display: "inline-flex", alignItems: "center",
+                  padding: "8px 16px", borderRadius: 999,
+                  border: `1px solid ${c.navBorder}`,
+                  background: "transparent",
+                  color: isDark ? "rgba(255,255,255,.8)" : "#2645C8",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 13,
+                  textDecoration: "none", transition: "background .15s, border-color .15s",
+                  whiteSpace: "nowrap"
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = isDark ? "rgba(255,255,255,.08)" : "rgba(38,69,200,.08)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
+              >Log In</a>
+              <a href="/signup"
+                style={{
+                  display: "inline-flex", alignItems: "center",
+                  padding: "9px 18px", borderRadius: 999,
+                  background: "#2645C8", color: "#fff",
+                  fontFamily: "'Inter', sans-serif", fontWeight: 500, fontSize: 13,
+                  textDecoration: "none", transition: "filter .15s",
+                  whiteSpace: "nowrap"
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = "brightness(1.12)"; }}
+                onMouseLeave={e => { e.currentTarget.style.filter = ""; }}
+              >Sign Up</a>
+            </div>
+          )}
 
           <button
             className="show-mobile"
