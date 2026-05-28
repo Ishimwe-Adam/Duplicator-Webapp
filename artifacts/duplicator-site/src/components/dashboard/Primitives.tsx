@@ -223,9 +223,10 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   rows: T[];
   emptyText?: string;
+  onRowClick?: (row: T) => void;
 }
 
-export function DataTable<T extends { id: string | number }>({ columns, rows, emptyText = "No data yet." }: DataTableProps<T>) {
+export function DataTable<T extends { id: string | number }>({ columns, rows, emptyText = "No data yet.", onRowClick }: DataTableProps<T>) {
   const { c } = useTheme();
   if (rows.length === 0) {
     return (
@@ -264,9 +265,14 @@ export function DataTable<T extends { id: string | number }>({ columns, rows, em
           {rows.map((row, i) => (
             <tr
               key={row.id}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
               style={{
                 borderBottom: i === rows.length - 1 ? "none" : `1px solid ${c.border}`,
+                cursor: onRowClick ? "pointer" : "default",
+                transition: "background .15s",
               }}
+              onMouseEnter={onRowClick ? (e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)") : undefined}
+              onMouseLeave={onRowClick ? (e) => (e.currentTarget.style.background = "transparent") : undefined}
             >
               {columns.map((col) => (
                 <td

@@ -30,6 +30,10 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 - `artifacts/duplicator-site/src/components/AuthShell.tsx`, `DashboardKpi.tsx` — shared building blocks
 - `artifacts/duplicator-site/src/lib/format.ts` — `formatFRW()`
 - `artifacts/api-server/src/routes/auth.ts` — `/api/auth/{register,login,logout,me}`; atomic SQL CASE for failed-login lockout
+- `artifacts/api-server/src/routes/orders.ts` — `/api/orders` role-scoped CRUD + atomic status transitions
+- `artifacts/duplicator-site/src/pages/orders/{OrdersListPage,OrderDetailPage,NewOrderModal}.tsx` — orders UI
+- `artifacts/duplicator-site/src/lib/orders.ts` — status labels/tones, frontend transition mirror (server is authoritative)
+- `lib/db/src/schema/orders.ts` — orders schema + `formatOrderNumber()` + `nextAllowedOrderStatuses()`
 - `artifacts/api-server/src/lib/{auth,password}.ts` — scrypt hashing + 7-day session cookies (`duplicator_session`)
 - `artifacts/api-server/src/middlewares/requireAuth.ts` — `requireAuth` + `requireRole(...)`
 - `lib/db/src/schema/{users,sessions}.ts` — Drizzle schema (role enum: super_admin/admin/staff/client)
@@ -65,8 +69,9 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 ## Phase status
 
 - **Phase 1 ✅** — Auth foundation (DB + API + UI), role-based dashboard shells, FRW pricing on Products, code-reviewed and hardened (atomic lockout, complete subcategory price coverage).
-- **Phase 2 (next)** — Orders module (create/list/track, status timeline).
-- Later phases — Invoices+PDF, Tasks/Kanban, CRM, Messaging (Socket.io), Analytics, Admin panel, Quotes+AI assist, MoMo/Airtel payments.
+- **Phase 2 ✅** — Orders module: `orders` + `order_status_events` tables, `/api/orders` (list/create/get/patch status) with role-scoped queries, `/{admin,staff,portal}/orders` pages + detail view with timeline + create modal. Code-reviewed and hardened: server-side workflow enforcement via `nextAllowedOrderStatuses`, atomic status update with precondition (`WHERE id=? AND status=?`) returning 409 on concurrent transitions, `subtotal_amount` as bigint to prevent int32 overflow.
+- **Phase 3 (next)** — Invoices + PDF generation, payments (MoMo/Airtel).
+- Later phases — Tasks/Kanban, CRM, Messaging (Socket.io), Analytics, Quotes + AI assist.
 
 ## User preferences
 

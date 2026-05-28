@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: auth
     description: Authentication & sessions
+  - name: orders
+    description: Customer orders
 paths:
   /healthz:
     get:
@@ -117,6 +119,146 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /orders:
+    get:
+      operationId: listOrders
+      tags: [orders]
+      summary: List orders (role-scoped — clients see own, staff see assigned, admins see all)
+      responses:
+        "200":
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderListResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createOrder
+      tags: [orders]
+      summary: Create a new order (client self-creates; admin can create on behalf)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDetail"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders/{id}:
+    get:
+      operationId: getOrder
+      tags: [orders]
+      summary: Get order detail with status timeline
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Order detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDetail"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /orders/{id}/status:
+    patch:
+      operationId: updateOrderStatus
+      tags: [orders]
+      summary: Update an order's status (staff/admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusInput"
+      responses:
+        "200":
+          description: Updated order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderDetail"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -193,3 +335,187 @@ components:
         password:
           type: string
           minLength: 1
+
+    OrderStatus:
+      type: string
+      enum:
+        - draft
+        - quoted
+        - approved
+        - in_production
+        - ready
+        - delivered
+        - cancelled
+
+    OrderItemLine:
+      type: object
+      required: [description, qty, unitPrice]
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 200
+        qty:
+          type: integer
+          minimum: 1
+          maximum: 100000
+        unitPrice:
+          type: integer
+          minimum: 0
+          maximum: 1000000000
+          description: Unit price in RWF (integer)
+
+    OrderPartyRef:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: ["string", "null"]
+
+    OrderSummary:
+      type: object
+      required:
+        - id
+        - orderNumber
+        - title
+        - status
+        - subtotalAmount
+        - itemCount
+        - createdAt
+        - updatedAt
+        - client
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        subtotalAmount:
+          type: integer
+        itemCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        client:
+          $ref: "#/components/schemas/OrderPartyRef"
+        assignedTo:
+          oneOf:
+            - $ref: "#/components/schemas/OrderPartyRef"
+            - type: "null"
+
+    OrderStatusEvent:
+      type: object
+      required: [id, status, createdAt]
+      properties:
+        id:
+          type: integer
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        note:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        by:
+          oneOf:
+            - $ref: "#/components/schemas/OrderPartyRef"
+            - type: "null"
+
+    OrderDetail:
+      type: object
+      required:
+        - id
+        - orderNumber
+        - title
+        - status
+        - items
+        - subtotalAmount
+        - notes
+        - client
+        - createdAt
+        - updatedAt
+        - timeline
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItemLine"
+        subtotalAmount:
+          type: integer
+        notes:
+          type: ["string", "null"]
+        client:
+          $ref: "#/components/schemas/OrderPartyRef"
+        assignedTo:
+          oneOf:
+            - $ref: "#/components/schemas/OrderPartyRef"
+            - type: "null"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        timeline:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderStatusEvent"
+
+    OrderListResponse:
+      type: object
+      required: [orders]
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderSummary"
+
+    CreateOrderInput:
+      type: object
+      required: [title, items]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 160
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/OrderItemLine"
+        notes:
+          type: string
+          maxLength: 2000
+        clientId:
+          type: integer
+          description: Required when an admin creates an order on behalf of a client. Ignored for clients.
+
+    UpdateOrderStatusInput:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: "#/components/schemas/OrderStatus"
+        note:
+          type: string
+          maxLength: 500

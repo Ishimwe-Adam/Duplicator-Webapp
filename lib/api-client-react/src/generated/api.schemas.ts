@@ -54,3 +54,106 @@ export interface LoginInput {
   /** @minLength 1 */
   password: string;
 }
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+
+export const OrderStatus = {
+  draft: "draft",
+  quoted: "quoted",
+  approved: "approved",
+  in_production: "in_production",
+  ready: "ready",
+  delivered: "delivered",
+  cancelled: "cancelled",
+} as const;
+
+export interface OrderItemLine {
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  description: string;
+  /**
+   * @minimum 1
+   * @maximum 100000
+   */
+  qty: number;
+  /**
+   * Unit price in RWF (integer)
+   * @minimum 0
+   * @maximum 1000000000
+   */
+  unitPrice: number;
+}
+
+export interface OrderPartyRef {
+  id: number;
+  name: string;
+  /** @nullable */
+  email?: string | null;
+}
+
+export interface OrderSummary {
+  id: number;
+  orderNumber: string;
+  title: string;
+  status: OrderStatus;
+  subtotalAmount: number;
+  itemCount: number;
+  createdAt: string;
+  updatedAt: string;
+  client: OrderPartyRef;
+  assignedTo?: OrderPartyRef | null;
+}
+
+export interface OrderStatusEvent {
+  id: number;
+  status: OrderStatus;
+  /** @nullable */
+  note?: string | null;
+  createdAt: string;
+  by?: OrderPartyRef | null;
+}
+
+export interface OrderDetail {
+  id: number;
+  orderNumber: string;
+  title: string;
+  status: OrderStatus;
+  items: OrderItemLine[];
+  subtotalAmount: number;
+  /** @nullable */
+  notes: string | null;
+  client: OrderPartyRef;
+  assignedTo?: OrderPartyRef | null;
+  createdAt: string;
+  updatedAt: string;
+  timeline: OrderStatusEvent[];
+}
+
+export interface OrderListResponse {
+  orders: OrderSummary[];
+}
+
+export interface CreateOrderInput {
+  /**
+   * @minLength 1
+   * @maxLength 160
+   */
+  title: string;
+  /**
+   * @minItems 1
+   * @maxItems 50
+   */
+  items: OrderItemLine[];
+  /** @maxLength 2000 */
+  notes?: string;
+  /** Required when an admin creates an order on behalf of a client. Ignored for clients. */
+  clientId?: number;
+}
+
+export interface UpdateOrderStatusInput {
+  status: OrderStatus;
+  /** @maxLength 500 */
+  note?: string;
+}

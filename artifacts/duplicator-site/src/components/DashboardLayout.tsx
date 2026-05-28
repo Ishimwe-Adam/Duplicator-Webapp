@@ -36,7 +36,7 @@ function navForRole(role: string): NavItem[] {
   if (role === "client") {
     return [
       { href: "/portal", label: "Overview", icon: LayoutDashboard },
-      { href: "/portal/orders", label: "My Orders", icon: ShoppingBag, badge: "Soon" },
+      { href: "/portal/orders", label: "My Orders", icon: ShoppingBag },
       { href: "/portal/invoices", label: "My Invoices", icon: FileText, badge: "Soon" },
       { href: "/portal/quotes", label: "Quote Requests", icon: ListChecks, badge: "Soon" },
       { href: "/portal/profile", label: "Profile", icon: Settings, badge: "Soon" },
@@ -46,7 +46,7 @@ function navForRole(role: string): NavItem[] {
     return [
       { href: "/staff", label: "Overview", icon: LayoutDashboard },
       { href: "/staff/tasks", label: "My Tasks", icon: ListChecks, badge: "Soon" },
-      { href: "/staff/orders", label: "Orders", icon: ShoppingBag, badge: "Soon" },
+      { href: "/staff/orders", label: "Orders", icon: ShoppingBag },
       { href: "/staff/messages", label: "Messages", icon: MessageSquare, badge: "Soon" },
       { href: "/staff/clients", label: "Clients", icon: Users, badge: "Soon" },
     ];
@@ -54,7 +54,7 @@ function navForRole(role: string): NavItem[] {
   // admin & super_admin
   return [
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
-    { href: "/admin/orders", label: "Orders", icon: ShoppingBag, badge: "Soon" },
+    { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
     { href: "/admin/invoices", label: "Invoices", icon: FileText, badge: "Soon" },
     { href: "/admin/tasks", label: "Tasks", icon: ListChecks, badge: "Soon" },
     { href: "/admin/clients", label: "Clients (CRM)", icon: Users, badge: "Soon" },

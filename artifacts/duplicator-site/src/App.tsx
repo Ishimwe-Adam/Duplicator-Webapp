@@ -10,6 +10,8 @@ import SignupPage from "@/pages/SignupPage";
 import AdminDashboard from "@/pages/dashboards/AdminDashboard";
 import StaffDashboard from "@/pages/dashboards/StaffDashboard";
 import ClientDashboard from "@/pages/dashboards/ClientDashboard";
+import OrdersListPage from "@/pages/orders/OrdersListPage";
+import OrderDetailPage from "@/pages/orders/OrderDetailPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -26,14 +28,44 @@ function Router() {
           <AdminDashboard />
         </ProtectedRoute>
       </Route>
+      <Route path="/admin/orders">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <OrdersListPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/orders/:id">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <OrderDetailPage />
+        </ProtectedRoute>
+      </Route>
       <Route path="/staff">
         <ProtectedRoute roles={["staff"]}>
           <StaffDashboard />
         </ProtectedRoute>
       </Route>
+      <Route path="/staff/orders">
+        <ProtectedRoute roles={["staff"]}>
+          <OrdersListPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/orders/:id">
+        <ProtectedRoute roles={["staff"]}>
+          <OrderDetailPage />
+        </ProtectedRoute>
+      </Route>
       <Route path="/portal">
         <ProtectedRoute roles={["client"]}>
           <ClientDashboard />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/orders">
+        <ProtectedRoute roles={["client"]}>
+          <OrdersListPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/orders/:id">
+        <ProtectedRoute roles={["client"]}>
+          <OrderDetailPage />
         </ProtectedRoute>
       </Route>
       <Route component={NotFound} />

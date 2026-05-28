@@ -8,8 +8,17 @@
 
 export * from "./authResponse";
 export * from "./authUser";
+export * from "./createOrderInput";
 export * from "./errorResponse";
 export * from "./healthStatus";
 export * from "./loginInput";
+export * from "./orderDetail";
+export * from "./orderItemLine";
+export * from "./orderListResponse";
+export * from "./orderPartyRef";
+export * from "./orderStatus";
+export * from "./orderStatusEvent";
+export * from "./orderSummary";
 export * from "./registerInput";
+export * from "./updateOrderStatusInput";
 export * from "./userRole";

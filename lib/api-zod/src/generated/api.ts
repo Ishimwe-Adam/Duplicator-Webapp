@@ -61,3 +61,279 @@ export const GetCurrentUserResponse = zod.object({
   companyName: zod.string().nullish(),
   profilePictureUrl: zod.string().nullish(),
 });
+
+/**
+ * @summary List orders (role-scoped — clients see own, staff see assigned, admins see all)
+ */
+export const ListOrdersResponse = zod.object({
+  orders: zod.array(
+    zod.object({
+      id: zod.number(),
+      orderNumber: zod.string(),
+      title: zod.string(),
+      status: zod.enum([
+        "draft",
+        "quoted",
+        "approved",
+        "in_production",
+        "ready",
+        "delivered",
+        "cancelled",
+      ]),
+      subtotalAmount: zod.number(),
+      itemCount: zod.number(),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+      client: zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      assignedTo: zod
+        .union([
+          zod.object({
+            id: zod.number(),
+            name: zod.string(),
+            email: zod.string().nullish(),
+          }),
+          zod.null(),
+        ])
+        .optional(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a new order (client self-creates; admin can create on behalf)
+ */
+export const createOrderBodyTitleMax = 160;
+
+export const createOrderBodyItemsItemDescriptionMax = 200;
+
+export const createOrderBodyItemsItemQtyMax = 100000;
+
+export const createOrderBodyItemsItemUnitPriceMin = 0;
+export const createOrderBodyItemsItemUnitPriceMax = 1000000000;
+
+export const createOrderBodyItemsMax = 50;
+
+export const createOrderBodyNotesMax = 2000;
+
+export const CreateOrderBody = zod.object({
+  title: zod.string().min(1).max(createOrderBodyTitleMax),
+  items: zod
+    .array(
+      zod.object({
+        description: zod
+          .string()
+          .min(1)
+          .max(createOrderBodyItemsItemDescriptionMax),
+        qty: zod.number().min(1).max(createOrderBodyItemsItemQtyMax),
+        unitPrice: zod
+          .number()
+          .min(createOrderBodyItemsItemUnitPriceMin)
+          .max(createOrderBodyItemsItemUnitPriceMax)
+          .describe("Unit price in RWF (integer)"),
+      }),
+    )
+    .min(1)
+    .max(createOrderBodyItemsMax),
+  notes: zod.string().max(createOrderBodyNotesMax).optional(),
+  clientId: zod
+    .number()
+    .optional()
+    .describe(
+      "Required when an admin creates an order on behalf of a client. Ignored for clients.",
+    ),
+});
+
+/**
+ * @summary Get order detail with status timeline
+ */
+export const GetOrderParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const getOrderResponseItemsItemDescriptionMax = 200;
+
+export const getOrderResponseItemsItemQtyMax = 100000;
+
+export const getOrderResponseItemsItemUnitPriceMin = 0;
+export const getOrderResponseItemsItemUnitPriceMax = 1000000000;
+
+export const GetOrderResponse = zod.object({
+  id: zod.number(),
+  orderNumber: zod.string(),
+  title: zod.string(),
+  status: zod.enum([
+    "draft",
+    "quoted",
+    "approved",
+    "in_production",
+    "ready",
+    "delivered",
+    "cancelled",
+  ]),
+  items: zod.array(
+    zod.object({
+      description: zod
+        .string()
+        .min(1)
+        .max(getOrderResponseItemsItemDescriptionMax),
+      qty: zod.number().min(1).max(getOrderResponseItemsItemQtyMax),
+      unitPrice: zod
+        .number()
+        .min(getOrderResponseItemsItemUnitPriceMin)
+        .max(getOrderResponseItemsItemUnitPriceMax)
+        .describe("Unit price in RWF (integer)"),
+    }),
+  ),
+  subtotalAmount: zod.number(),
+  notes: zod.string().nullable(),
+  client: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string().nullish(),
+  }),
+  assignedTo: zod
+    .union([
+      zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      zod.null(),
+    ])
+    .optional(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  timeline: zod.array(
+    zod.object({
+      id: zod.number(),
+      status: zod.enum([
+        "draft",
+        "quoted",
+        "approved",
+        "in_production",
+        "ready",
+        "delivered",
+        "cancelled",
+      ]),
+      note: zod.string().nullish(),
+      createdAt: zod.coerce.date(),
+      by: zod
+        .union([
+          zod.object({
+            id: zod.number(),
+            name: zod.string(),
+            email: zod.string().nullish(),
+          }),
+          zod.null(),
+        ])
+        .optional(),
+    }),
+  ),
+});
+
+/**
+ * @summary Update an order's status (staff/admin)
+ */
+export const UpdateOrderStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const updateOrderStatusBodyNoteMax = 500;
+
+export const UpdateOrderStatusBody = zod.object({
+  status: zod.enum([
+    "draft",
+    "quoted",
+    "approved",
+    "in_production",
+    "ready",
+    "delivered",
+    "cancelled",
+  ]),
+  note: zod.string().max(updateOrderStatusBodyNoteMax).optional(),
+});
+
+export const updateOrderStatusResponseItemsItemDescriptionMax = 200;
+
+export const updateOrderStatusResponseItemsItemQtyMax = 100000;
+
+export const updateOrderStatusResponseItemsItemUnitPriceMin = 0;
+export const updateOrderStatusResponseItemsItemUnitPriceMax = 1000000000;
+
+export const UpdateOrderStatusResponse = zod.object({
+  id: zod.number(),
+  orderNumber: zod.string(),
+  title: zod.string(),
+  status: zod.enum([
+    "draft",
+    "quoted",
+    "approved",
+    "in_production",
+    "ready",
+    "delivered",
+    "cancelled",
+  ]),
+  items: zod.array(
+    zod.object({
+      description: zod
+        .string()
+        .min(1)
+        .max(updateOrderStatusResponseItemsItemDescriptionMax),
+      qty: zod.number().min(1).max(updateOrderStatusResponseItemsItemQtyMax),
+      unitPrice: zod
+        .number()
+        .min(updateOrderStatusResponseItemsItemUnitPriceMin)
+        .max(updateOrderStatusResponseItemsItemUnitPriceMax)
+        .describe("Unit price in RWF (integer)"),
+    }),
+  ),
+  subtotalAmount: zod.number(),
+  notes: zod.string().nullable(),
+  client: zod.object({
+    id: zod.number(),
+    name: zod.string(),
+    email: zod.string().nullish(),
+  }),
+  assignedTo: zod
+    .union([
+      zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      zod.null(),
+    ])
+    .optional(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+  timeline: zod.array(
+    zod.object({
+      id: zod.number(),
+      status: zod.enum([
+        "draft",
+        "quoted",
+        "approved",
+        "in_production",
+        "ready",
+        "delivered",
+        "cancelled",
+      ]),
+      note: zod.string().nullish(),
+      createdAt: zod.coerce.date(),
+      by: zod
+        .union([
+          zod.object({
+            id: zod.number(),
+            name: zod.string(),
+            email: zod.string().nullish(),
+          }),
+          zod.null(),
+        ])
+        .optional(),
+    }),
+  ),
+});
