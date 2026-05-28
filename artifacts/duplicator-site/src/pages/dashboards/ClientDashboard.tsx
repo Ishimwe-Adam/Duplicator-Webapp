@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { KpiCard } from "@/components/DashboardKpi";
 import { Section, StatusPill, DemoTag, ProgressBar } from "@/components/dashboard/Primitives";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import { ShoppingBag, FileText, Sparkles, Clock, ArrowUpRight, Package, Truck, CheckCircle2, RotateCcw, Award } from "lucide-react";
 import { formatFRW } from "@/lib/format";

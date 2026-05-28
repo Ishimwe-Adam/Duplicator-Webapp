@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useListOrders, getListOrdersQueryKey } from "@workspace/api-client-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Section, StatusPill, DataTable } from "@/components/dashboard/Primitives";

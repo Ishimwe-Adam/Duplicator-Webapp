@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useGetCurrentUser,
@@ -6,21 +6,8 @@ import {
   useLogout,
   useRegister,
   getGetCurrentUserQueryKey,
-  type AuthUser,
-  type LoginInput,
-  type RegisterInput,
 } from "@workspace/api-client-react";
-
-interface AuthContextValue {
-  user: AuthUser | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (input: LoginInput) => Promise<AuthUser>;
-  register: (input: RegisterInput) => Promise<AuthUser>;
-  logout: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext, type AuthContextValue } from "./auth";
 
 const REQ = { credentials: "include" as const };
 
@@ -63,11 +50,3 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
-
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
-  return ctx;
-}
-
-export type Role = AuthUser["role"];

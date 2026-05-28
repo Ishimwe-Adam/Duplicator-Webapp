@@ -5,7 +5,7 @@ import {
   getListOrdersQueryKey,
 } from "@workspace/api-client-react";
 import { useTheme } from "@/context/ThemeContext";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { formatFRW } from "@/lib/format";
 import { Plus, Trash2, X } from "lucide-react";
 

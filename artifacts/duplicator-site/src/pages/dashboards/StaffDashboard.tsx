@@ -2,7 +2,7 @@ import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { KpiCard } from "@/components/DashboardKpi";
 import { Section, StatusPill, Avatar, DemoTag, ProgressBar } from "@/components/dashboard/Primitives";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import { ListChecks, ShoppingBag, MessageSquare, Clock, ArrowUpRight, Flame } from "lucide-react";
 import { formatFRW } from "@/lib/format";

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
 import AuthShell, { Field, SubmitButton, ErrorBanner } from "@/components/AuthShell";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/auth";
 import { roleHome } from "./LoginPage";
 function errorMessage(err: unknown, fallback: string): string {
   if (err && typeof err === "object" && "data" in err) {

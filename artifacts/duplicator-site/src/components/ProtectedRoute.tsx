@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { Redirect } from "wouter";
-import { useAuth, type Role } from "@/context/AuthContext";
+import { useAuth, type Role } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 
 interface ProtectedRouteProps {
