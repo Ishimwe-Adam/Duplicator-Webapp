@@ -5,6 +5,7 @@ import {
   invoicesTable,
   ordersTable,
   usersTable,
+  paymentsTable,
   formatInvoiceNumber,
   formatOrderNumber,
   nextAllowedInvoiceStatuses,
@@ -13,16 +14,19 @@ import {
   type Invoice,
   type InvoiceStatus,
   type OrderItemLine,
+  type Payment,
 } from "@workspace/db";
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   CreateInvoiceBody,
   UpdateInvoiceStatusBody,
+  RecordPaymentBody,
   type InvoiceDetail,
   type InvoiceSummary,
   type InvoiceListResponse,
   type OrderPartyRef,
   type InvoiceOrderRef,
+  type Payment as PaymentDto,
 } from "@workspace/api-zod";
 import { requireAuth, requireRole } from "../middlewares/requireAuth";
 
@@ -75,11 +79,52 @@ function orderRef(o: OrderRow | null | undefined, orderId: number): InvoiceOrder
   };
 }
 
+async function fetchPaidByInvoice(invoiceIds: number[]): Promise<Map<number, number>> {
+  const unique = Array.from(new Set(invoiceIds));
+  if (unique.length === 0) return new Map();
+  const rows = await db
+    .select({
+      invoiceId: paymentsTable.invoiceId,
+      paid: sql<string>`COALESCE(SUM(${paymentsTable.amount}), 0)`,
+    })
+    .from(paymentsTable)
+    .where(inArray(paymentsTable.invoiceId, unique))
+    .groupBy(paymentsTable.invoiceId);
+  return new Map(rows.map((r) => [r.invoiceId, Number(r.paid)]));
+}
+
+async function fetchPaymentsForInvoice(invoiceId: number): Promise<Payment[]> {
+  return db
+    .select()
+    .from(paymentsTable)
+    .where(eq(paymentsTable.invoiceId, invoiceId))
+    .orderBy(asc(paymentsTable.paidAt));
+}
+
+function paymentDto(p: Payment, recordedBy: UserRow | null): PaymentDto {
+  return {
+    id: p.id,
+    amount: p.amount,
+    method: p.method,
+    reference: p.reference ?? null,
+    notes: p.notes ?? null,
+    paidAt: p.paidAt,
+    recordedBy: partyRef(recordedBy) ?? {
+      id: p.recordedById,
+      name: "Unknown",
+      email: null,
+    },
+    createdAt: p.createdAt,
+  };
+}
+
 function summarize(
   inv: Invoice,
   userMap: Map<number, UserRow>,
   orderMap: Map<number, OrderRow>,
+  paidMap: Map<number, number>,
 ): InvoiceSummary {
+  const amountPaid = paidMap.get(inv.id) ?? 0;
   return {
     id: inv.id,
     invoiceNumber: formatInvoiceNumber(inv.id),
@@ -88,6 +133,8 @@ function summarize(
     taxRatePercent: inv.taxRatePercent,
     taxAmount: inv.taxAmount,
     totalAmount: inv.totalAmount,
+    amountPaid,
+    balanceDue: Math.max(0, inv.totalAmount - amountPaid),
     issueDate: inv.issueDate,
     dueDate: inv.dueDate,
     isOverdue: isInvoiceOverdue(inv),
@@ -102,8 +149,10 @@ function summarize(
 }
 
 async function buildDetail(inv: Invoice): Promise<InvoiceDetail> {
-  const userMap = await fetchUserMap([inv.clientId]);
+  const payments = await fetchPaymentsForInvoice(inv.id);
+  const userMap = await fetchUserMap([inv.clientId, ...payments.map((p) => p.recordedById)]);
   const orderMap = await fetchOrderMap([inv.orderId]);
+  const amountPaid = payments.reduce((s, p) => s + p.amount, 0);
   return {
     id: inv.id,
     invoiceNumber: formatInvoiceNumber(inv.id),
@@ -113,6 +162,9 @@ async function buildDetail(inv: Invoice): Promise<InvoiceDetail> {
     taxRatePercent: inv.taxRatePercent,
     taxAmount: inv.taxAmount,
     totalAmount: inv.totalAmount,
+    amountPaid,
+    balanceDue: Math.max(0, inv.totalAmount - amountPaid),
+    payments: payments.map((p) => paymentDto(p, userMap.get(p.recordedById) ?? null)),
     notes: inv.notes ?? null,
     issueDate: inv.issueDate,
     dueDate: inv.dueDate,
@@ -160,8 +212,9 @@ router.get("/", async (req, res) => {
 
   const userMap = await fetchUserMap(invs.map((i) => i.clientId));
   const orderMap = await fetchOrderMap(invs.map((i) => i.orderId));
+  const paidMap = await fetchPaidByInvoice(invs.map((i) => i.id));
   const body: InvoiceListResponse = {
-    invoices: invs.map((i) => summarize(i, userMap, orderMap)),
+    invoices: invs.map((i) => summarize(i, userMap, orderMap, paidMap)),
   };
   res.status(200).json(body);
 });
@@ -301,6 +354,91 @@ router.patch("/:id/status", requireRole(...ADMIN_ROLES), async (req, res) => {
 
   req.log.info({ invoiceId: id, status: nextStatus, by: user.id }, "invoice status updated");
   res.status(200).json(await buildDetail(rows[0]));
+});
+
+router.post("/:id/payments", requireRole(...ADMIN_ROLES), async (req, res) => {
+  const user = req.user!;
+  const id = parseIdParam(req.params.id);
+  if (id === null) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+  const parsed = RecordPaymentBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    return;
+  }
+  const input = parsed.data;
+  const paidAt = input.paidAt ? new Date(input.paidAt) : new Date();
+  if (Number.isNaN(paidAt.getTime())) {
+    res.status(400).json({ error: "Invalid paidAt" });
+    return;
+  }
+
+  try {
+    await db.transaction(async (tx) => {
+      // Lock the invoice row so balance can't shift under us.
+      const [inv] = await tx
+        .select()
+        .from(invoicesTable)
+        .where(eq(invoicesTable.id, id))
+        .for("update")
+        .limit(1);
+      if (!inv) throw new HttpError(404, "Invoice not found");
+      if (inv.status === "paid") throw new HttpError(400, "Invoice is already paid");
+      if (inv.status === "void") throw new HttpError(400, "Cannot record payment on a void invoice");
+
+      const [agg] = await tx
+        .select({ paid: sql<string>`COALESCE(SUM(${paymentsTable.amount}), 0)` })
+        .from(paymentsTable)
+        .where(eq(paymentsTable.invoiceId, id));
+      const alreadyPaid = Number(agg?.paid ?? 0);
+      const balance = inv.totalAmount - alreadyPaid;
+      if (balance <= 0) {
+        throw new HttpError(400, "Invoice has no outstanding balance");
+      }
+      if (input.amount > balance) {
+        throw new HttpError(400, `Amount exceeds outstanding balance of FRW ${balance.toLocaleString("en-US")}`);
+      }
+
+      await tx.insert(paymentsTable).values({
+        invoiceId: id,
+        amount: input.amount,
+        method: input.method,
+        reference: input.reference?.trim() || null,
+        notes: input.notes?.trim() || null,
+        paidAt,
+        recordedById: user.id,
+      });
+
+      const newPaid = alreadyPaid + input.amount;
+      if (newPaid >= inv.totalAmount) {
+        // Auto-flip to paid regardless of prior status (overrides normal workflow).
+        // Also backfill sentAt if invoice skipped the 'sent' state, so the lifecycle
+        // timeline stays consistent (paidAt is always after sentAt).
+        const now = new Date();
+        await tx
+          .update(invoicesTable)
+          .set({
+            status: "paid",
+            paidAt: now,
+            sentAt: inv.sentAt ?? now,
+            updatedAt: now,
+          })
+          .where(eq(invoicesTable.id, id));
+      }
+    });
+  } catch (e) {
+    if (e instanceof HttpError) {
+      res.status(e.status).json({ error: e.message });
+      return;
+    }
+    throw e;
+  }
+
+  const [updated] = await db.select().from(invoicesTable).where(eq(invoicesTable.id, id)).limit(1);
+  req.log.info({ invoiceId: id, amount: input.amount, method: input.method, by: user.id }, "payment recorded");
+  res.status(201).json(await buildDetail(updated));
 });
 
 // PDF download — kept out of the OpenAPI hooks (binary stream).

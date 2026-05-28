@@ -28,6 +28,7 @@ import type {
   LoginInput,
   OrderDetail,
   OrderListResponse,
+  RecordPaymentInput,
   RegisterInput,
   UpdateInvoiceStatusInput,
   UpdateOrderStatusInput,
@@ -1024,6 +1025,93 @@ export function useGetInvoice<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Record a manual payment against an invoice (admin only)
+ */
+export const getRecordPaymentUrl = (id: number) => {
+  return `/api/invoices/${id}/payments`;
+};
+
+export const recordPayment = async (
+  id: number,
+  recordPaymentInput: RecordPaymentInput,
+  options?: RequestInit,
+): Promise<InvoiceDetail> => {
+  return customFetch<InvoiceDetail>(getRecordPaymentUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(recordPaymentInput),
+  });
+};
+
+export const getRecordPaymentMutationOptions = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordPayment>>,
+    TError,
+    { id: number; data: BodyType<RecordPaymentInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof recordPayment>>,
+  TError,
+  { id: number; data: BodyType<RecordPaymentInput> },
+  TContext
+> => {
+  const mutationKey = ["recordPayment"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof recordPayment>>,
+    { id: number; data: BodyType<RecordPaymentInput> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return recordPayment(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RecordPaymentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof recordPayment>>
+>;
+export type RecordPaymentMutationBody = BodyType<RecordPaymentInput>;
+export type RecordPaymentMutationError = ErrorType<ErrorResponse>;
+
+/**
+ * @summary Record a manual payment against an invoice (admin only)
+ */
+export const useRecordPayment = <
+  TError = ErrorType<ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof recordPayment>>,
+    TError,
+    { id: number; data: BodyType<RecordPaymentInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof recordPayment>>,
+  TError,
+  { id: number; data: BodyType<RecordPaymentInput> },
+  TContext
+> => {
+  return useMutation(getRecordPaymentMutationOptions(options));
+};
 
 /**
  * @summary Update an invoice's status (admin only)

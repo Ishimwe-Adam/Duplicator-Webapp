@@ -351,6 +351,8 @@ export const ListInvoicesResponse = zod.object({
       taxRatePercent: zod.number().optional(),
       taxAmount: zod.number(),
       totalAmount: zod.number(),
+      amountPaid: zod.number(),
+      balanceDue: zod.number(),
       issueDate: zod.coerce.date(),
       dueDate: zod.coerce.date(),
       isOverdue: zod.boolean(),
@@ -425,6 +427,24 @@ export const GetInvoiceResponse = zod.object({
   taxRatePercent: zod.number(),
   taxAmount: zod.number(),
   totalAmount: zod.number(),
+  amountPaid: zod.number(),
+  balanceDue: zod.number(),
+  payments: zod.array(
+    zod.object({
+      id: zod.number(),
+      amount: zod.number(),
+      method: zod.enum(["momo", "airtel", "bank_transfer", "cash", "other"]),
+      reference: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      paidAt: zod.coerce.date(),
+      recordedBy: zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
   notes: zod.string().nullish(),
   issueDate: zod.coerce.date(),
   dueDate: zod.coerce.date(),
@@ -443,6 +463,35 @@ export const GetInvoiceResponse = zod.object({
   }),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Record a manual payment against an invoice (admin only)
+ */
+export const RecordPaymentParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const recordPaymentBodyReferenceMax = 200;
+
+export const recordPaymentBodyNotesMax = 1000;
+
+export const RecordPaymentBody = zod.object({
+  amount: zod
+    .number()
+    .min(1)
+    .describe("Amount in FRW. Must be > 0 and ≤ outstanding balance."),
+  method: zod.enum(["momo", "airtel", "bank_transfer", "cash", "other"]),
+  reference: zod
+    .string()
+    .max(recordPaymentBodyReferenceMax)
+    .optional()
+    .describe("External txn id \/ slip \/ cheque number."),
+  notes: zod.string().max(recordPaymentBodyNotesMax).optional(),
+  paidAt: zod.coerce
+    .date()
+    .optional()
+    .describe("When the payment actually happened. Defaults to now."),
 });
 
 /**
@@ -485,6 +534,24 @@ export const UpdateInvoiceStatusResponse = zod.object({
   taxRatePercent: zod.number(),
   taxAmount: zod.number(),
   totalAmount: zod.number(),
+  amountPaid: zod.number(),
+  balanceDue: zod.number(),
+  payments: zod.array(
+    zod.object({
+      id: zod.number(),
+      amount: zod.number(),
+      method: zod.enum(["momo", "airtel", "bank_transfer", "cash", "other"]),
+      reference: zod.string().nullish(),
+      notes: zod.string().nullish(),
+      paidAt: zod.coerce.date(),
+      recordedBy: zod.object({
+        id: zod.number(),
+        name: zod.string(),
+        email: zod.string().nullish(),
+      }),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
   notes: zod.string().nullish(),
   issueDate: zod.coerce.date(),
   dueDate: zod.coerce.date(),

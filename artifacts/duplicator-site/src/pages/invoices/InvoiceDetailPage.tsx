@@ -21,7 +21,9 @@ import {
 } from "@/lib/invoices";
 import { formatDateTime } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
-import { ChevronLeft, AlertCircle, Download } from "lucide-react";
+import { ChevronLeft, AlertCircle, Download, Wallet } from "lucide-react";
+import { PAYMENT_METHOD_LABEL } from "@/lib/payments";
+import RecordPaymentModal from "./RecordPaymentModal";
 
 const REQ = { credentials: "include" as const };
 
@@ -43,6 +45,7 @@ export default function InvoiceDetailPage() {
   });
   const updateM = useUpdateInvoiceStatus({ request: REQ });
   const [pendingTo, setPendingTo] = useState<InvoiceStatus | null>(null);
+  const [payOpen, setPayOpen] = useState(false);
 
   if (!user) return null;
   const base = invoicesBasePath(user.role);
@@ -183,8 +186,50 @@ export default function InvoiceDetailPage() {
               {inv.taxRatePercent > 0 && (
                 <Row label={`VAT (${inv.taxRatePercent}%)`} value={formatFRW(inv.taxAmount)} c={c} />
               )}
-              <Row label="Total" value={formatFRW(inv.totalAmount)} bold c={c} />
+              <Row label="Total" value={formatFRW(inv.totalAmount)} c={c} />
+              {inv.amountPaid > 0 && (
+                <Row label="Paid" value={`− ${formatFRW(inv.amountPaid)}`} c={c} />
+              )}
+              <Row label="Balance due" value={formatFRW(inv.balanceDue)} bold c={c} />
             </div>
+          </Section>
+
+          <Section
+            title="Payments"
+            action={
+              canChange && inv.balanceDue > 0 && inv.status !== "void" ? (
+                <button
+                  onClick={() => setPayOpen(true)}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    padding: "7px 12px", border: "none", borderRadius: 8,
+                    background: "linear-gradient(135deg, #2645C8, #00C6FF)",
+                    color: "#fff", fontFamily: "'Inter', sans-serif",
+                    fontSize: 12.5, fontWeight: 500, cursor: "pointer",
+                  }}
+                >
+                  <Wallet size={13} /> Record payment
+                </button>
+              ) : undefined
+            }
+            noPad
+          >
+            {inv.payments.length === 0 ? (
+              <div style={{ padding: "22px 22px", textAlign: "center", color: c.textMuted, fontSize: 12.5 }}>
+                No payments recorded yet.
+              </div>
+            ) : (
+              <DataTable
+                columns={[
+                  { key: "date", header: "Date", render: (r: typeof inv.payments[number]) => <span style={{ fontSize: 12.5 }}>{formatDateTime(r.paidAt)}</span> },
+                  { key: "method", header: "Method", render: (r) => <span>{PAYMENT_METHOD_LABEL[r.method]}</span> },
+                  { key: "ref", header: "Reference", render: (r) => <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: c.textMuted }}>{r.reference || "—"}</span> },
+                  { key: "by", header: "Recorded by", render: (r) => <span style={{ color: c.textSecondary, fontSize: 12.5 }}>{r.recordedBy.name}</span> },
+                  { key: "amt", header: "Amount", align: "right", render: (r) => <span style={{ fontWeight: 500, color: "#7FE8FF" }}>{formatFRW(r.amount)}</span> },
+                ]}
+                rows={inv.payments}
+              />
+            )}
           </Section>
 
           {inv.notes && (
@@ -257,6 +302,15 @@ export default function InvoiceDetailPage() {
           .iv-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {payOpen && (
+        <RecordPaymentModal
+          invoiceId={inv.id}
+          balanceDue={inv.balanceDue}
+          onClose={() => setPayOpen(false)}
+          onRecorded={() => setPayOpen(false)}
+        />
+      )}
     </DashboardLayout>
   );
 }

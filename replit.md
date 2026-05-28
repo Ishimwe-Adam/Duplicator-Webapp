@@ -31,7 +31,10 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 - `artifacts/duplicator-site/src/lib/format.ts` — `formatFRW()`
 - `artifacts/api-server/src/routes/auth.ts` — `/api/auth/{register,login,logout,me}`; atomic SQL CASE for failed-login lockout
 - `artifacts/api-server/src/routes/orders.ts` — `/api/orders` role-scoped CRUD + atomic status transitions
-- `artifacts/api-server/src/routes/invoices.ts` — `/api/invoices` role-scoped (clients see own, admins manage, staff blocked) + atomic status precondition + `/api/invoices/:id/pdf` pdfkit stream
+- `artifacts/api-server/src/routes/invoices.ts` — `/api/invoices` role-scoped (clients see own, admins manage, staff blocked) + atomic status precondition + `/api/invoices/:id/pdf` pdfkit stream + `POST /:id/payments` transactional payment recorder
+- `lib/db/src/schema/payments.ts` — payments table (bigint amount, method enum [momo/airtel/bank_transfer/cash/other], reference/notes/paidAt) + `PAYMENT_METHOD_LABEL`
+- `artifacts/duplicator-site/src/pages/invoices/RecordPaymentModal.tsx` — admin payment modal
+- `artifacts/duplicator-site/src/lib/payments.ts` — payment method labels (frontend mirror)
 - `lib/db/src/schema/invoices.ts` — invoices schema + `formatInvoiceNumber()` + `nextAllowedInvoiceStatuses()` + `computeInvoiceTotals()` + `isInvoiceOverdue()`
 - `artifacts/duplicator-site/src/pages/invoices/{InvoicesListPage,InvoiceDetailPage,CreateInvoiceModal}.tsx` — invoices UI
 - `artifacts/duplicator-site/src/lib/invoices.ts` — status labels/tones + frontend transition mirror + `pdfUrlFor()`
@@ -75,8 +78,9 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 - **Phase 1 ✅** — Auth foundation (DB + API + UI), role-based dashboard shells, FRW pricing on Products, code-reviewed and hardened (atomic lockout, complete subcategory price coverage).
 - **Phase 2 ✅** — Orders module: `orders` + `order_status_events` tables, `/api/orders` (list/create/get/patch status) with role-scoped queries, `/{admin,staff,portal}/orders` pages + detail view with timeline + create modal. Code-reviewed and hardened: server-side workflow enforcement via `nextAllowedOrderStatuses`, atomic status update with precondition (`WHERE id=? AND status=?`) returning 409 on concurrent transitions, `subtotal_amount` as bigint to prevent int32 overflow.
 - **Phase 3 ✅** — Invoices module: `invoices` table (bigint money, jsonb items snapshot, status enum [draft/sent/paid/void]), `/api/invoices` (list/create/get/patch status) admin-only mutations, staff blocked entirely, clients scoped to own. PDF generation via pdfkit at `GET /api/invoices/:id/pdf` (same-origin cookie auth, `Cache-Control: private, no-store`). Frontend: `/{admin,portal}/invoices` list + detail with PDF download, admin create-from-order modal w/ VAT %. Code-reviewed and hardened: invoice creation wrapped in `db.transaction` with `SELECT ... FOR UPDATE` on the order row (prevents race vs. concurrent order cancel/reassign), atomic status UPDATE WHERE id=? AND status=? returning 409 on lost race.
-- **Phase 4 (next)** — Payments (MoMo/Airtel) hooked to invoice status.
-- Later phases — Tasks/Kanban, CRM, Messaging (Socket.io), Analytics, Quotes + AI assist.
+- **Phase 4 ✅** — Manual payment recording: `payments` table (bigint amount, method enum, reference, paidAt), `POST /api/invoices/:id/payments` admin-only inside `db.transaction` w/ `SELECT … FOR UPDATE` on invoice + SUM-inside-tx balance check (race-safe vs. concurrent payments), rejects overpay/paid/void invoices. On full settlement auto-flips invoice to `status='paid'`, sets `paidAt`, backfills `sentAt` if invoice skipped sent. `InvoiceSummary` + `InvoiceDetail` now carry `amountPaid` + `balanceDue`; detail also exposes `payments[]` with `recordedBy`. Frontend: balance column on lists, Payments section + `RecordPaymentModal` (FRW input + method dropdown + reference + date) on detail. Code-reviewed: PASS.
+- **Phase 5 (next)** — Tasks/Kanban or CRM or Messaging (Socket.io).
+- Later phases — Analytics, Quotes + AI assist, real MoMo/Airtel Collect API integration.
 
 ## User preferences
 
@@ -100,6 +104,7 @@ A fully dark-themed marketing website for Duplicator Ltd, a Kigali-based printin
 - **Invoice PDF endpoint is NOT in the OpenAPI spec** — it streams binary, so the frontend uses a plain `<a href="/api/invoices/:id/pdf" target="_blank">` (same-origin cookie auth carries through). Don't try to generate hooks for it.
 - **pdfkit bundling**: `pdfkit` + its fontkit dep chain (`fontkit`, `brotli`, `linebreak`, `unicode-properties`, `unicode-trie`, `restructure`, `tiny-inflate`, `dfa`) are in `artifacts/api-server/build.mjs` externals — they use dynamic requires + path traversal for font files and break esbuild bundling otherwise.
 - **Invoice create is transactional** with `SELECT ... FOR UPDATE` on the order row, so order status / clientId can't change between the read and the insert. The status PATCH uses the same atomic-precondition pattern as orders (`WHERE id=? AND status=?` → 409 on race).
+- **Payment recording is transactional** with `SELECT ... FOR UPDATE` on the invoice + SUM(payments) inside the same tx — prevents two concurrent payments from both spending the same outstanding balance. Fully-paid invoices auto-flip to `status='paid'` *bypassing* `nextAllowedInvoiceStatuses` (a draft can go straight to paid for cash sales); `sentAt` is backfilled to `now()` in that case so the timeline stays monotonic.
 
 ## Pointers
 

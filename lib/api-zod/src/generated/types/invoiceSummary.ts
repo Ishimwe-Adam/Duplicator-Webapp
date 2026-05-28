@@ -17,6 +17,8 @@ export interface InvoiceSummary {
   taxRatePercent?: number;
   taxAmount: number;
   totalAmount: number;
+  amountPaid: number;
+  balanceDue: number;
   issueDate: Date;
   dueDate: Date;
   isOverdue: boolean;

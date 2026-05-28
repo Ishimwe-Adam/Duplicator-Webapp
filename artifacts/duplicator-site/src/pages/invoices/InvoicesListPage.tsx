@@ -137,6 +137,26 @@ export default function InvoicesListPage() {
                 ),
               },
               {
+                key: "balance",
+                header: "Balance",
+                align: "right" as const,
+                render: (r: typeof invoices[number]) => (
+                  <span
+                    style={{
+                      fontWeight: 500,
+                      color:
+                        r.balanceDue === 0
+                          ? "#86EFAC"
+                          : r.amountPaid > 0
+                          ? "#FCD34D"
+                          : c.textSecondary,
+                    }}
+                  >
+                    {r.balanceDue === 0 ? "Paid in full" : formatFRW(r.balanceDue)}
+                  </span>
+                ),
+              },
+              {
                 key: "due",
                 header: "Due",
                 render: (r: typeof invoices[number]) => (

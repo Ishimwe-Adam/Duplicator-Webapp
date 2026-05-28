@@ -16,6 +16,8 @@ tags:
     description: Customer orders
   - name: invoices
     description: Invoices generated from orders
+  - name: payments
+    description: Payments recorded against invoices
 paths:
   /healthz:
     get:
@@ -353,6 +355,55 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
         "404":
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /invoices/{id}/payments:
+    post:
+      operationId: recordPayment
+      tags: [payments]
+      summary: Record a manual payment against an invoice (admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecordPaymentInput"
+      responses:
+        "201":
+          description: Created — returns the updated invoice with payments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetail"
+        "400":
+          description: Invalid input (e.g. amount > balance, paid/void invoice)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Invoice not found
           content:
             application/json:
               schema:
@@ -698,6 +749,8 @@ components:
         - subtotalAmount
         - taxAmount
         - totalAmount
+        - amountPaid
+        - balanceDue
         - issueDate
         - dueDate
         - isOverdue
@@ -718,6 +771,10 @@ components:
         taxAmount:
           type: integer
         totalAmount:
+          type: integer
+        amountPaid:
+          type: integer
+        balanceDue:
           type: integer
         issueDate:
           type: string
@@ -746,6 +803,9 @@ components:
         - taxRatePercent
         - taxAmount
         - totalAmount
+        - amountPaid
+        - balanceDue
+        - payments
         - issueDate
         - dueDate
         - isOverdue
@@ -772,6 +832,14 @@ components:
           type: integer
         totalAmount:
           type: integer
+        amountPaid:
+          type: integer
+        balanceDue:
+          type: integer
+        payments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Payment"
         notes:
           type: ["string", "null"]
         issueDate:
@@ -833,3 +901,58 @@ components:
       properties:
         status:
           $ref: "#/components/schemas/InvoiceStatus"
+
+    PaymentMethod:
+      type: string
+      enum: [momo, airtel, bank_transfer, cash, other]
+
+    Payment:
+      type: object
+      required:
+        - id
+        - amount
+        - method
+        - paidAt
+        - recordedBy
+        - createdAt
+      properties:
+        id:
+          type: integer
+        amount:
+          type: integer
+        method:
+          $ref: "#/components/schemas/PaymentMethod"
+        reference:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        paidAt:
+          type: string
+          format: date-time
+        recordedBy:
+          $ref: "#/components/schemas/OrderPartyRef"
+        createdAt:
+          type: string
+          format: date-time
+
+    RecordPaymentInput:
+      type: object
+      required: [amount, method]
+      properties:
+        amount:
+          type: integer
+          minimum: 1
+          description: Amount in FRW. Must be > 0 and ≤ outstanding balance.
+        method:
+          $ref: "#/components/schemas/PaymentMethod"
+        reference:
+          type: string
+          maxLength: 200
+          description: External txn id / slip / cheque number.
+        notes:
+          type: string
+          maxLength: 1000
+        paidAt:
+          type: string
+          format: date-time
+          description: When the payment actually happened. Defaults to now.

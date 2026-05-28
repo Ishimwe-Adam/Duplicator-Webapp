@@ -181,11 +181,36 @@ export interface InvoiceSummary {
   taxRatePercent?: number;
   taxAmount: number;
   totalAmount: number;
+  amountPaid: number;
+  balanceDue: number;
   issueDate: string;
   dueDate: string;
   isOverdue: boolean;
   client: OrderPartyRef;
   order: InvoiceOrderRef;
+  createdAt: string;
+}
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
+
+export const PaymentMethod = {
+  momo: "momo",
+  airtel: "airtel",
+  bank_transfer: "bank_transfer",
+  cash: "cash",
+  other: "other",
+} as const;
+
+export interface Payment {
+  id: number;
+  amount: number;
+  method: PaymentMethod;
+  /** @nullable */
+  reference?: string | null;
+  /** @nullable */
+  notes?: string | null;
+  paidAt: string;
+  recordedBy: OrderPartyRef;
   createdAt: string;
 }
 
@@ -198,6 +223,9 @@ export interface InvoiceDetail {
   taxRatePercent: number;
   taxAmount: number;
   totalAmount: number;
+  amountPaid: number;
+  balanceDue: number;
+  payments: Payment[];
   /** @nullable */
   notes?: string | null;
   issueDate: string;
@@ -233,4 +261,22 @@ export interface CreateInvoiceInput {
 
 export interface UpdateInvoiceStatusInput {
   status: InvoiceStatus;
+}
+
+export interface RecordPaymentInput {
+  /**
+   * Amount in FRW. Must be > 0 and ≤ outstanding balance.
+   * @minimum 1
+   */
+  amount: number;
+  method: PaymentMethod;
+  /**
+   * External txn id / slip / cheque number.
+   * @maxLength 200
+   */
+  reference?: string;
+  /** @maxLength 1000 */
+  notes?: string;
+  /** When the payment actually happened. Defaults to now. */
+  paidAt?: string;
 }

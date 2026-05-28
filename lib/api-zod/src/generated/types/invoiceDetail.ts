@@ -9,6 +9,7 @@ import type { InvoiceOrderRef } from "./invoiceOrderRef";
 import type { InvoiceStatus } from "./invoiceStatus";
 import type { OrderItemLine } from "./orderItemLine";
 import type { OrderPartyRef } from "./orderPartyRef";
+import type { Payment } from "./payment";
 
 export interface InvoiceDetail {
   id: number;
@@ -19,6 +20,9 @@ export interface InvoiceDetail {
   taxRatePercent: number;
   taxAmount: number;
   totalAmount: number;
+  amountPaid: number;
+  balanceDue: number;
+  payments: Payment[];
   /** @nullable */
   notes?: string | null;
   issueDate: Date;
