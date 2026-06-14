@@ -4,6 +4,13 @@ import { Redirect } from "wouter";
 import { useAuth, type Role } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 
+const ROLE_RANK: Record<Role, number> = {
+  client: 0,
+  staff: 1,
+  admin: 2,
+  super_admin: 3,
+};
+
 interface ProtectedRouteProps {
   children: ReactNode;
   roles?: Role[];
@@ -38,14 +45,17 @@ export default function ProtectedRoute({ children, roles }: ProtectedRouteProps)
   if (!user) return <Redirect to="/login" />;
 
   if (roles && !roles.includes(user.role)) {
-    // Send user to their proper home if they hit the wrong dashboard
-    const home =
-      user.role === "client"
-        ? "/portal"
-        : user.role === "staff"
-        ? "/staff"
-        : "/admin";
-    return <Redirect to={home} />;
+    const userRank = ROLE_RANK[user.role];
+    const allowed = roles.some((role) => userRank >= ROLE_RANK[role]);
+    if (!allowed) {
+      const home =
+        user.role === "client"
+          ? "/portal"
+          : user.role === "staff"
+          ? "/staff"
+          : "/admin";
+      return <Redirect to={home} />;
+    }
   }
 
   return <>{children}</>;

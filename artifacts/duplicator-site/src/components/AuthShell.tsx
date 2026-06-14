@@ -78,7 +78,7 @@ export default function AuthShell({ title, subtitle, children, footer }: AuthShe
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 9,
                   letterSpacing: "0.14em",
-                  color: "#00C6FF",
+                  color: isDark ? "#00C6FF" : "#2645C8",
                   marginTop: 3,
                   textTransform: "uppercase",
                 }}

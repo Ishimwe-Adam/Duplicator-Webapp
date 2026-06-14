@@ -710,7 +710,7 @@ function ProductCard({ product, catColor }: { product: Product; catColor: string
           onMouseEnter={e => { e.currentTarget.style.opacity = "0.9"; e.currentTarget.style.transform = "translateY(-1px)"; }}
           onMouseLeave={e => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
         >
-          Request Quote
+          Order now
         </a>
       </div>
     </div>
@@ -766,7 +766,7 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
               fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
               padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${!activeSubcat ? category.color : c.border}`,
               background: !activeSubcat ? category.color : isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.04)",
-              color: !activeSubcat ? "#fff" : c.textMuted, cursor: "pointer", transition: "all .2s"
+              color: !activeSubcat ? (isDark ? "#fff" : "#04091A") : c.textMuted, cursor: "pointer", transition: "all .2s"
             }}>All</button>
           {category.subcategories.map(sub => {
             const count = catProducts.filter(p => p.subcategory === sub).length;
@@ -778,7 +778,7 @@ function CategorySection({ category, products: catProducts, activeSubcat, onSubc
                   fontFamily: "'Inter', sans-serif", fontSize: 10, textTransform: "uppercase", letterSpacing: ".08em",
                   padding: "7px 16px", borderRadius: 100, border: `1.5px solid ${active ? category.color : c.border}`,
                   background: active ? category.color : isDark ? "rgba(255,255,255,.04)" : "rgba(38,69,200,.04)",
-                  color: active ? "#fff" : c.textMuted, cursor: "pointer", transition: "all .2s"
+                  color: active ? (isDark ? "#fff" : "#04091A") : c.textMuted, cursor: "pointer", transition: "all .2s"
                 }}
               >{sub} ({count})</button>
             );

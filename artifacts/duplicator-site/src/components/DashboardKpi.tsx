@@ -17,7 +17,7 @@ export function KpiCard({ label, value, trend, icon: Icon, accent = "#00C6FF" }:
         padding: "22px 24px",
         background: c.bgCard,
         backdropFilter: "blur(16px)",
-        border: `1px solid ${c.border}`,
+        border: `1px solid ${isDark ? c.border : c.navBorder}`,
         borderRadius: 14,
         position: "relative",
         overflow: "hidden",

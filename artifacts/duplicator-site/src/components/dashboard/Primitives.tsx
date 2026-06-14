@@ -14,28 +14,28 @@ interface SectionProps {
 }
 
 export function Section({ title, subtitle, action, children, padding, noPad }: SectionProps) {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   return (
     <div
       style={{
         background: c.bgCard,
         backdropFilter: "blur(16px)",
-        border: `1px solid ${c.border}`,
+        border: `1px solid ${isDark ? c.border : c.navBorder}`,
         borderRadius: 14,
         overflow: "hidden",
       }}
     >
       {(title || action) && (
         <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            padding: "18px 22px",
-            borderBottom: `1px solid ${c.border}`,
-          }}
-        >
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+              padding: "18px 22px",
+              borderBottom: `1px solid ${isDark ? c.border : c.borderHover}`,
+            }}
+          >
           <div>
             {title && (
               <div
@@ -227,7 +227,7 @@ interface DataTableProps<T> {
 }
 
 export function DataTable<T extends { id: string | number }>({ columns, rows, emptyText = "No data yet.", onRowClick }: DataTableProps<T>) {
-  const { c } = useTheme();
+  const { c, isDark } = useTheme();
   if (rows.length === 0) {
     return (
       <div style={{ padding: 24, fontSize: 13, color: c.textMuted, fontFamily: "'Inter', sans-serif", textAlign: "center" }}>
@@ -251,7 +251,7 @@ export function DataTable<T extends { id: string | number }>({ columns, rows, em
                   textTransform: "uppercase",
                   color: c.textMuted,
                   fontWeight: 500,
-                  borderBottom: `1px solid ${c.border}`,
+                  borderBottom: `1px solid ${isDark ? c.border : c.navBorder}`,
                   width: col.width,
                   whiteSpace: "nowrap",
                 }}
@@ -267,7 +267,7 @@ export function DataTable<T extends { id: string | number }>({ columns, rows, em
               key={row.id}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
               style={{
-                borderBottom: i === rows.length - 1 ? "none" : `1px solid ${c.border}`,
+                borderBottom: i === rows.length - 1 ? "none" : `1px solid ${isDark ? c.border : c.borderHover}`,
                 cursor: onRowClick ? "pointer" : "default",
                 transition: "background .15s",
               }}

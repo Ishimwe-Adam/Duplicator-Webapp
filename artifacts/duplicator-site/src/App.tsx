@@ -14,6 +14,9 @@ import OrdersListPage from "@/pages/orders/OrdersListPage";
 import OrderDetailPage from "@/pages/orders/OrderDetailPage";
 import InvoicesListPage from "@/pages/invoices/InvoicesListPage";
 import InvoiceDetailPage from "@/pages/invoices/InvoiceDetailPage";
+import SalesQuotationPage from "@/pages/quotations/SalesQuotationPage";
+import JobCardPage from "@/pages/job-card/JobCardPage";
+import WorkspaceModulePage from "@/pages/workspace/WorkspaceModulePage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -30,6 +33,56 @@ function Router() {
           <AdminDashboard />
         </ProtectedRoute>
       </Route>
+      <Route path="/admin/analytics">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <AdminDashboard />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/tasks">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-tasks" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/employees">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-employees" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/clients">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-clients" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/messages">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-messages" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/calendar">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-calendar" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/documents">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-documents" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/gallery">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-gallery" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/announcements">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-announcements" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/settings">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <WorkspaceModulePage module="admin-settings" />
+        </ProtectedRoute>
+      </Route>
       <Route path="/admin/orders">
         <ProtectedRoute roles={["super_admin", "admin"]}>
           <OrdersListPage />
@@ -42,12 +95,17 @@ function Router() {
       </Route>
       <Route path="/admin/invoices">
         <ProtectedRoute roles={["super_admin", "admin"]}>
-          <InvoicesListPage />
+          <SalesQuotationPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/admin/job-card">
+        <ProtectedRoute roles={["super_admin", "admin"]}>
+          <JobCardPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/invoices/:id">
         <ProtectedRoute roles={["super_admin", "admin"]}>
-          <InvoiceDetailPage />
+          <SalesQuotationPage />
         </ProtectedRoute>
       </Route>
       <Route path="/staff">
@@ -63,6 +121,31 @@ function Router() {
       <Route path="/staff/orders/:id">
         <ProtectedRoute roles={["staff"]}>
           <OrderDetailPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/tasks">
+        <ProtectedRoute roles={["staff"]}>
+          <WorkspaceModulePage module="staff-tasks" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/gallery">
+        <ProtectedRoute roles={["staff"]}>
+          <WorkspaceModulePage module="staff-gallery" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/messages">
+        <ProtectedRoute roles={["staff"]}>
+          <WorkspaceModulePage module="staff-messages" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/invoices">
+        <ProtectedRoute roles={["staff"]}>
+          <SalesQuotationPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/staff/job-card">
+        <ProtectedRoute roles={["staff"]}>
+          <JobCardPage />
         </ProtectedRoute>
       </Route>
       <Route path="/portal">
@@ -88,6 +171,31 @@ function Router() {
       <Route path="/portal/invoices/:id">
         <ProtectedRoute roles={["client"]}>
           <InvoiceDetailPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/profile">
+        <ProtectedRoute roles={["client"]}>
+          <WorkspaceModulePage module="portal-profile" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/gallery">
+        <ProtectedRoute roles={["client"]}>
+          <WorkspaceModulePage module="portal-gallery" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/recommendations">
+        <ProtectedRoute roles={["client"]}>
+          <WorkspaceModulePage module="portal-recommendations" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/messages">
+        <ProtectedRoute roles={["client"]}>
+          <WorkspaceModulePage module="portal-messages" />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/portal/quotes">
+        <ProtectedRoute roles={["client"]}>
+          <SalesQuotationPage mode="client" />
         </ProtectedRoute>
       </Route>
       <Route component={NotFound} />

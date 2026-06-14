@@ -1,6 +1,7 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { KpiCard } from "@/components/DashboardKpi";
 import { Section, StatusPill, Avatar, MiniBarChart, DataTable, ProgressBar } from "@/components/dashboard/Primitives";
+import SharedWorkspaceBoard from "@/components/SharedWorkspaceBoard";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import { ShoppingBag, FileText, Users, TrendingUp, DollarSign, ArrowUpRight, AlertCircle, Loader2 } from "lucide-react";
@@ -130,6 +131,10 @@ function Body({ data, c, isDark }: { data: AnalyticsSummary; c: ReturnType<typeo
         />
       </div>
 
+      <div style={{ marginBottom: 16 }}>
+        <SharedWorkspaceBoard role="admin" />
+      </div>
+
       {/* Row: Revenue chart + Pipeline */}
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.6fr) minmax(0, 1fr)", gap: 16, marginBottom: 16 }} className="ad-row">
         <Section title="Revenue — last 12 months" subtitle="FRW (millions) by paid date">
@@ -189,7 +194,7 @@ function Body({ data, c, isDark }: { data: AnalyticsSummary; c: ReturnType<typeo
         <Section
           title="Receivables snapshot"
           subtitle="Outstanding balance across unpaid invoices"
-          action={<Link href="/admin/invoices" style={ghostLink(c.textSecondary)}>Invoices <ArrowUpRight size={13} /></Link>}
+          action={<Link href="/admin/invoices" style={ghostLink(c.textSecondary)}>Sales quotation <ArrowUpRight size={13} /></Link>}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ padding: "16px 18px", background: isDark ? "rgba(249,112,102,0.08)" : "rgba(249,112,102,0.06)", borderRadius: 11, border: `1px solid ${data.receivables.overdueCount > 0 ? "rgba(249,112,102,0.35)" : c.border}` }}>

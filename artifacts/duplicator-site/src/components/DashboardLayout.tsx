@@ -13,6 +13,7 @@ import {
   Megaphone,
   Calendar,
   Folder,
+  Image,
   Settings,
   LogOut,
   Sun,
@@ -29,7 +30,6 @@ interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
-  badge?: string;
 }
 
 function navForRole(role: string): NavItem[] {
@@ -38,32 +38,41 @@ function navForRole(role: string): NavItem[] {
       { href: "/portal", label: "Overview", icon: LayoutDashboard },
       { href: "/portal/orders", label: "My Orders", icon: ShoppingBag },
       { href: "/portal/invoices", label: "My Invoices", icon: FileText },
-      { href: "/portal/quotes", label: "Quote Requests", icon: ListChecks, badge: "Soon" },
-      { href: "/portal/profile", label: "Profile", icon: Settings, badge: "Soon" },
+      { href: "/portal/gallery", label: "Gallery", icon: Image },
+      { href: "/portal/recommendations", label: "Recommendations", icon: MessageSquare },
+      { href: "/portal/messages", label: "Messages", icon: MessageSquare },
+      { href: "/portal/profile", label: "Profile", icon: Settings },
+      { href: "/portal/quotes", label: "Sales Quotation", icon: MessageSquare },
     ];
   }
+
   if (role === "staff") {
     return [
       { href: "/staff", label: "Overview", icon: LayoutDashboard },
-      { href: "/staff/tasks", label: "My Tasks", icon: ListChecks, badge: "Soon" },
-      { href: "/staff/orders", label: "Orders", icon: ShoppingBag },
-      { href: "/staff/messages", label: "Messages", icon: MessageSquare, badge: "Soon" },
-      { href: "/staff/clients", label: "Clients", icon: Users, badge: "Soon" },
+      { href: "/staff/orders", label: "Assigned Orders", icon: ShoppingBag },
+      { href: "/staff/tasks", label: "Tasks", icon: ListChecks },
+      { href: "/staff/job-card", label: "Job Card", icon: FileText },
+      { href: "/staff/gallery", label: "Gallery", icon: Image },
+      { href: "/staff/messages", label: "Messages", icon: MessageSquare },
+      { href: "/staff/invoices", label: "Sales Quotation", icon: FileText },
     ];
   }
-  // admin & super_admin
+
   return [
     { href: "/admin", label: "Overview", icon: LayoutDashboard },
     { href: "/admin/orders", label: "Orders", icon: ShoppingBag },
-    { href: "/admin/invoices", label: "Invoices", icon: FileText },
-    { href: "/admin/tasks", label: "Tasks", icon: ListChecks, badge: "Soon" },
-    { href: "/admin/clients", label: "Clients (CRM)", icon: Users, badge: "Soon" },
-    { href: "/admin/messages", label: "Messages", icon: MessageSquare, badge: "Soon" },
-    { href: "/admin/analytics", label: "Analytics", icon: BarChart3, badge: "Soon" },
-    { href: "/admin/documents", label: "Documents", icon: Folder, badge: "Soon" },
-    { href: "/admin/calendar", label: "Calendar", icon: Calendar, badge: "Soon" },
-    { href: "/admin/announcements", label: "Announcements", icon: Megaphone, badge: "Soon" },
-    { href: "/admin/settings", label: "Settings", icon: Settings, badge: "Soon" },
+    { href: "/admin/invoices", label: "Sales Quotation", icon: FileText },
+    { href: "/admin/job-card", label: "Job Card", icon: FileText },
+    { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/admin/tasks", label: "Tasks", icon: ListChecks },
+    { href: "/admin/employees", label: "Employees", icon: Users },
+    { href: "/admin/clients", label: "Clients (CRM)", icon: Users },
+    { href: "/admin/messages", label: "Messages", icon: MessageSquare },
+    { href: "/admin/documents", label: "Documents", icon: Folder },
+    { href: "/admin/gallery", label: "Gallery", icon: Image },
+    { href: "/admin/calendar", label: "Calendar", icon: Calendar },
+    { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
+    { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 }
 
@@ -87,12 +96,10 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // close drawer on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [location]);
 
-  // lock body scroll while drawer is open on mobile
   useEffect(() => {
     if (!mobileOpen) return;
     document.body.style.overflow = "hidden";
@@ -102,8 +109,8 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
   }, [mobileOpen]);
 
   if (!user) return null;
-  const items = navForRole(user.role);
 
+  const items = navForRole(user.role);
   const sidebarW = collapsed ? 72 : 248;
 
   const Sidebar = (
@@ -113,14 +120,13 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
         width: sidebarW,
         background: isDark ? "rgba(4,9,26,0.92)" : "rgba(255,255,255,0.96)",
         backdropFilter: "blur(20px)",
-        borderRight: `1px solid ${c.border}`,
+        borderRight: `1px solid ${isDark ? c.border : c.navBorder}`,
         padding: "24px 14px",
         display: "flex",
         flexDirection: "column",
         transition: "width .2s, transform .25s ease",
       }}
     >
-      {/* Brand */}
       <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 28, padding: "0 6px" }}>
         <div
           style={{
@@ -152,18 +158,15 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
         )}
       </Link>
 
-      {/* Nav */}
       <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: 2, overflowY: "auto" }}>
         {items.map((item) => {
           const active = location === item.href;
           const Icon = item.icon;
-          const disabled = !!item.badge; // "Soon" items aren't routed yet
           return (
             <button
               key={item.href}
-              onClick={() => { if (!disabled) setLocation(item.href); }}
-              title={disabled ? `${item.label} — coming soon` : (collapsed ? item.label : undefined)}
-              disabled={disabled}
+              onClick={() => setLocation(item.href)}
+              title={collapsed ? item.label : undefined}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -172,29 +175,25 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
                 justifyContent: collapsed ? "center" : "flex-start",
                 borderRadius: 9,
                 border: "none",
-                background: active
-                  ? isDark
-                    ? "rgba(38,69,200,0.22)"
-                    : "rgba(38,69,200,0.1)"
-                  : "transparent",
-                color: active ? (isDark ? "#fff" : "#2645C8") : (disabled ? c.textMuted : c.textSecondary),
+                background: active ? (isDark ? "rgba(38,69,200,0.22)" : "rgba(38,69,200,0.1)") : "transparent",
+                color: active ? (isDark ? "#fff" : "#04091A") : c.textSecondary,
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 13,
                 fontWeight: active ? 500 : 400,
-                cursor: disabled ? "not-allowed" : "pointer",
-                opacity: disabled ? 0.6 : 1,
+                cursor: "pointer",
+                opacity: 1,
                 transition: "all .15s",
                 textAlign: "left",
                 position: "relative",
               }}
               onMouseEnter={(e) => {
-                if (!active && !disabled) {
+                if (!active) {
                   e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.04)" : "rgba(38,69,200,0.05)";
-                  e.currentTarget.style.color = c.textPrimary;
+                  e.currentTarget.style.color = isDark ? c.textPrimary : "#04091A";
                 }
               }}
               onMouseLeave={(e) => {
-                if (!active && !disabled) {
+                if (!active) {
                   e.currentTarget.style.background = "transparent";
                   e.currentTarget.style.color = c.textSecondary;
                 }
@@ -204,22 +203,6 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
               {!collapsed && (
                 <>
                   <span style={{ flex: 1 }}>{item.label}</span>
-                  {item.badge && (
-                    <span
-                      style={{
-                        fontSize: 9,
-                        letterSpacing: "0.08em",
-                        padding: "2px 7px",
-                        borderRadius: 99,
-                        background: isDark ? "rgba(255,255,255,0.08)" : "rgba(38,69,200,0.1)",
-                        color: c.textMuted,
-                        textTransform: "uppercase",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
                   {active && <ChevronRight size={14} />}
                 </>
               )}
@@ -228,7 +211,6 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
         })}
       </nav>
 
-      {/* User card + logout */}
       <div style={{ marginTop: 16, paddingTop: 16, borderTop: `1px solid ${c.border}` }}>
         {!collapsed && (
           <div
@@ -237,6 +219,7 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
               marginBottom: 8,
               borderRadius: 9,
               background: isDark ? "rgba(255,255,255,0.03)" : "rgba(38,69,200,0.04)",
+              border: `1px solid ${isDark ? c.border : c.navBorder}`,
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -281,7 +264,7 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
             padding: collapsed ? "10px 0" : "10px 12px",
             justifyContent: collapsed ? "center" : "flex-start",
             borderRadius: 9,
-            border: "none",
+            border: `1px solid ${isDark ? "transparent" : c.navBorder}`,
             background: "transparent",
             color: c.textSecondary,
             fontFamily: "'Inter', sans-serif",
@@ -308,7 +291,6 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
     <div style={{ minHeight: "100vh", display: "flex", background: isDark ? "#04091A" : "#F5F7FB" }}>
       {Sidebar}
 
-      {/* Backdrop for mobile drawer */}
       {mobileOpen && (
         <div
           onClick={() => setMobileOpen(false)}
@@ -322,9 +304,7 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
         />
       )}
 
-      {/* Main */}
       <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
-        {/* Topbar */}
         <header
           style={{
             display: "flex",
@@ -332,7 +312,7 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
             justifyContent: "space-between",
             gap: 12,
             padding: "18px 24px",
-            borderBottom: `1px solid ${c.border}`,
+            borderBottom: `1px solid ${isDark ? c.border : c.borderHover}`,
             background: isDark ? "rgba(4,9,26,0.65)" : "rgba(255,255,255,0.7)",
             backdropFilter: "blur(16px)",
             position: "sticky",
@@ -341,7 +321,6 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0, flex: 1 }}>
-            {/* Mobile hamburger */}
             <button
               className="dl-mobile-only"
               onClick={() => setMobileOpen(true)}
@@ -350,7 +329,7 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
                 width: 38,
                 height: 38,
                 borderRadius: 9,
-                border: `1px solid ${c.border}`,
+                border: `1px solid ${isDark ? c.border : c.navBorder}`,
                 background: "transparent",
                 color: c.textPrimary,
                 cursor: "pointer",
@@ -387,14 +366,10 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <button
-              className="dl-desktop-only"
-              title="Search (demo)"
-              style={iconBtn(c.border, c.textSecondary)}
-            >
+            <button className="dl-desktop-only" title="Search (demo)" style={iconBtn(isDark ? c.border : c.navBorder, c.textSecondary)}>
               <Search size={16} />
             </button>
-            <button title="Notifications (demo)" style={{ ...iconBtn(c.border, c.textSecondary), position: "relative" }}>
+            <button title="Notifications (demo)" style={{ ...iconBtn(isDark ? c.border : c.navBorder, c.textSecondary), position: "relative" }}>
               <Bell size={16} />
               <span style={{ position: "absolute", top: 8, right: 9, width: 6, height: 6, borderRadius: "50%", background: "#EF4444" }} />
             </button>
@@ -402,24 +377,21 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
               className="dl-desktop-only"
               onClick={() => setCollapsed((v) => !v)}
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              style={iconBtn(c.border, c.textSecondary)}
+              style={iconBtn(isDark ? c.border : c.navBorder, c.textSecondary)}
             >
               <Menu size={16} />
             </button>
-            <button
-              onClick={toggle}
-              title="Toggle theme"
-              style={iconBtn(c.border, c.textSecondary)}
-            >
+            <button onClick={toggle} title="Toggle theme" style={iconBtn(isDark ? c.border : c.navBorder, c.textSecondary)}>
               {isDark ? <Sun size={15} /> : <Moon size={15} />}
             </button>
           </div>
         </header>
 
-        <div style={{ flex: 1, padding: "28px 24px", overflow: "auto" }} className="dl-content">{children}</div>
+        <div style={{ flex: 1, padding: "28px 24px", overflow: "auto" }} className="dl-content">
+          {children}
+        </div>
       </main>
 
-      {/* Drawer close button (mobile only, sits over open drawer) */}
       {mobileOpen && (
         <button
           onClick={() => setMobileOpen(false)}
@@ -427,11 +399,11 @@ export default function DashboardLayout({ title, subtitle, children }: Dashboard
           style={{
             position: "fixed",
             top: 16,
-            left: 248 - 44,
+            left: 204,
             width: 36,
             height: 36,
             borderRadius: 9,
-            border: `1px solid ${c.border}`,
+            border: `1px solid ${isDark ? c.border : c.navBorder}`,
             background: isDark ? "rgba(4,9,26,0.9)" : "#fff",
             color: c.textPrimary,
             cursor: "pointer",

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
 import AuthShell, { Field, SubmitButton, ErrorBanner } from "@/components/AuthShell";
 import { useAuth } from "@/context/auth";
+import { useTheme } from "@/context/ThemeContext";
 
 function errorMessage(err: unknown, fallback: string): string {
   if (err && typeof err === "object" && "data" in err) {
@@ -32,6 +33,7 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
 
 export default function LoginPage() {
   const { login } = useAuth();
+  const { c, isDark } = useTheme();
   const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -90,16 +92,16 @@ export default function LoginPage() {
           marginBottom: 22,
           padding: "14px 16px",
           borderRadius: 12,
-          background: "rgba(0,198,255,0.05)",
-          border: "1px solid rgba(0,198,255,0.18)",
+          background: isDark ? "rgba(0,198,255,0.05)" : "rgba(38,69,200,0.05)",
+          border: `1px solid ${isDark ? "rgba(0,198,255,0.18)" : "rgba(38,69,200,0.18)"}`,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10, gap: 8 }}>
           <div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12.5, color: "#fff", fontWeight: 500 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12.5, color: c.textPrimary, fontWeight: 500 }}>
               ⚡ Try any role instantly
             </div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: "rgba(255,255,255,0.55)", marginTop: 2 }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, color: c.textSecondary, marginTop: 2 }}>
               One click signs you in with a seeded demo account.
             </div>
           </div>
@@ -119,9 +121,9 @@ export default function LoginPage() {
                   gap: 4,
                   padding: "10px 12px",
                   borderRadius: 10,
-                  background: "rgba(255,255,255,0.04)",
-                  border: `1px solid ${isLoading ? acc.accent : "rgba(255,255,255,0.1)"}`,
-                  color: "#fff",
+                  background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.72)",
+                  border: `1px solid ${isLoading ? acc.accent : (isDark ? "rgba(255,255,255,0.1)" : "rgba(38,69,200,0.12)" )}`,
+                  color: c.textPrimary,
                   cursor: demoLoading !== null ? "wait" : "pointer",
                   textAlign: "left",
                   fontFamily: "'Inter', sans-serif",
@@ -131,13 +133,13 @@ export default function LoginPage() {
                 onMouseEnter={(e) => {
                   if (demoLoading === null) {
                     e.currentTarget.style.borderColor = acc.accent;
-                    e.currentTarget.style.background = "rgba(255,255,255,0.07)";
+                    e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.07)" : "rgba(38,69,200,0.07)";
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isLoading) {
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                    e.currentTarget.style.borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(38,69,200,0.12)";
+                    e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.72)";
                   }
                 }}
               >
@@ -145,7 +147,7 @@ export default function LoginPage() {
                   <span style={{ width: 7, height: 7, borderRadius: "50%", background: acc.accent, boxShadow: `0 0 8px ${acc.accent}` }} />
                   <span style={{ fontSize: 12, fontWeight: 500 }}>{isLoading ? "Signing in…" : acc.label}</span>
                 </div>
-                <span style={{ fontSize: 10.5, color: "rgba(255,255,255,0.55)", letterSpacing: "0.01em" }}>{acc.desc}</span>
+                <span style={{ fontSize: 10.5, color: c.textSecondary, letterSpacing: "0.01em" }}>{acc.desc}</span>
               </button>
             );
           })}
@@ -154,9 +156,9 @@ export default function LoginPage() {
       )}
 
       <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontFamily: "'Inter', sans-serif", textTransform: "uppercase", letterSpacing: "0.12em" }}>or</span>
-        <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+        <div style={{ flex: 1, height: 1, background: c.border }} />
+        <span style={{ fontSize: 11, color: c.textMuted, fontFamily: "'Inter', sans-serif", textTransform: "uppercase", letterSpacing: "0.12em" }}>or</span>
+        <div style={{ flex: 1, height: 1, background: c.border }} />
       </div>
 
       <form onSubmit={onSubmit}>
