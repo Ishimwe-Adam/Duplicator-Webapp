@@ -6,8 +6,8 @@ import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import { ShoppingBag, FileText, Users, TrendingUp, DollarSign, ArrowUpRight, AlertCircle, Loader2 } from "lucide-react";
 import { formatFRW } from "@/lib/format";
-import { useGetAnalyticsSummary, getGetAnalyticsSummaryQueryKey } from "@workspace/api-client-react";
-import type { AnalyticsSummary, OrderStatus } from "@workspace/api-client-react";
+import { useGetAnalyticsSummary, getGetAnalyticsSummaryQueryKey } from "@/lib/api-stub";
+import type { AnalyticsSummary, OrderStatus } from "@/lib/api-stub";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_TONE } from "@/lib/orders";
 import { Link } from "wouter";
 

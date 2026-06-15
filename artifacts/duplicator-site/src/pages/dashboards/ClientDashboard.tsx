@@ -22,8 +22,8 @@ import {
   getListOrdersQueryKey,
   useListInvoices,
   useListOrders,
-} from "@workspace/api-client-react";
-import type { OrderStatus } from "@workspace/api-client-react";
+} from "@/lib/api-stub";
+import type { OrderStatus } from "@/lib/api-stub";
 import {
   AlertCircle,
   ArrowUpRight,
@@ -35,7 +35,6 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
-const REQ = { credentials: "include" as const };
 const STATUS_PROGRESS: Record<OrderStatus, number> = {
   draft: 10,
   quoted: 25,
@@ -56,7 +55,6 @@ export default function ClientDashboard() {
       staleTime: 10_000,
       refetchOnWindowFocus: false,
     },
-    request: REQ,
   });
   const invoicesQ = useListInvoices({
     query: {
@@ -64,7 +62,6 @@ export default function ClientDashboard() {
       staleTime: 10_000,
       refetchOnWindowFocus: false,
     },
-    request: REQ,
   });
 
   if (!user) return null;

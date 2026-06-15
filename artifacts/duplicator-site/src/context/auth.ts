@@ -3,7 +3,7 @@ import type {
   AuthUser,
   LoginInput,
   RegisterInput,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 
 export interface AuthContextValue {
   user: AuthUser | null;

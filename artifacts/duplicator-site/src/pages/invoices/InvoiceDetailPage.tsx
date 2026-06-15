@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useRoute, useLocation, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  useGetInvoice,
+  useGetInvoiceDetail,
   useUpdateInvoiceStatus,
-  getGetInvoiceQueryKey,
+  getGetInvoiceDetailQueryKey,
   getListInvoicesQueryKey,
   type InvoiceStatus,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -25,8 +25,6 @@ import { ChevronLeft, AlertCircle, Download, Wallet } from "lucide-react";
 import { PAYMENT_METHOD_LABEL } from "@/lib/payments";
 import RecordPaymentModal from "./RecordPaymentModal";
 
-const REQ = { credentials: "include" as const };
-
 export default function InvoiceDetailPage() {
   const { user } = useAuth();
   const { c } = useTheme();
@@ -35,15 +33,14 @@ export default function InvoiceDetailPage() {
   const [, params] = useRoute<{ id: string }>("/:base*/invoices/:id");
   const id = Number.parseInt(params?.id ?? "", 10);
 
-  const invQ = useGetInvoice(id, {
+  const invQ = useGetInvoiceDetail(id, {
     query: {
-      queryKey: getGetInvoiceQueryKey(id),
+      queryKey: getGetInvoiceDetailQueryKey(id),
       enabled: Number.isFinite(id),
       staleTime: 5_000,
     },
-    request: REQ,
   });
-  const updateM = useUpdateInvoiceStatus({ request: REQ });
+  const updateM = useUpdateInvoiceStatus();
   const [pendingTo, setPendingTo] = useState<InvoiceStatus | null>(null);
   const [payOpen, setPayOpen] = useState(false);
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useListOrders, getListOrdersQueryKey } from "@workspace/api-client-react";
+import { useListOrders, getListOrdersQueryKey } from "@/lib/api-stub";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -15,8 +15,6 @@ import {
 import { formatFRW } from "@/lib/format";
 import { Plus, ShoppingBag, AlertCircle } from "lucide-react";
 
-const REQ = { credentials: "include" as const };
-
 export default function OrdersListPage() {
   const { user } = useAuth();
   const { c } = useTheme();
@@ -29,7 +27,6 @@ export default function OrdersListPage() {
       staleTime: 10_000,
       refetchOnWindowFocus: false,
     },
-    request: REQ,
   });
 
   if (!user) return null;

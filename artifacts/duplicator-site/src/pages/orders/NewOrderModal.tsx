@@ -3,7 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   useCreateOrder,
   getListOrdersQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/auth";
 import { formatFRW } from "@/lib/format";
@@ -20,13 +20,11 @@ interface Props {
   onCreated: (orderId: number) => void;
 }
 
-const REQ = { credentials: "include" as const };
-
 export default function NewOrderModal({ onClose, onCreated }: Props) {
   const { c, isDark } = useTheme();
   const { user } = useAuth();
   const qc = useQueryClient();
-  const createM = useCreateOrder({ request: REQ });
+  const createM = useCreateOrder();
 
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState("");

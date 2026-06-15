@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import {
   useListInvoices,
   getListInvoicesQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -18,8 +18,6 @@ import { formatDate } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
 import { Plus, FileText, AlertCircle } from "lucide-react";
 
-const REQ = { credentials: "include" as const };
-
 export default function InvoicesListPage() {
   const { user } = useAuth();
   const { c } = useTheme();
@@ -32,7 +30,6 @@ export default function InvoicesListPage() {
       staleTime: 10_000,
       refetchOnWindowFocus: false,
     },
-    request: REQ,
   });
 
   if (!user) return null;

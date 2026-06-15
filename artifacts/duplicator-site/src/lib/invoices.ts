@@ -1,4 +1,4 @@
-import type { InvoiceStatus } from "@workspace/api-client-react";
+import type { InvoiceStatus } from "@/lib/api-stub";
 
 export const INVOICE_STATUS_LABEL: Record<InvoiceStatus, string> = {
   draft: "Draft",

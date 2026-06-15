@@ -22,8 +22,8 @@ import {
   getGetAnalyticsSummaryQueryKey,
   getListInvoicesQueryKey,
   getListOrdersQueryKey,
-} from "@workspace/api-client-react";
-import type { OrderStatus } from "@workspace/api-client-react";
+} from "@/lib/api-stub";
+import type { OrderStatus } from "@/lib/api-stub";
 import {
   Bell,
   CalendarDays,
@@ -69,8 +69,6 @@ type ModuleKey =
   | "portal-messages"
   | "portal-quotes";
 
-const REQ = { credentials: "include" as const };
-
 const MODULE_META: Record<ModuleKey, { title: string; subtitle: string }> = {
   "admin-tasks": { title: "Tasks", subtitle: "Track the work queue across production and admin." },
   "admin-clients": { title: "Clients", subtitle: "Live CRM view of your highest-value accounts." },
@@ -92,37 +90,6 @@ const MODULE_META: Record<ModuleKey, { title: string; subtitle: string }> = {
 };
 
 const SIGNATURE_OPTIONS = ["Receiver", "Client Representative", "Sales Manager", "Print Operator", "Owner"] as const;
-const PAYMENT_METHODS = ["Cash", "Cheque", "Bank transfer", "MoMo", "Airtel", "Other"] as const;
-const MESSAGE_RECIPIENTS = [
-  "Customer Care Desk",
-  "Sales Manager",
-  "Production Lead",
-  "Accounts",
-  "Design",
-  "Print Operator",
-  "Client Representative",
-  "Owner",
-] as const;
-const TASK_ASSIGNEES = [
-  "Sales team",
-  "Production",
-  "Accounts",
-  "Design",
-  "Print Operator",
-  "Manager",
-  "Owner",
-  "Client Representative",
-  "Unassigned",
-] as const;
-const TASK_STATUSES: Task["status"][] = ["todo", "doing", "done"];
-const TASK_PRIORITIES: Task["priority"][] = ["High", "Medium", "Low"];
-
-const TASK_PRESETS: Array<Pick<Task, "title" | "owner" | "due" | "priority" | "status">> = [
-  { title: "Approve final proof for Bank of Kigali", owner: "Sales team", due: "Today", priority: "High", status: "doing" },
-  { title: "Confirm fabric shades for staff polos", owner: "Production", due: "Tomorrow", priority: "Medium", status: "todo" },
-  { title: "Prepare roll-up delivery note", owner: "Admin", due: "Today", priority: "Low", status: "done" },
-  { title: "Call client about invoice settlement", owner: "Accounts", due: "Thu", priority: "High", status: "todo" },
-];
 
 const EMPLOYEE_ROSTER = [
   "Sales team",
@@ -304,7 +271,6 @@ function AdminTasksModule() {
   const { c, isDark } = useTheme();
   const { data: analytics } = useGetAnalyticsSummary({
     query: { queryKey: getGetAnalyticsSummaryQueryKey(), staleTime: 30_000 },
-    request: REQ,
   });
   const [tasks, setTasks] = useStoredState<Task[]>("duplicator-admin-tasks", [
     {
@@ -652,11 +618,9 @@ function AdminClientsModule() {
   const { c } = useTheme();
   const { data: analytics } = useGetAnalyticsSummary({
     query: { queryKey: [...getGetAnalyticsSummaryQueryKey(), "clients"], staleTime: 30_000 },
-    request: REQ,
   });
   const { data: orders } = useListOrders({
     query: { queryKey: [...getListOrdersQueryKey(), "clients"], staleTime: 30_000 },
-    request: REQ,
   });
   const [query, setQuery] = useState("");
   const clients = analytics?.clients.top ?? [];
@@ -2121,7 +2085,6 @@ function StaffTasksModule() {
   const { c } = useTheme();
   const { data: orders } = useListOrders({
     query: { queryKey: [...getListOrdersQueryKey(), "staff-work"], staleTime: 30_000 },
-    request: REQ,
   });
   const rows = orders?.orders ?? [];
   const [selectedId, setSelectedId] = useState<string | number | null>(rows[0]?.id ?? null);
@@ -2242,7 +2205,6 @@ function ClientProfileModule() {
   const { c } = useTheme();
   const { data: invoices } = useListInvoices({
     query: { queryKey: [...getListInvoicesQueryKey(), "profile"], staleTime: 30_000 },
-    request: REQ,
   });
   const myInvoices = invoices?.invoices ?? [];
   return (

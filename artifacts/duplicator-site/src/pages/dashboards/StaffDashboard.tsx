@@ -14,8 +14,8 @@ import {
 import {
   getListOrdersQueryKey,
   useListOrders,
-} from "@workspace/api-client-react";
-import type { OrderStatus } from "@workspace/api-client-react";
+} from "@/lib/api-stub";
+import type { OrderStatus } from "@/lib/api-stub";
 import {
   AlertCircle,
   ArrowUpRight,
@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
-const REQ = { credentials: "include" as const };
 const ACTIVE_STATUSES: OrderStatus[] = ["draft", "quoted", "approved", "in_production", "ready"];
 
 export default function StaffDashboard() {
@@ -40,7 +39,6 @@ export default function StaffDashboard() {
       staleTime: 10_000,
       refetchOnWindowFocus: false,
     },
-    request: REQ,
   });
 
   if (!user) return null;

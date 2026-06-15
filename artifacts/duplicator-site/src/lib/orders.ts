@@ -1,4 +1,4 @@
-import type { OrderStatus } from "@workspace/api-client-react";
+import type { OrderStatus } from "@/lib/api-stub";
 
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   draft: "Draft",

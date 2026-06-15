@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useRoute, Link, useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  useGetOrder,
+  useGetOrderDetail,
   useUpdateOrderStatus,
-  getGetOrderQueryKey,
+  getGetOrderDetailQueryKey,
   getListOrdersQueryKey,
   type OrderStatus,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -22,8 +22,6 @@ import {
 import { formatFRW } from "@/lib/format";
 import { ChevronLeft, AlertCircle, MessageCircle } from "lucide-react";
 
-const REQ = { credentials: "include" as const };
-
 export default function OrderDetailPage() {
   const { user } = useAuth();
   const { c, isDark } = useTheme();
@@ -33,15 +31,14 @@ export default function OrderDetailPage() {
   const [, params] = useRoute<{ id: string }>("/:base*/orders/:id");
   const id = Number.parseInt(params?.id ?? "", 10);
 
-  const orderQ = useGetOrder(id, {
+  const orderQ = useGetOrderDetail(id, {
     query: {
-      queryKey: getGetOrderQueryKey(id),
+      queryKey: getGetOrderDetailQueryKey(id),
       enabled: Number.isFinite(id),
       staleTime: 5_000,
     },
-    request: REQ,
   });
-  const updateM = useUpdateOrderStatus({ request: REQ });
+  const updateM = useUpdateOrderStatus();
 
   const [note, setNote] = useState("");
   const [pendingTo, setPendingTo] = useState<OrderStatus | null>(null);

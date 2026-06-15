@@ -6,10 +6,8 @@ import {
   useLogout,
   useRegister,
   getGetCurrentUserQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { AuthContext, type AuthContextValue } from "./auth";
-
-const REQ = { credentials: "include" as const };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
@@ -18,26 +16,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       retry: false,
       staleTime: 30_000,
       refetchOnWindowFocus: false,
-      queryKey: getGetCurrentUserQueryKey(),
     },
-    request: REQ,
   });
 
-  const loginM = useLogin({ request: REQ });
-  const registerM = useRegister({ request: REQ });
-  const logoutM = useLogout({ request: REQ });
+  const loginM = useLogin({});
+  const registerM = useRegister({});
+  const logoutM = useLogout({});
 
   const value: AuthContextValue = {
-    user: meQuery.data ?? null,
+    user: meQuery.data?.user ?? null,
     isLoading: meQuery.isLoading,
     isAuthenticated: !!meQuery.data,
     login: async (data) => {
-      const res = await loginM.mutateAsync({ data });
+      const res = await loginM.mutateAsync(data);
       await qc.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
       return res.user;
     },
     register: async (data) => {
-      const res = await registerM.mutateAsync({ data });
+      const res = await registerM.mutateAsync(data);
       await qc.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
       return res.user;
     },

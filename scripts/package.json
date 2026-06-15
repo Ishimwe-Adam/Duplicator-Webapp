@@ -8,12 +8,7 @@
     "seed": "tsx ./src/seed.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@workspace/db": "workspace:*",
-    "drizzle-orm": "catalog:"
-  },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "tsx": "catalog:"
+    "@types/node": "^25.3.3"
   }
 }

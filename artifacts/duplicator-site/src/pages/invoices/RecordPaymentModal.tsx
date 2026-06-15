@@ -2,16 +2,14 @@ import { useState, type CSSProperties } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   useRecordPayment,
-  getGetInvoiceQueryKey,
+  getGetInvoiceDetailQueryKey,
   getListInvoicesQueryKey,
   type PaymentMethod,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useTheme } from "@/context/ThemeContext";
 import { formatFRW } from "@/lib/format";
 import { ALL_PAYMENT_METHODS, PAYMENT_METHOD_LABEL } from "@/lib/payments";
 import { X } from "lucide-react";
-
-const REQ = { credentials: "include" as const };
 
 interface Props {
   invoiceId: number;
@@ -28,7 +26,7 @@ function todayIso(): string {
 export default function RecordPaymentModal({ invoiceId, balanceDue, onClose, onRecorded }: Props) {
   const { c, isDark } = useTheme();
   const qc = useQueryClient();
-  const recordM = useRecordPayment({ request: REQ });
+  const recordM = useRecordPayment();
 
   const [amount, setAmount] = useState<number | "">(balanceDue);
   const [method, setMethod] = useState<PaymentMethod>("momo");
@@ -59,7 +57,7 @@ export default function RecordPaymentModal({ invoiceId, balanceDue, onClose, onR
         },
       });
       await Promise.all([
-        qc.invalidateQueries({ queryKey: getGetInvoiceQueryKey(invoiceId) }),
+        qc.invalidateQueries({ queryKey: getGetInvoiceDetailQueryKey(invoiceId) }),
         qc.invalidateQueries({ queryKey: getListInvoicesQueryKey() }),
       ]);
       onRecorded();

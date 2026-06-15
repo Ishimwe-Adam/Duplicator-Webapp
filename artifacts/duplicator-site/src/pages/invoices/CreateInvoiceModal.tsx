@@ -5,12 +5,10 @@ import {
   useCreateInvoice,
   getListInvoicesQueryKey,
   getListOrdersQueryKey,
-} from "@workspace/api-client-react";
+} from "@/lib/api-stub";
 import { useTheme } from "@/context/ThemeContext";
 import { formatFRW } from "@/lib/format";
 import { X } from "lucide-react";
-
-const REQ = { credentials: "include" as const };
 
 interface Props {
   onClose: () => void;
@@ -29,9 +27,8 @@ export default function CreateInvoiceModal({ onClose, onCreated }: Props) {
   const qc = useQueryClient();
   const ordersQ = useListOrders({
     query: { queryKey: getListOrdersQueryKey(), staleTime: 10_000 },
-    request: REQ,
   });
-  const createM = useCreateInvoice({ request: REQ });
+  const createM = useCreateInvoice();
 
   const [orderId, setOrderId] = useState<number | "">("");
   const [dueDate, setDueDate] = useState(defaultDueDateIso());

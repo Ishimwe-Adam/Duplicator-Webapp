@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "@workspace/api-client-react";
+import type { PaymentMethod } from "@/lib/api-stub";
 
 export const PAYMENT_METHOD_LABEL: Record<PaymentMethod, string> = {
   momo: "MTN MoMo",
