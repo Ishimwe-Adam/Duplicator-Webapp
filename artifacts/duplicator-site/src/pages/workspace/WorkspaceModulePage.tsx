@@ -24,31 +24,7 @@ import {
   getListOrdersQueryKey,
 } from "@/lib/api-stub";
 import type { OrderStatus } from "@/lib/api-stub";
-import {
-  Bell,
-  CalendarDays,
-  CheckCircle2,
-  ClipboardList,
-  Download,
-  FileText,
-  Megaphone,
-  MessageSquare,
-  FolderPlus,
-  FileUp,
-  Image,
-  Plus,
-  Save,
-  Search,
-  PencilLine,
-  Settings2,
-  ShoppingBag,
-  Sparkles,
-  Star,
-  Users,
-  Wallet,
-  Upload,
-  Trash2,
-} from "lucide-react";
+import { Bell, CalendarDays, CircleCheck as CheckCircle2, ClipboardList, Download, FileText, Megaphone, MessageSquare, FolderPlus, FileUp, Image, Plus, Save, Search, PencilLine, Settings2, ShoppingBag, Sparkles, Star, Users, Wallet, Upload, Trash2 } from "lucide-react";
 
 type ModuleKey =
   | "admin-tasks"
