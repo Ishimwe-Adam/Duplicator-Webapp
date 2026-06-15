@@ -16,7 +16,7 @@ import {
 } from "@/lib/invoices";
 import { formatDate } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
-import { Plus, FileText, AlertCircle } from "lucide-react";
+import { Plus, FileText, CircleAlert as AlertCircle } from "lucide-react";
 
 export default function InvoicesListPage() {
   const { user } = useAuth();

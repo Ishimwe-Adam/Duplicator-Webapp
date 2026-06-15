@@ -16,15 +16,7 @@ import {
   useListOrders,
 } from "@/lib/api-stub";
 import type { OrderStatus } from "@/lib/api-stub";
-import {
-  AlertCircle,
-  ArrowUpRight,
-  CheckCircle2,
-  Clock,
-  Factory,
-  PackageCheck,
-  ShoppingBag,
-} from "lucide-react";
+import { CircleAlert as AlertCircle, ArrowUpRight, CircleCheck as CheckCircle2, Clock, Factory, PackageCheck, ShoppingBag } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const ACTIVE_STATUSES: OrderStatus[] = ["draft", "quoted", "approved", "in_production", "ready"];

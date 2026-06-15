@@ -13,7 +13,7 @@ import {
   formatDate,
 } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
-import { Plus, ShoppingBag, AlertCircle } from "lucide-react";
+import { Plus, ShoppingBag, CircleAlert as AlertCircle } from "lucide-react";
 
 export default function OrdersListPage() {
   const { user } = useAuth();

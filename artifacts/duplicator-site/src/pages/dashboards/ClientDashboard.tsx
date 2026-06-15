@@ -24,15 +24,7 @@ import {
   useListOrders,
 } from "@/lib/api-stub";
 import type { OrderStatus } from "@/lib/api-stub";
-import {
-  AlertCircle,
-  ArrowUpRight,
-  Clock,
-  FileText,
-  ShoppingBag,
-  Sparkles,
-  Wallet,
-} from "lucide-react";
+import { CircleAlert as AlertCircle, ArrowUpRight, Clock, FileText, ShoppingBag, Sparkles, Wallet } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const STATUS_PROGRESS: Record<OrderStatus, number> = {

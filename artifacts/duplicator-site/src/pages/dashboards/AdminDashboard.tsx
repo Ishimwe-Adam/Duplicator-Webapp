@@ -4,7 +4,7 @@ import { Section, StatusPill, Avatar, MiniBarChart, DataTable, ProgressBar } fro
 import SharedWorkspaceBoard from "@/components/SharedWorkspaceBoard";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
-import { ShoppingBag, FileText, Users, TrendingUp, DollarSign, ArrowUpRight, AlertCircle, Loader2 } from "lucide-react";
+import { ShoppingBag, FileText, Users, TrendingUp, DollarSign, ArrowUpRight, CircleAlert as AlertCircle, Loader as Loader2 } from "lucide-react";
 import { formatFRW } from "@/lib/format";
 import { useGetAnalyticsSummary, getGetAnalyticsSummaryQueryKey } from "@/lib/api-stub";
 import type { AnalyticsSummary, OrderStatus } from "@/lib/api-stub";

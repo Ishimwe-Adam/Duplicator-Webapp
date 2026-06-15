@@ -21,7 +21,7 @@ import {
 } from "@/lib/invoices";
 import { formatDateTime } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
-import { ChevronLeft, AlertCircle, Download, Wallet } from "lucide-react";
+import { ChevronLeft, CircleAlert as AlertCircle, Download, Wallet } from "lucide-react";
 import { PAYMENT_METHOD_LABEL } from "@/lib/payments";
 import RecordPaymentModal from "./RecordPaymentModal";
 

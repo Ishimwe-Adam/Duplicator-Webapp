@@ -20,7 +20,7 @@ import {
   formatDateTime,
 } from "@/lib/orders";
 import { formatFRW } from "@/lib/format";
-import { ChevronLeft, AlertCircle, MessageCircle } from "lucide-react";
+import { ChevronLeft, CircleAlert as AlertCircle, MessageCircle } from "lucide-react";
 
 export default function OrderDetailPage() {
   const { user } = useAuth();
