@@ -7,8 +7,11 @@
   "scripts": {
     "build": "pnpm --filter @workspace/duplicator-site build",
     "typecheck": "pnpm -r --filter './lib/*' --filter @workspace/api-server --filter @workspace/duplicator-site --filter @workspace/scripts run typecheck",
+    "db:generate": "pnpm --filter @workspace/db db:generate",
+    "db:migrate": "pnpm --filter @workspace/db db:migrate",
     "db:push": "pnpm --filter @workspace/db db:push",
-    "seed": "pnpm --filter @workspace/scripts seed"
+    "seed": "pnpm --filter @workspace/scripts seed:demo",
+    "seed:demo:prod": "pnpm --filter @workspace/scripts seed:demo:prod"
   },
   "devDependencies": {
     "typescript": "~5.9.2",

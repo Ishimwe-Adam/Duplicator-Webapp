@@ -3,6 +3,21 @@ import { eq } from "drizzle-orm";
 import { scrypt, randomBytes } from "node:crypto";
 import { promisify } from "node:util";
 
+const args = new Set(process.argv.slice(2));
+const isProduction = (process.env.NODE_ENV ?? "").toLowerCase() === "production";
+
+if (!args.has("--demo")) {
+  throw new Error(
+    "Refusing to seed without an explicit mode. Use `pnpm seed` or `pnpm --filter @workspace/scripts seed:demo`.",
+  );
+}
+
+if (isProduction && !args.has("--allow-production")) {
+  throw new Error(
+    "Refusing to seed demo users in production without --allow-production.",
+  );
+}
+
 const scryptAsync = promisify(scrypt) as (
   p: string,
   s: string,
