@@ -7,7 +7,15 @@ import {
   useRegister,
   getGetCurrentUserQueryKey,
 } from "@/lib/api-stub";
+import type { AuthUser } from "@/lib/api-stub";
 import { AuthContext, type AuthContextValue } from "./auth";
+
+type CurrentUserResult = AuthUser | { user: AuthUser } | null | undefined;
+
+function getAuthUser(data: CurrentUserResult): AuthUser | null {
+  if (!data) return null;
+  return "user" in data ? data.user : data;
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const qc = useQueryClient();
@@ -22,11 +30,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginM = useLogin({});
   const registerM = useRegister({});
   const logoutM = useLogout({});
+  const currentUser = getAuthUser(meQuery.data as CurrentUserResult);
 
   const value: AuthContextValue = {
-    user: meQuery.data?.user ?? null,
+    user: currentUser,
     isLoading: meQuery.isLoading,
-    isAuthenticated: !!meQuery.data,
+    isAuthenticated: !!currentUser,
     login: async (data) => {
       const res = await loginM.mutateAsync(data);
       await qc.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
