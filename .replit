@@ -45,3 +45,4 @@ externalPort = 3000
 [userenv]
 
 [userenv.shared]
+SUPABASE_DATABASE_URL = "postgresql://postgres.bcemzrrhznjgnicvyjta:IShimwe!%402026@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"

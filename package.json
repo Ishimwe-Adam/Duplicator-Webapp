@@ -4,10 +4,16 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
-    "typescript": "~5.9.2",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "tsx": "^4.22.4"
   }
 }
