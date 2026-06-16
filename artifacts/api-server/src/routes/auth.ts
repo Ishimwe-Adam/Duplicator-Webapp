@@ -1,6 +1,5 @@
 import { Router, type IRouter } from "express";
-import { db, usersTable } from "@workspace/db";
-import { eq, sql } from "drizzle-orm";
+import { supabase, mapUser } from "@workspace/db";
 import {
   RegisterBody,
   LoginBody,
@@ -18,38 +17,47 @@ import {
 const router: IRouter = Router();
 
 const MAX_FAILED = 5;
-const LOCK_MS = 30 * 60 * 1000;
+const LOCK_MINUTES = 30;
 
 router.post("/register", async (req, res) => {
   const parsed = RegisterBody.safeParse(req.body);
   if (!parsed.success) {
-    res
-      .status(400)
-      .json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
+    res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
     return;
   }
   const { email, password, name, phone, companyName } = parsed.data;
-  const existing = await db
-    .select({ id: usersTable.id })
-    .from(usersTable)
-    .where(eq(usersTable.email, email.toLowerCase()))
+
+  const { data: existing } = await supabase
+    .from("users")
+    .select("id")
+    .eq("email", email.toLowerCase())
     .limit(1);
-  if (existing.length > 0) {
+
+  if (existing && existing.length > 0) {
     res.status(409).json({ error: "Email already in use" });
     return;
   }
+
   const passwordHash = await hashPassword(password);
-  const [user] = await db
-    .insert(usersTable)
-    .values({
+  const { data: inserted, error } = await supabase
+    .from("users")
+    .insert({
       email: email.toLowerCase(),
-      passwordHash,
+      password_hash: passwordHash,
       name,
       phone: phone ?? null,
-      companyName: companyName ?? null,
+      company_name: companyName ?? null,
       role: "client",
     })
-    .returning();
+    .select()
+    .single();
+
+  if (error || !inserted) {
+    res.status(500).json({ error: "Failed to create account" });
+    return;
+  }
+
+  const user = mapUser(inserted as Record<string, unknown>);
   await createSession(user.id, req, res);
   const body: AuthResponse = { user: toAuthUser(user) };
   res.status(201).json(body);
@@ -62,49 +70,48 @@ router.post("/login", async (req, res) => {
     return;
   }
   const { email, password } = parsed.data;
-  const [user] = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.email, email.toLowerCase()))
+
+  const { data: rows } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email.toLowerCase())
     .limit(1);
-  if (!user || !user.isActive) {
+
+  const raw = rows?.[0];
+  if (!raw) {
+    res.status(401).json({ error: "Invalid email or password" });
+    return;
+  }
+
+  const user = mapUser(raw as Record<string, unknown>);
+
+  if (!user.isActive) {
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
   if (user.lockedUntil && user.lockedUntil > new Date()) {
-    res
-      .status(423)
-      .json({ error: "Account temporarily locked. Try again later." });
+    res.status(423).json({ error: "Account temporarily locked. Try again later." });
     return;
   }
+
   const ok = await verifyPassword(password, user.passwordHash);
   if (!ok) {
-    // Atomic increment + conditional lock via single SQL statement.
-    // Avoids the read-modify-write race where concurrent failed logins
-    // could clobber each other's increments and bypass the threshold.
-    const lockUntil = new Date(Date.now() + LOCK_MS);
-    await db
-      .update(usersTable)
-      .set({
-        failedLoginAttempts: sql`CASE
-          WHEN ${usersTable.failedLoginAttempts} + 1 >= ${MAX_FAILED} THEN 0
-          ELSE ${usersTable.failedLoginAttempts} + 1
-        END`,
-        lockedUntil: sql`CASE
-          WHEN ${usersTable.failedLoginAttempts} + 1 >= ${MAX_FAILED} THEN ${lockUntil}
-          ELSE ${usersTable.lockedUntil}
-        END`,
-      })
-      .where(eq(usersTable.id, user.id));
+    await supabase.rpc("record_failed_login", {
+      p_user_id: user.id,
+      p_max_failed: MAX_FAILED,
+      p_lock_minutes: LOCK_MINUTES,
+    });
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
+
   if (user.failedLoginAttempts !== 0 || user.lockedUntil) {
-    await db
-      .update(usersTable)
-      .set({ failedLoginAttempts: 0, lockedUntil: null })
-      .where(eq(usersTable.id, user.id));
+    await supabase
+      .from("users")
+      .update({ failed_login_attempts: 0, locked_until: null })
+      .eq("id", user.id);
   }
+
   await createSession(user.id, req, res);
   const body: AuthResponse = { user: toAuthUser(user) };
   res.status(200).json(body);

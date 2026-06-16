@@ -1,16 +1,14 @@
 import { Router, type IRouter } from "express";
 import {
-  db,
-  ordersTable,
-  orderStatusEventsTable,
-  usersTable,
+  supabase,
+  mapOrder,
+  mapOrderStatusEvent,
   formatOrderNumber,
   nextAllowedOrderStatuses,
   type OrderStatus,
   type Order,
   type OrderItemLine,
 } from "@workspace/db";
-import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import {
   CreateOrderBody,
   UpdateOrderStatusBody,
@@ -26,13 +24,7 @@ const router: IRouter = Router();
 
 const STAFF_OR_ADMIN = ["super_admin", "admin", "staff"] as const;
 
-// Helpers -------------------------------------------------------------------
-
-type UserRow = {
-  id: number;
-  name: string;
-  email: string | null;
-};
+type UserRow = { id: number; name: string; email: string | null };
 
 function partyRef(u: UserRow | null | undefined): OrderPartyRef | null {
   if (!u) return null;
@@ -46,11 +38,16 @@ function computeSubtotal(items: OrderItemLine[]): number {
 async function fetchUserMap(ids: number[]): Promise<Map<number, UserRow>> {
   const unique = Array.from(new Set(ids.filter((n): n is number => typeof n === "number")));
   if (unique.length === 0) return new Map();
-  const rows = await db
-    .select({ id: usersTable.id, name: usersTable.name, email: usersTable.email })
-    .from(usersTable)
-    .where(inArray(usersTable.id, unique));
-  return new Map(rows.map((r) => [r.id, r]));
+  const { data: rows } = await supabase
+    .from("users")
+    .select("id, name, email")
+    .in("id", unique);
+  return new Map(
+    (rows ?? []).map((r) => [
+      r.id as number,
+      { id: r.id as number, name: r.name as string, email: r.email as string | null },
+    ]),
+  );
 }
 
 function summarize(order: Order, userMap: Map<number, UserRow>): OrderSummary {
@@ -74,11 +71,15 @@ function summarize(order: Order, userMap: Map<number, UserRow>): OrderSummary {
 }
 
 async function buildDetail(order: Order): Promise<OrderDetail> {
-  const events = await db
-    .select()
-    .from(orderStatusEventsTable)
-    .where(eq(orderStatusEventsTable.orderId, order.id))
-    .orderBy(asc(orderStatusEventsTable.createdAt));
+  const { data: eventRows } = await supabase
+    .from("order_status_events")
+    .select("*")
+    .eq("order_id", order.id)
+    .order("created_at", { ascending: true });
+
+  const events = (eventRows ?? []).map((r) =>
+    mapOrderStatusEvent(r as Record<string, unknown>),
+  );
 
   const userIds = [
     order.clientId,
@@ -122,27 +123,28 @@ function parseIdParam(raw: string | string[] | undefined): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-// Routes --------------------------------------------------------------------
-
-// All order routes require auth
 router.use(requireAuth);
 
 router.get("/", async (req, res) => {
   const user = req.user!;
-  const baseSelect = db.select().from(ordersTable);
+  let query = supabase
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  const orders: Order[] = await (user.role === "client"
-    ? baseSelect.where(eq(ordersTable.clientId, user.id)).orderBy(desc(ordersTable.createdAt))
-    : user.role === "staff"
-      ? baseSelect.where(eq(ordersTable.assignedTo, user.id)).orderBy(desc(ordersTable.createdAt))
-      : baseSelect.orderBy(desc(ordersTable.createdAt)));
+  if (user.role === "client") query = query.eq("client_id", user.id);
+  else if (user.role === "staff") query = query.eq("assigned_to", user.id);
 
-  const userIds = orders.flatMap((o) => [o.clientId, ...(o.assignedTo ? [o.assignedTo] : [])]);
+  const { data: rows } = await query;
+  const orders = (rows ?? []).map((r) => mapOrder(r as Record<string, unknown>));
+
+  const userIds = orders.flatMap((o) => [
+    o.clientId,
+    ...(o.assignedTo ? [o.assignedTo] : []),
+  ]);
   const userMap = await fetchUserMap(userIds);
 
-  const body: OrderListResponse = {
-    orders: orders.map((o) => summarize(o, userMap)),
-  };
+  const body: OrderListResponse = { orders: orders.map((o) => summarize(o, userMap)) };
   res.status(200).json(body);
 });
 
@@ -163,16 +165,17 @@ router.post("/", async (req, res) => {
       res.status(400).json({ error: "clientId is required when admins create orders" });
       return;
     }
-    const [c] = await db
-      .select({ id: usersTable.id, role: usersTable.role })
-      .from(usersTable)
-      .where(eq(usersTable.id, input.clientId))
+    const { data: clientRows } = await supabase
+      .from("users")
+      .select("id, role")
+      .eq("id", input.clientId)
       .limit(1);
+    const c = clientRows?.[0];
     if (!c || c.role !== "client") {
       res.status(400).json({ error: "Specified clientId is not a client" });
       return;
     }
-    clientId = c.id;
+    clientId = c.id as number;
   } else {
     res.status(403).json({ error: "Staff cannot create orders" });
     return;
@@ -181,30 +184,34 @@ router.post("/", async (req, res) => {
   const items = input.items as OrderItemLine[];
   const subtotal = computeSubtotal(items);
 
-  const inserted = await db.transaction(async (tx) => {
-    const [order] = await tx
-      .insert(ordersTable)
-      .values({
-        clientId,
-        title: input.title,
-        items,
-        subtotalAmount: subtotal,
-        notes: input.notes ?? null,
-        status: "draft",
-      })
-      .returning();
-    await tx.insert(orderStatusEventsTable).values({
-      orderId: order.id,
+  const { data: orderRow, error: orderErr } = await supabase
+    .from("orders")
+    .insert({
+      client_id: clientId,
+      title: input.title,
+      items,
+      subtotal_amount: subtotal,
+      notes: input.notes ?? null,
       status: "draft",
-      note: "Order created",
-      byUserId: user.id,
-    });
-    return order;
+    })
+    .select()
+    .single();
+
+  if (orderErr || !orderRow) {
+    res.status(500).json({ error: "Failed to create order" });
+    return;
+  }
+
+  await supabase.from("order_status_events").insert({
+    order_id: (orderRow as Record<string, unknown>).id as number,
+    status: "draft",
+    note: "Order created",
+    by_user_id: user.id,
   });
 
-  req.log.info({ orderId: inserted.id, clientId, by: user.id }, "order created");
-  const detail = await buildDetail(inserted);
-  res.status(201).json(detail);
+  const order = mapOrder(orderRow as Record<string, unknown>);
+  req.log.info({ orderId: order.id, clientId, by: user.id }, "order created");
+  res.status(201).json(await buildDetail(order));
 });
 
 router.get("/:id", async (req, res) => {
@@ -214,11 +221,13 @@ router.get("/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
-  const [order] = await db.select().from(ordersTable).where(eq(ordersTable.id, id)).limit(1);
-  if (!order) {
+  const { data: rows } = await supabase.from("orders").select("*").eq("id", id).limit(1);
+  const raw = rows?.[0];
+  if (!raw) {
     res.status(404).json({ error: "Order not found" });
     return;
   }
+  const order = mapOrder(raw as Record<string, unknown>);
   if (user.role === "client" && order.clientId !== user.id) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -243,11 +252,15 @@ router.patch("/:id/status", requireRole(...STAFF_OR_ADMIN), async (req, res) => 
     return;
   }
   const nextStatus = parsed.data.status as OrderStatus;
-  const [existing] = await db.select().from(ordersTable).where(eq(ordersTable.id, id)).limit(1);
-  if (!existing) {
+
+  const { data: rows } = await supabase.from("orders").select("*").eq("id", id).limit(1);
+  const raw = rows?.[0];
+  if (!raw) {
     res.status(404).json({ error: "Order not found" });
     return;
   }
+  const existing = mapOrder(raw as Record<string, unknown>);
+
   if (user.role === "staff" && existing.assignedTo !== user.id) {
     res.status(403).json({ error: "You can only update orders assigned to you" });
     return;
@@ -256,7 +269,6 @@ router.patch("/:id/status", requireRole(...STAFF_OR_ADMIN), async (req, res) => 
     res.status(200).json(await buildDetail(existing));
     return;
   }
-  // Enforce workflow rules server-side (UI is advisory only).
   const allowed = nextAllowedOrderStatuses(existing.status);
   if (!allowed.includes(nextStatus)) {
     res.status(400).json({
@@ -265,32 +277,28 @@ router.patch("/:id/status", requireRole(...STAFF_OR_ADMIN), async (req, res) => 
     return;
   }
 
-  // Atomic precondition update — guards against concurrent transitions.
-  const updated = await db.transaction(async (tx) => {
-    const rows = await tx
-      .update(ordersTable)
-      .set({ status: nextStatus, updatedAt: new Date() })
-      .where(and(eq(ordersTable.id, id), eq(ordersTable.status, existing.status)))
-      .returning();
-    if (rows.length === 0) return null;
-    await tx.insert(orderStatusEventsTable).values({
-      orderId: id,
-      status: nextStatus,
-      note: parsed.data.note ?? null,
-      byUserId: user.id,
-    });
-    return rows[0];
+  const { data: updated, error } = await supabase.rpc("transition_order_status", {
+    p_order_id: id,
+    p_from_status: existing.status,
+    p_to_status: nextStatus,
+    p_note: parsed.data.note ?? null,
+    p_by_user_id: user.id,
   });
 
-  if (!updated) {
+  if (error) {
+    res.status(500).json({ error: "Failed to update order status" });
+    return;
+  }
+  if (!updated || (updated as unknown[]).length === 0) {
     res.status(409).json({
       error: "Order was updated by someone else. Refresh and try again.",
     });
     return;
   }
 
+  const updatedOrder = mapOrder((updated as Record<string, unknown>[])[0]);
   req.log.info({ orderId: id, status: nextStatus, by: user.id }, "order status updated");
-  res.status(200).json(await buildDetail(updated));
+  res.status(200).json(await buildDetail(updatedOrder));
 });
 
 export default router;

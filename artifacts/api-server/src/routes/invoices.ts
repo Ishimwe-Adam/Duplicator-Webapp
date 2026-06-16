@@ -1,22 +1,18 @@
 import { Router, type IRouter } from "express";
 import PDFDocument from "pdfkit";
 import {
-  db,
-  invoicesTable,
-  ordersTable,
-  usersTable,
-  paymentsTable,
+  supabase,
+  mapInvoice,
+  mapPayment,
   formatInvoiceNumber,
   formatOrderNumber,
   nextAllowedInvoiceStatuses,
-  computeInvoiceTotals,
   isInvoiceOverdue,
   type Invoice,
   type InvoiceStatus,
   type OrderItemLine,
   type Payment,
 } from "@workspace/db";
-import { and, asc, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   CreateInvoiceBody,
   UpdateInvoiceStatusBody,
@@ -30,20 +26,10 @@ import {
 } from "@workspace/api-zod";
 import { requireAuth, requireRole } from "../middlewares/requireAuth";
 
-class HttpError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-  }
-}
-
-// silence unused-import lint when sql isn't needed elsewhere
-void sql;
-
 const router: IRouter = Router();
-
 const ADMIN_ROLES = ["super_admin", "admin"] as const;
 
-type UserRow = { id: number; name: string; email: string | null };
+type UserRow  = { id: number; name: string; email: string | null };
 type OrderRow = { id: number; title: string };
 
 function partyRef(u: UserRow | null | undefined): OrderPartyRef | null {
@@ -54,51 +40,59 @@ function partyRef(u: UserRow | null | undefined): OrderPartyRef | null {
 async function fetchUserMap(ids: number[]): Promise<Map<number, UserRow>> {
   const unique = Array.from(new Set(ids));
   if (unique.length === 0) return new Map();
-  const rows = await db
-    .select({ id: usersTable.id, name: usersTable.name, email: usersTable.email })
-    .from(usersTable)
-    .where(inArray(usersTable.id, unique));
-  return new Map(rows.map((r) => [r.id, r]));
+  const { data: rows } = await supabase
+    .from("users")
+    .select("id, name, email")
+    .in("id", unique);
+  return new Map(
+    (rows ?? []).map((r) => [
+      r.id as number,
+      { id: r.id as number, name: r.name as string, email: r.email as string | null },
+    ]),
+  );
 }
 
 async function fetchOrderMap(ids: number[]): Promise<Map<number, OrderRow>> {
   const unique = Array.from(new Set(ids));
   if (unique.length === 0) return new Map();
-  const rows = await db
-    .select({ id: ordersTable.id, title: ordersTable.title })
-    .from(ordersTable)
-    .where(inArray(ordersTable.id, unique));
-  return new Map(rows.map((r) => [r.id, r]));
+  const { data: rows } = await supabase
+    .from("orders")
+    .select("id, title")
+    .in("id", unique);
+  return new Map(
+    (rows ?? []).map((r) => [
+      r.id as number,
+      { id: r.id as number, title: r.title as string },
+    ]),
+  );
 }
 
 function orderRef(o: OrderRow | null | undefined, orderId: number): InvoiceOrderRef {
-  return {
-    id: orderId,
-    orderNumber: formatOrderNumber(orderId),
-    title: o?.title ?? "Order",
-  };
+  return { id: orderId, orderNumber: formatOrderNumber(orderId), title: o?.title ?? "Order" };
 }
 
 async function fetchPaidByInvoice(invoiceIds: number[]): Promise<Map<number, number>> {
   const unique = Array.from(new Set(invoiceIds));
   if (unique.length === 0) return new Map();
-  const rows = await db
-    .select({
-      invoiceId: paymentsTable.invoiceId,
-      paid: sql<string>`COALESCE(SUM(${paymentsTable.amount}), 0)`,
-    })
-    .from(paymentsTable)
-    .where(inArray(paymentsTable.invoiceId, unique))
-    .groupBy(paymentsTable.invoiceId);
-  return new Map(rows.map((r) => [r.invoiceId, Number(r.paid)]));
+  const { data: rows } = await supabase
+    .from("payments")
+    .select("invoice_id, amount")
+    .in("invoice_id", unique);
+  const map = new Map<number, number>();
+  for (const r of rows ?? []) {
+    const iid = r.invoice_id as number;
+    map.set(iid, (map.get(iid) ?? 0) + Number(r.amount));
+  }
+  return map;
 }
 
 async function fetchPaymentsForInvoice(invoiceId: number): Promise<Payment[]> {
-  return db
-    .select()
-    .from(paymentsTable)
-    .where(eq(paymentsTable.invoiceId, invoiceId))
-    .orderBy(asc(paymentsTable.paidAt));
+  const { data } = await supabase
+    .from("payments")
+    .select("*")
+    .eq("invoice_id", invoiceId)
+    .order("paid_at", { ascending: true });
+  return (data ?? []).map((r) => mapPayment(r as Record<string, unknown>));
 }
 
 function paymentDto(p: Payment, recordedBy: UserRow | null): PaymentDto {
@@ -109,11 +103,7 @@ function paymentDto(p: Payment, recordedBy: UserRow | null): PaymentDto {
     reference: p.reference ?? null,
     notes: p.notes ?? null,
     paidAt: p.paidAt,
-    recordedBy: partyRef(recordedBy) ?? {
-      id: p.recordedById,
-      name: "Unknown",
-      email: null,
-    },
+    recordedBy: partyRef(recordedBy) ?? { id: p.recordedById, name: "Unknown", email: null },
     createdAt: p.createdAt,
   };
 }
@@ -138,11 +128,7 @@ function summarize(
     issueDate: inv.issueDate,
     dueDate: inv.dueDate,
     isOverdue: isInvoiceOverdue(inv),
-    client: partyRef(userMap.get(inv.clientId)) ?? {
-      id: inv.clientId,
-      name: "Unknown",
-      email: null,
-    },
+    client: partyRef(userMap.get(inv.clientId)) ?? { id: inv.clientId, name: "Unknown", email: null },
     order: orderRef(orderMap.get(inv.orderId), inv.orderId),
     createdAt: inv.createdAt,
   };
@@ -150,8 +136,10 @@ function summarize(
 
 async function buildDetail(inv: Invoice): Promise<InvoiceDetail> {
   const payments = await fetchPaymentsForInvoice(inv.id);
-  const userMap = await fetchUserMap([inv.clientId, ...payments.map((p) => p.recordedById)]);
-  const orderMap = await fetchOrderMap([inv.orderId]);
+  const [userMap, orderMap] = await Promise.all([
+    fetchUserMap([inv.clientId, ...payments.map((p) => p.recordedById)]),
+    fetchOrderMap([inv.orderId]),
+  ]);
   const amountPaid = payments.reduce((s, p) => s + p.amount, 0);
   return {
     id: inv.id,
@@ -171,11 +159,7 @@ async function buildDetail(inv: Invoice): Promise<InvoiceDetail> {
     sentAt: inv.sentAt ?? null,
     paidAt: inv.paidAt ?? null,
     isOverdue: isInvoiceOverdue(inv),
-    client: partyRef(userMap.get(inv.clientId)) ?? {
-      id: inv.clientId,
-      name: "Unknown",
-      email: null,
-    },
+    client: partyRef(userMap.get(inv.clientId)) ?? { id: inv.clientId, name: "Unknown", email: null },
     order: orderRef(orderMap.get(inv.orderId), inv.orderId),
     createdAt: inv.createdAt,
     updatedAt: inv.updatedAt,
@@ -195,7 +179,6 @@ function canViewInvoice(role: string, userId: number, inv: Invoice): boolean {
   return false;
 }
 
-// All invoice routes require auth
 router.use(requireAuth);
 
 router.get("/", async (req, res) => {
@@ -204,15 +187,18 @@ router.get("/", async (req, res) => {
     res.status(403).json({ error: "Staff cannot view invoices" });
     return;
   }
-  const baseSelect = db.select().from(invoicesTable);
-  const invs: Invoice[] =
-    user.role === "client"
-      ? await baseSelect.where(eq(invoicesTable.clientId, user.id)).orderBy(desc(invoicesTable.createdAt))
-      : await baseSelect.orderBy(desc(invoicesTable.createdAt));
+  let query = supabase.from("invoices").select("*").order("created_at", { ascending: false });
+  if (user.role === "client") query = query.eq("client_id", user.id);
 
-  const userMap = await fetchUserMap(invs.map((i) => i.clientId));
-  const orderMap = await fetchOrderMap(invs.map((i) => i.orderId));
-  const paidMap = await fetchPaidByInvoice(invs.map((i) => i.id));
+  const { data: rows } = await query;
+  const invs = (rows ?? []).map((r) => mapInvoice(r as Record<string, unknown>));
+
+  const [userMap, orderMap, paidMap] = await Promise.all([
+    fetchUserMap(invs.map((i) => i.clientId)),
+    fetchOrderMap(invs.map((i) => i.orderId)),
+    fetchPaidByInvoice(invs.map((i) => i.id)),
+  ]);
+
   const body: InvoiceListResponse = {
     invoices: invs.map((i) => summarize(i, userMap, orderMap, paidMap)),
   };
@@ -235,53 +221,31 @@ router.post("/", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  // Transactional lock on the order row so its status / items / clientId cannot
-  // mutate between our re-read and the invoice insert. Without this, a concurrent
-  // "cancel order" or "reassign client" could slip in after our read.
-  let inv: Invoice;
-  try {
-    inv = await db.transaction(async (tx) => {
-      const [order] = await tx
-        .select()
-        .from(ordersTable)
-        .where(eq(ordersTable.id, input.orderId))
-        .for("update")
-        .limit(1);
-      if (!order) {
-        throw new HttpError(400, "Order not found");
-      }
-      if (order.status === "cancelled") {
-        throw new HttpError(400, "Cannot invoice a cancelled order");
-      }
+  const { data, error } = await supabase.rpc("create_invoice", {
+    p_order_id: input.orderId,
+    p_tax_rate_percent: taxRate,
+    p_notes: input.notes ?? null,
+    p_due_date: dueDate.toISOString(),
+  });
 
-      const items = (order.items ?? []) as OrderItemLine[];
-      const totals = computeInvoiceTotals(items, taxRate);
-
-      const [created] = await tx
-        .insert(invoicesTable)
-        .values({
-          orderId: order.id,
-          clientId: order.clientId,
-          items,
-          subtotalAmount: totals.subtotal,
-          taxRatePercent: taxRate,
-          taxAmount: totals.tax,
-          totalAmount: totals.total,
-          status: "draft",
-          notes: input.notes ?? null,
-          dueDate,
-        })
-        .returning();
-      return created;
-    });
-  } catch (e) {
-    if (e instanceof HttpError) {
-      res.status(e.status).json({ error: e.message });
-      return;
+  if (error) {
+    if (error.message.includes("ORDER_NOT_FOUND")) {
+      res.status(400).json({ error: "Order not found" });
+    } else if (error.message.includes("ORDER_CANCELLED")) {
+      res.status(400).json({ error: "Cannot invoice a cancelled order" });
+    } else {
+      res.status(500).json({ error: "Failed to create invoice" });
     }
-    throw e;
+    return;
   }
 
+  const rows = data as Record<string, unknown>[];
+  if (!rows || rows.length === 0) {
+    res.status(500).json({ error: "Failed to create invoice" });
+    return;
+  }
+
+  const inv = mapInvoice(rows[0]);
   req.log.info({ invoiceId: inv.id, orderId: input.orderId, by: user.id }, "invoice created");
   res.status(201).json(await buildDetail(inv));
 });
@@ -293,11 +257,13 @@ router.get("/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
-  const [inv] = await db.select().from(invoicesTable).where(eq(invoicesTable.id, id)).limit(1);
-  if (!inv) {
+  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
+  const raw = rows?.[0];
+  if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
+  const inv = mapInvoice(raw as Record<string, unknown>);
   if (!canViewInvoice(user.role, user.id, inv)) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -318,11 +284,15 @@ router.patch("/:id/status", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
   const nextStatus = parsed.data.status as InvoiceStatus;
-  const [existing] = await db.select().from(invoicesTable).where(eq(invoicesTable.id, id)).limit(1);
-  if (!existing) {
+
+  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
+  const raw = rows?.[0];
+  if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
+  const existing = mapInvoice(raw as Record<string, unknown>);
+
   if (existing.status === nextStatus) {
     res.status(200).json(await buildDetail(existing));
     return;
@@ -336,24 +306,27 @@ router.patch("/:id/status", requireRole(...ADMIN_ROLES), async (req, res) => {
   }
 
   const now = new Date();
-  const patch: Partial<Invoice> = { status: nextStatus, updatedAt: now };
-  if (nextStatus === "sent" && !existing.sentAt) patch.sentAt = now;
-  if (nextStatus === "paid" && !existing.paidAt) patch.paidAt = now;
+  const patch: Record<string, unknown> = { status: nextStatus, updated_at: now.toISOString() };
+  if (nextStatus === "sent" && !existing.sentAt) patch.sent_at = now.toISOString();
+  if (nextStatus === "paid" && !existing.paidAt) patch.paid_at = now.toISOString();
 
-  const rows = await db
-    .update(invoicesTable)
-    .set(patch)
-    .where(and(eq(invoicesTable.id, id), eq(invoicesTable.status, existing.status)))
-    .returning();
-  if (rows.length === 0) {
+  const { data: updated, error } = await supabase
+    .from("invoices")
+    .update(patch)
+    .eq("id", id)
+    .eq("status", existing.status)
+    .select();
+
+  if (error || !updated || (updated as unknown[]).length === 0) {
     res.status(409).json({
       error: "Invoice was updated by someone else. Refresh and try again.",
     });
     return;
   }
 
+  const updatedInv = mapInvoice((updated as Record<string, unknown>[])[0]);
   req.log.info({ invoiceId: id, status: nextStatus, by: user.id }, "invoice status updated");
-  res.status(200).json(await buildDetail(rows[0]));
+  res.status(200).json(await buildDetail(updatedInv));
 });
 
 router.post("/:id/payments", requireRole(...ADMIN_ROLES), async (req, res) => {
@@ -375,74 +348,43 @@ router.post("/:id/payments", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  try {
-    await db.transaction(async (tx) => {
-      // Lock the invoice row so balance can't shift under us.
-      const [inv] = await tx
-        .select()
-        .from(invoicesTable)
-        .where(eq(invoicesTable.id, id))
-        .for("update")
-        .limit(1);
-      if (!inv) throw new HttpError(404, "Invoice not found");
-      if (inv.status === "paid") throw new HttpError(400, "Invoice is already paid");
-      if (inv.status === "void") throw new HttpError(400, "Cannot record payment on a void invoice");
+  const { data, error } = await supabase.rpc("record_payment", {
+    p_invoice_id: id,
+    p_amount: input.amount,
+    p_method: input.method,
+    p_reference: input.reference?.trim() || null,
+    p_notes: input.notes?.trim() || null,
+    p_paid_at: paidAt.toISOString(),
+    p_recorded_by_id: user.id,
+  });
 
-      const [agg] = await tx
-        .select({ paid: sql<string>`COALESCE(SUM(${paymentsTable.amount}), 0)` })
-        .from(paymentsTable)
-        .where(eq(paymentsTable.invoiceId, id));
-      const alreadyPaid = Number(agg?.paid ?? 0);
-      const balance = inv.totalAmount - alreadyPaid;
-      if (balance <= 0) {
-        throw new HttpError(400, "Invoice has no outstanding balance");
-      }
-      if (input.amount > balance) {
-        throw new HttpError(400, `Amount exceeds outstanding balance of FRW ${balance.toLocaleString("en-US")}`);
-      }
-
-      await tx.insert(paymentsTable).values({
-        invoiceId: id,
-        amount: input.amount,
-        method: input.method,
-        reference: input.reference?.trim() || null,
-        notes: input.notes?.trim() || null,
-        paidAt,
-        recordedById: user.id,
+  if (error) {
+    const msg = error.message;
+    if (msg.includes("INVOICE_NOT_FOUND")) {
+      res.status(404).json({ error: "Invoice not found" });
+    } else if (msg.includes("INVOICE_ALREADY_PAID")) {
+      res.status(400).json({ error: "Invoice is already paid" });
+    } else if (msg.includes("INVOICE_VOID")) {
+      res.status(400).json({ error: "Cannot record payment on a void invoice" });
+    } else if (msg.includes("NO_OUTSTANDING_BALANCE")) {
+      res.status(400).json({ error: "Invoice has no outstanding balance" });
+    } else if (msg.includes("AMOUNT_EXCEEDS_BALANCE")) {
+      const balance = msg.split(":").pop()?.trim() ?? "0";
+      res.status(400).json({
+        error: `Amount exceeds outstanding balance of FRW ${Number(balance).toLocaleString("en-US")}`,
       });
-
-      const newPaid = alreadyPaid + input.amount;
-      if (newPaid >= inv.totalAmount) {
-        // Auto-flip to paid regardless of prior status (overrides normal workflow).
-        // Also backfill sentAt if invoice skipped the 'sent' state, so the lifecycle
-        // timeline stays consistent (paidAt is always after sentAt).
-        const now = new Date();
-        await tx
-          .update(invoicesTable)
-          .set({
-            status: "paid",
-            paidAt: now,
-            sentAt: inv.sentAt ?? now,
-            updatedAt: now,
-          })
-          .where(eq(invoicesTable.id, id));
-      }
-    });
-  } catch (e) {
-    if (e instanceof HttpError) {
-      res.status(e.status).json({ error: e.message });
-      return;
+    } else {
+      res.status(500).json({ error: "Failed to record payment" });
     }
-    throw e;
+    return;
   }
 
-  const [updated] = await db.select().from(invoicesTable).where(eq(invoicesTable.id, id)).limit(1);
+  const { data: fresh } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
+  const freshInv = mapInvoice((fresh?.[0] ?? data?.[0]) as Record<string, unknown>);
   req.log.info({ invoiceId: id, amount: input.amount, method: input.method, by: user.id }, "payment recorded");
-  res.status(201).json(await buildDetail(updated));
+  res.status(201).json(await buildDetail(freshInv));
 });
 
-// PDF download — kept out of the OpenAPI hooks (binary stream).
-// Same-origin cookie auth means a plain <a href="/api/invoices/:id/pdf"> works.
 router.get("/:id/pdf", async (req, res) => {
   const user = req.user!;
   const id = parseIdParam(req.params.id);
@@ -450,30 +392,33 @@ router.get("/:id/pdf", async (req, res) => {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
-  const [inv] = await db.select().from(invoicesTable).where(eq(invoicesTable.id, id)).limit(1);
-  if (!inv) {
+  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
+  const raw = rows?.[0];
+  if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
+  const inv = mapInvoice(raw as Record<string, unknown>);
   if (!canViewInvoice(user.role, user.id, inv)) {
     res.status(403).json({ error: "Forbidden" });
     return;
   }
-  const userMap = await fetchUserMap([inv.clientId]);
-  const orderMap = await fetchOrderMap([inv.orderId]);
-  const client = userMap.get(inv.clientId);
-  const order = orderMap.get(inv.orderId);
+  const [userMap, orderMap] = await Promise.all([
+    fetchUserMap([inv.clientId]),
+    fetchOrderMap([inv.orderId]),
+  ]);
+  const client = userMap.get(inv.clientId) ?? null;
+  const order  = orderMap.get(inv.orderId) ?? null;
 
   const filename = `${formatInvoiceNumber(inv.id)}.pdf`;
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", `inline; filename="${filename}"`);
-  // Sensitive document — never cache in shared/intermediary caches.
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
 
   const doc = new PDFDocument({ size: "A4", margin: 50 });
   doc.pipe(res);
-  renderInvoicePdf(doc, inv, client ?? null, order ?? null);
+  renderInvoicePdf(doc, inv, client, order);
   doc.end();
 });
 
@@ -491,50 +436,20 @@ function renderInvoicePdf(
   const BLUE = "#2645C8";
   const MUTED = "#6B7280";
 
-  // Header band
   doc.rect(0, 0, doc.page.width, 110).fill(NAVY);
-  doc
-    .fillColor("#FFFFFF")
-    .font("Helvetica-Bold")
-    .fontSize(22)
-    .text("Duplicator Ltd", 50, 40);
-  doc
-    .font("Helvetica")
-    .fontSize(10)
-    .fillColor("#7FE8FF")
-    .text("Print · Branding · Sewing", 50, 68);
-  doc
-    .fillColor("#FFFFFF")
-    .fontSize(9)
-    .text("Karuruma, Kigali  ·  +250 788 355 226  ·  duplicator10@gmail.com", 50, 84);
+  doc.fillColor("#FFFFFF").font("Helvetica-Bold").fontSize(22).text("Duplicator Ltd", 50, 40);
+  doc.font("Helvetica").fontSize(10).fillColor("#7FE8FF").text("Print · Branding · Sewing", 50, 68);
+  doc.fillColor("#FFFFFF").fontSize(9).text("Karuruma, Kigali  ·  +250 788 355 226  ·  duplicator10@gmail.com", 50, 84);
 
-  // Invoice meta block (right)
-  doc
-    .fillColor("#FFFFFF")
-    .font("Helvetica-Bold")
-    .fontSize(18)
-    .text("INVOICE", 380, 40, { width: 165, align: "right" });
-  doc
-    .font("Helvetica")
-    .fontSize(10)
-    .fillColor("#A9C6FF")
-    .text(formatInvoiceNumber(inv.id), 380, 66, { width: 165, align: "right" });
+  doc.fillColor("#FFFFFF").font("Helvetica-Bold").fontSize(18).text("INVOICE", 380, 40, { width: 165, align: "right" });
+  doc.font("Helvetica").fontSize(10).fillColor("#A9C6FF").text(formatInvoiceNumber(inv.id), 380, 66, { width: 165, align: "right" });
 
   doc.moveDown(2);
   doc.fillColor(NAVY);
 
-  // Bill to + meta rows
   const metaTop = 150;
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(10)
-    .fillColor(MUTED)
-    .text("BILL TO", 50, metaTop);
-  doc
-    .font("Helvetica")
-    .fontSize(11)
-    .fillColor(NAVY)
-    .text(client?.name ?? "Client", 50, metaTop + 14);
+  doc.font("Helvetica-Bold").fontSize(10).fillColor(MUTED).text("BILL TO", 50, metaTop);
+  doc.font("Helvetica").fontSize(11).fillColor(NAVY).text(client?.name ?? "Client", 50, metaTop + 14);
   if (client?.email) doc.fontSize(10).fillColor(MUTED).text(client.email);
 
   const labelX = 360;
@@ -549,7 +464,6 @@ function renderInvoicePdf(
   row(2, "ORDER", order ? formatOrderNumber(inv.orderId) : `#${inv.orderId}`);
   row(3, "STATUS", inv.status.toUpperCase());
 
-  // Items table
   const tableTop = 260;
   doc.rect(50, tableTop, doc.page.width - 100, 26).fill(BLUE);
   doc.fillColor("#FFFFFF").font("Helvetica-Bold").fontSize(10);
@@ -573,20 +487,13 @@ function renderInvoicePdf(
     y += 24;
   });
 
-  // Totals
   y += 12;
   doc.moveTo(360, y).lineTo(545, y).strokeColor("#E5E7EB").stroke();
   y += 10;
   const totalRow = (label: string, value: string, bold = false) => {
-    doc
-      .font(bold ? "Helvetica-Bold" : "Helvetica")
-      .fontSize(bold ? 12 : 10)
-      .fillColor(bold ? NAVY : MUTED)
+    doc.font(bold ? "Helvetica-Bold" : "Helvetica").fontSize(bold ? 12 : 10).fillColor(bold ? NAVY : MUTED)
       .text(label, 360, y, { width: 90, align: "right" });
-    doc
-      .font(bold ? "Helvetica-Bold" : "Helvetica")
-      .fontSize(bold ? 12 : 10)
-      .fillColor(NAVY)
+    doc.font(bold ? "Helvetica-Bold" : "Helvetica").fontSize(bold ? 12 : 10).fillColor(NAVY)
       .text(value, 450, y, { width: 95, align: "right" });
     y += bold ? 20 : 16;
   };
@@ -594,7 +501,6 @@ function renderInvoicePdf(
   if (inv.taxRatePercent > 0) totalRow(`VAT (${inv.taxRatePercent}%)`, frw(inv.taxAmount));
   totalRow("TOTAL", frw(inv.totalAmount), true);
 
-  // Notes
   if (inv.notes) {
     y += 14;
     doc.font("Helvetica-Bold").fontSize(9).fillColor(MUTED).text("NOTES", 50, y);
@@ -602,18 +508,11 @@ function renderInvoicePdf(
     doc.font("Helvetica").fontSize(10).fillColor(NAVY).text(inv.notes, 50, y, { width: 495 });
   }
 
-  // Footer
   const footerY = doc.page.height - 60;
-  doc
-    .font("Helvetica")
-    .fontSize(9)
-    .fillColor(MUTED)
-    .text(
-      "Thank you for your business. Payable by bank transfer or MoMo to +250 788 355 226.",
-      50,
-      footerY,
-      { width: doc.page.width - 100, align: "center" },
-    );
+  doc.font("Helvetica").fontSize(9).fillColor(MUTED).text(
+    "Thank you for your business. Payable by bank transfer or MoMo to +250 788 355 226.",
+    50, footerY, { width: doc.page.width - 100, align: "center" },
+  );
 }
 
 export default router;

@@ -1,22 +1,42 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import pg from "pg";
-import * as schema from "./schema";
+export { supabase } from "./client";
 
-const { Pool } = pg;
+export {
+  type User,
+  type Session,
+  type Order,
+  type OrderStatusEvent,
+  type Invoice,
+  type Payment,
+  mapUser,
+  mapSession,
+  mapOrder,
+  mapOrderStatusEvent,
+  mapInvoice,
+  mapPayment,
+} from "./mappers";
 
-const connectionString =
-  process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL;
+export { type UserRole } from "./schema/users";
 
-if (!connectionString) {
-  throw new Error(
-    "SUPABASE_DATABASE_URL (or DATABASE_URL) must be set. Did you forget to provision a database?",
-  );
-}
+export {
+  type OrderStatus,
+  type OrderItemLine,
+  ALL_ORDER_STATUSES,
+  formatOrderNumber,
+  nextAllowedOrderStatuses,
+  orderItemLineSchema,
+} from "./schema/orders";
 
-export const pool = new Pool({
-  connectionString,
-  ssl: connectionString.includes("supabase.com") ? { rejectUnauthorized: false } : undefined,
-});
-export const db = drizzle(pool, { schema });
+export {
+  type InvoiceStatus,
+  ALL_INVOICE_STATUSES,
+  formatInvoiceNumber,
+  nextAllowedInvoiceStatuses,
+  computeInvoiceTotals,
+  isInvoiceOverdue,
+} from "./schema/invoices";
 
-export * from "./schema";
+export {
+  type PaymentMethod,
+  ALL_PAYMENT_METHODS,
+  PAYMENT_METHOD_LABEL,
+} from "./schema/payments";
