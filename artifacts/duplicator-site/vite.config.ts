@@ -26,6 +26,9 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
     strictPort: true,
+    headers: {
+      "Cache-Control": "no-store",
+    },
     proxy: {
       "/api": {
         target: "http://localhost:3000",
