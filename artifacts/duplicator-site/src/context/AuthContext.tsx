@@ -26,16 +26,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutM = useLogout({});
 
   const value: AuthContextValue = {
-    user: meQuery.data?.user ?? null,
+    user: meQuery.data ?? null,
     isLoading: meQuery.isLoading,
     isAuthenticated: !!meQuery.data,
     login: async (data) => {
-      const res = (await loginM.mutateAsync(data)) as AuthResponse;
+      const res = (await loginM.mutateAsync({ data })) as AuthResponse;
       await qc.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
       return res.user;
     },
     register: async (data) => {
-      const res = (await registerM.mutateAsync(data)) as AuthResponse;
+      const res = (await registerM.mutateAsync({ data })) as AuthResponse;
       await qc.invalidateQueries({ queryKey: getGetCurrentUserQueryKey() });
       return res.user;
     },

@@ -1,0 +1,5 @@
+packages:
+  - "artifacts/duplicator-site"
+  - "artifacts/api-server"
+  - "lib/*"
+  - "scripts"

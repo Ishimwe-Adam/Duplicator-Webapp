@@ -10,10 +10,14 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@workspace/api-zod": "workspace:*",
+    "@workspace/db": "workspace:*",
     "cookie-parser": "^1.4.7",
     "cors": "^2",
+    "drizzle-orm": "^0.44.5",
     "express": "^5",
     "pdfkit": "^0.18.0",
+    "pg": "^8.16.3",
     "pino": "^9",
     "pino-http": "^10"
   },

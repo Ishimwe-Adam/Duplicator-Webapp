@@ -95,7 +95,7 @@ function Router() {
       </Route>
       <Route path="/admin/invoices">
         <ProtectedRoute roles={["super_admin", "admin"]}>
-          <SalesQuotationPage />
+          <InvoicesListPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/job-card">
@@ -105,7 +105,7 @@ function Router() {
       </Route>
       <Route path="/admin/invoices/:id">
         <ProtectedRoute roles={["super_admin", "admin"]}>
-          <SalesQuotationPage />
+          <InvoiceDetailPage />
         </ProtectedRoute>
       </Route>
       <Route path="/staff">
@@ -140,7 +140,7 @@ function Router() {
       </Route>
       <Route path="/staff/invoices">
         <ProtectedRoute roles={["staff"]}>
-          <SalesQuotationPage />
+          <InvoicesListPage />
         </ProtectedRoute>
       </Route>
       <Route path="/staff/job-card">
