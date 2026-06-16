@@ -30,7 +30,7 @@ outputType = "webview"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "pnpm --filter @workspace/duplicator-site run dev"
-waitForPort = 5000
+waitForPort = 24468
 
 [agent]
 stack = "PNPM_WORKSPACE"

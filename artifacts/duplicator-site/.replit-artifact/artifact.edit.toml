@@ -1,0 +1,17 @@
+kind = "web"
+  previewPath = "/"
+  title = "Duplicator Ltd"
+  version = "1.0.0"
+  id = "duplicator-site-main"
+
+  [[services]]
+  localPort = 5000
+  name = "Duplicator Site"
+  paths = ["/"]
+
+  [services.env]
+  PORT = "5000"
+
+  [services.development]
+  run = "pnpm --filter @workspace/duplicator-site run dev"
+  
