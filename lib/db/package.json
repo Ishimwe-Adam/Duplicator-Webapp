@@ -3,10 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "push": "drizzle-kit push",
+    "generate": "drizzle-kit generate",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
   "dependencies": {
+    "drizzle-orm": "^0.44.2",
+    "drizzle-zod": "^0.7.0",
+    "pg": "^8.16.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@types/node": "^25.3.3"
+    "@types/node": "^25.3.3",
+    "@types/pg": "^8.11.14",
+    "drizzle-kit": "^0.31.1"
   }
 }

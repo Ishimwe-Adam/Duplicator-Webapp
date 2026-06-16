@@ -1,1 +1,1 @@
-- [duplicator-site port config](duplicator-site-port.md) — Vite must run on port 24468 (set by artifact.toml); the artifact router forwards "/" to that port.
+- [duplicator-site port config](duplicator-site-port.md) — Vite on port 5000 (webview), Express API on port 3000 (console), Vite proxies /api to port 3000.
