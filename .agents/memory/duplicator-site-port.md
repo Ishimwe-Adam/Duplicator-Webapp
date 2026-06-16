@@ -1,14 +1,17 @@
 ---
 name: duplicator-site port config
-description: Port setup for the Vite frontend and Express API server in Replit workflow mode.
+description: Port setup for the Vite frontend and Express API server using the Replit artifact system.
 ---
 
-After migration to Replit, the project runs as two workflows:
+This project uses the **Replit artifact system**. Each artifact has an `artifact.toml` under `.replit-artifact/` that defines port routing. The canvas preview and iframe use artifact workflows, NOT custom workflows.
 
-- **Frontend (Vite)**: port **5000** — required for `webview` output type in Replit. Configured in `artifacts/duplicator-site/vite.config.ts` as `server.port = 5000`.
-- **API Server (Express)**: port **3000** — console workflow, started via `PORT=3000 pnpm --filter @workspace/api-server run dev`.
-- **Vite proxy**: `/api` requests are proxied from port 5000 → port 3000 via the `server.proxy` config in `vite.config.ts`.
+- **Frontend (Vite)**: port **24468** — defined in `artifacts/duplicator-site/.replit-artifact/artifact.toml` as `localPort = 24468`. Artifact runner injects `PORT=24468`. Vite config must have `server.port = 24468`.
+- **API Server (Express)**: port **8080** (dev) — defined in `artifacts/api-server/.replit-artifact/artifact.toml` as `localPort = 8080`. Artifact runner injects `PORT=8080`.
+- **Vite proxy**: `/api` requests are proxied from port 24468 → port 8080 via `server.proxy` in `vite.config.ts`.
 
-**Why:** Replit's webview output type requires port 5000. The old port 24468 was from an artifact.toml setup that no longer applies. Vite proxies `/api` to the backend so cookies are same-origin.
+**Why:** The artifact router intercepts canvas preview traffic and routes `/` to port 24468 and `/api` to port 8080. Custom workflows on different ports won't appear in the canvas preview iframe.
 
-**How to apply:** Keep Vite on port 5000, API on port 3000, and the proxy in place. The workflow named "Start application" serves the frontend; "API Server" serves the backend.
+**How to apply:**
+- Always use artifact workflows (`artifacts/duplicator-site: web` and `artifacts/api-server: API Server`), not custom "Start application" / "API Server" workflows.
+- Never create custom workflows that bind to ports 24468 or 8080 — they'll conflict.
+- Keep `vite.config.ts` `server.port = 24468` and proxy `/api` to `http://localhost:8080`.

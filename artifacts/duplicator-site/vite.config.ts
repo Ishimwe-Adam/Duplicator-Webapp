@@ -22,16 +22,13 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 5000,
+    port: 24468,
     host: "0.0.0.0",
     allowedHosts: true,
     strictPort: true,
-    headers: {
-      "Cache-Control": "no-store",
-    },
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "http://localhost:8080",
         changeOrigin: true,
       },
     },
