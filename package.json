@@ -3,6 +3,16 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev:site": "pnpm --filter @workspace/duplicator-site run dev",
+    "dev:api": "pnpm --filter @workspace/api-server run dev",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "typecheck:libs": "pnpm -r --filter @workspace/db --filter @workspace/api-zod --filter @workspace/api-client-react --if-present run typecheck",
+    "build": "pnpm -r --if-present run build",
+    "codegen": "pnpm --filter @workspace/api-spec run codegen",
+    "seed": "pnpm --filter @workspace/scripts run seed"
+  },
   "devDependencies": {
     "typescript": "~5.9.2",
     "prettier": "^3.8.1"
