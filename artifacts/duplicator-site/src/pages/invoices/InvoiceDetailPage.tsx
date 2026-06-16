@@ -96,7 +96,7 @@ export default function InvoiceDetailPage() {
     try {
       await updateM.mutateAsync({ id: inv.id, data: { status: next } });
       await Promise.all([
-        qc.invalidateQueries({ queryKey: getGetInvoiceQueryKey(inv.id) }),
+        qc.invalidateQueries({ queryKey: getGetInvoiceDetailQueryKey(inv.id) }),
         qc.invalidateQueries({ queryKey: getListInvoicesQueryKey() }),
       ]);
     } finally {
@@ -246,7 +246,6 @@ export default function InvoiceDetailPage() {
             <DetailRow label="Due" value={formatDateTime(inv.dueDate)} />
             {inv.sentAt && <DetailRow label="Sent" value={formatDateTime(inv.sentAt)} />}
             {inv.paidAt && <DetailRow label="Paid" value={formatDateTime(inv.paidAt)} />}
-            <DetailRow label="Updated" value={formatDateTime(inv.updatedAt)} />
           </Section>
 
           {canChange && (

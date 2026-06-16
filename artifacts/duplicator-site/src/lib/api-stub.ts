@@ -45,7 +45,7 @@ export const getGetCurrentUserQueryKey = () => ["auth", "me"] as const;
 export const getGetMeQueryKey = getGetCurrentUserQueryKey;
 
 export const useGetCurrentUser = <TData = AuthResponse, TError = Error>(options?: {
-  query?: UseQueryOptions<AuthResponse, TError, TData>;
+  query?: Parameters<typeof useQuery>[0];
 }) => {
   return useQuery({
     queryKey: getGetCurrentUserQueryKey(),
@@ -167,22 +167,22 @@ export const useCreateOrder = (options?: {
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: CreateOrderInput): Promise<OrderDetail> => {
+    mutationFn: async ({ data }: { data: CreateOrderInput }): Promise<OrderDetail> => {
       await delay(300);
       const newOrder: OrderSummary = {
         id: mockOrders.length + 1,
         orderNumber: `ORD-${String(mockOrders.length + 1).padStart(3, "0")}`,
-        title: input.title,
+        title: data.title,
         status: "draft",
-        subtotalAmount: input.items.reduce((sum, item) => sum + item.qty * item.unitPrice, 0),
-        itemCount: input.items.length,
+        subtotalAmount: data.items.reduce((sum, item) => sum + item.qty * item.unitPrice, 0),
+        itemCount: data.items.length,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         client: currentUser ? { id: currentUser.id, name: currentUser.name, email: currentUser.email } : { id: 0, name: "Unknown" },
       };
       mockOrders.push(newOrder);
       queryClient.invalidateQueries({ queryKey: getListOrdersQueryKey() });
-      return { ...newOrder, items: input.items, notes: input.notes || null, timeline: [] };
+      return { ...newOrder, items: data.items, notes: data.notes || null, timeline: [] };
     },
     ...options?.mutation,
   });
@@ -193,15 +193,15 @@ export const useUpdateOrderStatus = (options?: {
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input }: { id: number; input: UpdateOrderStatusInput }): Promise<OrderDetail> => {
+    mutationFn: async ({ id, data }: { id: number; data: UpdateOrderStatusInput }): Promise<OrderDetail> => {
       await delay(200);
       const idx = mockOrders.findIndex(o => o.id === id);
       if (idx === -1) throw new Error("Order not found");
-      mockOrders[idx] = { ...mockOrders[idx], status: input.status, updatedAt: new Date().toISOString() };
+      mockOrders[idx] = { ...mockOrders[idx], status: data.status, updatedAt: new Date().toISOString() };
       queryClient.invalidateQueries({ queryKey: getListOrdersQueryKey() });
       queryClient.invalidateQueries({ queryKey: getOrderDetailQueryKey(id) });
       const order = mockOrders[idx];
-      return { ...order, items: [{ description: "Printing Service", qty: 1, unitPrice: order.subtotalAmount }], notes: input.note || null, timeline: [] };
+      return { ...order, items: [{ description: "Printing Service", qty: 1, unitPrice: order.subtotalAmount }], notes: data.note || null, timeline: [] };
     },
     ...options?.mutation,
   });
@@ -237,8 +237,9 @@ export const useGetInvoiceDetail = <TData = InvoiceDetail, TError = Error>(id: n
       if (!inv) throw new Error("Invoice not found");
       return {
         ...inv,
+        taxRatePercent: inv.taxRatePercent ?? 18,
         items: [{ description: "Printing Service", qty: 1, unitPrice: inv.subtotalAmount }],
-        payments: inv.status === "paid" ? [{ id: 1, amount: inv.totalAmount, method: "momo", paidAt: inv.issueDate, recordedBy: { id: 1, name: "Admin User" }, createdAt: inv.issueDate }] : [],
+        payments: inv.status === "paid" ? [{ id: 1, amount: inv.totalAmount, method: "momo" as const, paidAt: inv.issueDate, recordedBy: { id: 1, name: "Admin User" }, createdAt: inv.issueDate }] : [],
         sentAt: inv.status !== "draft" ? inv.issueDate : null,
         paidAt: inv.status === "paid" ? inv.issueDate : null,
       };
@@ -252,22 +253,23 @@ export const useCreateInvoice = (options?: {
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (input: CreateInvoiceInput): Promise<InvoiceDetail> => {
+    mutationFn: async ({ data }: { data: CreateInvoiceInput }): Promise<InvoiceDetail> => {
       await delay(300);
-      const order = mockOrders.find(o => o.id === input.orderId);
+      const order = mockOrders.find(o => o.id === data.orderId);
       if (!order) throw new Error("Order not found");
+      const taxRate = data.taxRatePercent || 18;
       const newInv: InvoiceSummary = {
         id: mockInvoices.length + 1,
         invoiceNumber: `INV-${String(mockInvoices.length + 1).padStart(3, "0")}`,
         status: "draft",
         subtotalAmount: order.subtotalAmount,
-        taxRatePercent: input.taxRatePercent || 18,
-        taxAmount: Math.round(order.subtotalAmount * (input.taxRatePercent || 18) / 100),
-        totalAmount: Math.round(order.subtotalAmount * (1 + (input.taxRatePercent || 18) / 100)),
+        taxRatePercent: taxRate,
+        taxAmount: Math.round(order.subtotalAmount * taxRate / 100),
+        totalAmount: Math.round(order.subtotalAmount * (1 + taxRate / 100)),
         amountPaid: 0,
-        balanceDue: Math.round(order.subtotalAmount * (1 + (input.taxRatePercent || 18) / 100)),
+        balanceDue: Math.round(order.subtotalAmount * (1 + taxRate / 100)),
         issueDate: new Date().toISOString().split("T")[0],
-        dueDate: input.dueDate,
+        dueDate: data.dueDate,
         isOverdue: false,
         client: order.client,
         order: { id: order.id, orderNumber: order.orderNumber, title: order.title },
@@ -275,7 +277,7 @@ export const useCreateInvoice = (options?: {
       };
       mockInvoices.push(newInv);
       queryClient.invalidateQueries({ queryKey: getListInvoicesQueryKey() });
-      return { ...newInv, items: [{ description: "Printing Service", qty: 1, unitPrice: newInv.subtotalAmount }], payments: [], sentAt: null, paidAt: null };
+      return { ...newInv, taxRatePercent: taxRate, items: [{ description: "Printing Service", qty: 1, unitPrice: newInv.subtotalAmount }], payments: [], sentAt: null, paidAt: null };
     },
     ...options?.mutation,
   });
@@ -286,21 +288,20 @@ export const useRecordPayment = (options?: {
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input }: { id: number; input: RecordPaymentInput }): Promise<InvoiceDetail> => {
+    mutationFn: async ({ id, data }: { id: number; data: RecordPaymentInput }): Promise<InvoiceDetail> => {
       await delay(300);
       const idx = mockInvoices.findIndex(i => i.id === id);
       if (idx === -1) throw new Error("Invoice not found");
       const inv = mockInvoices[idx];
-      inv.amountPaid += input.amount;
-      inv.balanceDue -= input.amount;
+      inv.amountPaid += data.amount;
+      inv.balanceDue -= data.amount;
       if (inv.balanceDue <= 0) {
         inv.status = "paid";
         inv.balanceDue = 0;
       }
       queryClient.invalidateQueries({ queryKey: getListInvoicesQueryKey() });
       queryClient.invalidateQueries({ queryKey: getInvoiceDetailQueryKey(id) });
-      const order = mockOrders.find(o => o.orderNumber === inv.order.orderNumber);
-      return { ...inv, items: [{ description: "Printing Service", qty: 1, unitPrice: inv.subtotalAmount }], payments: [], sentAt: inv.issueDate, paidAt: inv.status === "paid" ? new Date().toISOString() : null };
+      return { ...inv, taxRatePercent: inv.taxRatePercent ?? 18, items: [{ description: "Printing Service", qty: 1, unitPrice: inv.subtotalAmount }], payments: [], sentAt: inv.issueDate, paidAt: inv.status === "paid" ? new Date().toISOString() : null };
     },
     ...options?.mutation,
   });
@@ -311,15 +312,15 @@ export const useUpdateInvoiceStatus = (options?: {
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input }: { id: number; input: UpdateInvoiceStatusInput }): Promise<InvoiceDetail> => {
+    mutationFn: async ({ id, data }: { id: number; data: UpdateInvoiceStatusInput }): Promise<InvoiceDetail> => {
       await delay(200);
       const idx = mockInvoices.findIndex(i => i.id === id);
       if (idx === -1) throw new Error("Invoice not found");
-      mockInvoices[idx].status = input.status;
+      mockInvoices[idx].status = data.status;
       queryClient.invalidateQueries({ queryKey: getListInvoicesQueryKey() });
       queryClient.invalidateQueries({ queryKey: getInvoiceDetailQueryKey(id) });
       const inv = mockInvoices[idx];
-      return { ...inv, items: [{ description: "Printing Service", qty: 1, unitPrice: inv.subtotalAmount }], payments: [], sentAt: inv.issueDate, paidAt: null };
+      return { ...inv, taxRatePercent: inv.taxRatePercent ?? 18, items: [{ description: "Printing Service", qty: 1, unitPrice: inv.subtotalAmount }], payments: [], sentAt: inv.issueDate, paidAt: null };
     },
     ...options?.mutation,
   });

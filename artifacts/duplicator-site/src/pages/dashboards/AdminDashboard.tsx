@@ -43,7 +43,6 @@ export default function AdminDashboard() {
       queryKey: getGetAnalyticsSummaryQueryKey(),
       refetchInterval: 60_000,
     },
-    request: { credentials: "include" },
   });
 
   if (!user) return null;

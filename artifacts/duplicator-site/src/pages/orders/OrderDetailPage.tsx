@@ -107,7 +107,7 @@ export default function OrderDetailPage() {
       });
       setNote("");
       await Promise.all([
-        qc.invalidateQueries({ queryKey: getGetOrderQueryKey(order.id) }),
+        qc.invalidateQueries({ queryKey: getGetOrderDetailQueryKey(order.id) }),
         qc.invalidateQueries({ queryKey: getListOrdersQueryKey() }),
       ]);
     } finally {

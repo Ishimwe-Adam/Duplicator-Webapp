@@ -81,7 +81,7 @@ export default function NewOrderModal({ onClose, onCreated }: Props) {
         },
       });
       await qc.invalidateQueries({ queryKey: getListOrdersQueryKey() });
-      onCreated(created.id);
+      onCreated((created as { id: number }).id);
     } catch (e) {
       const msg =
         e instanceof Error && e.message ? e.message : "Could not create order.";

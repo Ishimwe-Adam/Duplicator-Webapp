@@ -66,7 +66,7 @@ export default function CreateInvoiceModal({ onClose, onCreated }: Props) {
         },
       });
       await qc.invalidateQueries({ queryKey: getListInvoicesQueryKey() });
-      onCreated(created.id);
+      onCreated((created as { id: number }).id);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not create invoice.");
     }

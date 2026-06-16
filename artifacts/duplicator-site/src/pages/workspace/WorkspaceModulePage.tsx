@@ -78,6 +78,24 @@ const EMPLOYEE_ROSTER = [
   "Client Representative",
 ] as const;
 
+const TASK_ASSIGNEES = ["Unassigned", ...EMPLOYEE_ROSTER] as const;
+const TASK_PRIORITIES = ["High", "Medium", "Low"] as const;
+const TASK_STATUSES = ["todo", "doing", "done"] as const;
+const TASK_PRESETS = [
+  { title: "Approve final proof for client", owner: "Sales team", due: "Today", priority: "High" as const, status: "todo" as const },
+  { title: "Print roll-up banners — 2pcs", owner: "Production", due: "Tomorrow", priority: "Medium" as const, status: "todo" as const },
+  { title: "Issue invoice for completed order", owner: "Accounts", due: "Today", priority: "High" as const, status: "doing" as const },
+  { title: "Design new flyer template", owner: "Design", due: "Friday", priority: "Low" as const, status: "todo" as const },
+];
+const MESSAGE_RECIPIENTS = [
+  "Sales Manager",
+  "Production Lead",
+  "Accounts",
+  "Design Team",
+  "Customer Care Desk",
+] as const;
+const PAYMENT_METHODS = ["MTN Mobile Money", "Airtel Money", "Bank Transfer", "Cash", "Other"] as const;
+
 type Task = {
   id: number;
   title: string;
