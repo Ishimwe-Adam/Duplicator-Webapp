@@ -17,6 +17,7 @@
     "cors": "^2",
     "drizzle-orm": "^0.44.2",
     "express": "^5",
+    "google-auth-library": "^10.7.0",
     "pdfkit": "^0.18.0",
     "pg": "^8.16.0",
     "pino": "^9",

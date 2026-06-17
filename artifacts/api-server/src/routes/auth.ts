@@ -13,6 +13,7 @@ import {
   getUserFromRequest,
   toAuthUser,
 } from "../lib/auth";
+import { OAuth2Client } from "google-auth-library";
 
 const router: IRouter = Router();
 
@@ -110,6 +111,83 @@ router.post("/login", async (req, res) => {
       .from("users")
       .update({ failed_login_attempts: 0, locked_until: null })
       .eq("id", user.id);
+  }
+
+  await createSession(user.id, req, res);
+  const body: AuthResponse = { user: toAuthUser(user) };
+  res.status(200).json(body);
+});
+
+router.post("/google", async (req, res) => {
+  const { credential } = req.body as { credential?: unknown };
+  if (!credential || typeof credential !== "string") {
+    res.status(400).json({ error: "Missing Google credential" });
+    return;
+  }
+
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) {
+    res.status(503).json({ error: "Google sign-in is not configured on this server" });
+    return;
+  }
+
+  let email: string;
+  let fullName: string;
+  let picture: string | undefined;
+  try {
+    const oauthClient = new OAuth2Client(clientId);
+    const ticket = await oauthClient.verifyIdToken({ idToken: credential, audience: clientId });
+    const payload = ticket.getPayload();
+    if (!payload?.email_verified || !payload.email) {
+      res.status(401).json({ error: "Google account email not verified" });
+      return;
+    }
+    email = payload.email;
+    fullName = payload.name ?? email.split("@")[0];
+    picture = payload.picture;
+  } catch {
+    res.status(401).json({ error: "Invalid Google credential" });
+    return;
+  }
+
+  const { data: rows } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email.toLowerCase())
+    .limit(1);
+
+  let user;
+  if (rows && rows.length > 0) {
+    user = mapUser(rows[0] as Record<string, unknown>);
+    if (!user.isActive) {
+      res.status(401).json({ error: "Account is deactivated" });
+      return;
+    }
+    if (picture && !user.profilePictureUrl) {
+      await supabase.from("users").update({ profile_picture_url: picture }).eq("id", user.id);
+      user = { ...user, profilePictureUrl: picture };
+    }
+  } else {
+    const passwordHash = await hashPassword(
+      `google_oauth_${Math.random().toString(36)}_${Date.now()}`
+    );
+    const { data: inserted, error: insertErr } = await supabase
+      .from("users")
+      .insert({
+        email: email.toLowerCase(),
+        password_hash: passwordHash,
+        name: fullName,
+        profile_picture_url: picture ?? null,
+        role: "client",
+      })
+      .select()
+      .single();
+
+    if (insertErr || !inserted) {
+      res.status(500).json({ error: "Failed to create account" });
+      return;
+    }
+    user = mapUser(inserted as Record<string, unknown>);
   }
 
   await createSession(user.id, req, res);

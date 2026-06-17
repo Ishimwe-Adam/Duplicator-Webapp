@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import AuthShell, { Field, SubmitButton, ErrorBanner } from "@/components/AuthShell";
 import { useAuth } from "@/context/auth";
 import { roleHome } from "./LoginPage";
@@ -24,6 +25,26 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  async function onGoogleCredential(credential: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ credential }),
+      });
+      const data = await res.json() as { user?: { role: string }; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Google sign-in failed");
+      setLocation(roleHome(data.user!.role));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -65,6 +86,13 @@ export default function SignupPage() {
         </>
       }
     >
+      {/* ── Google Sign-Up ──────────────────────────────────────────── */}
+      <GoogleSignInButton
+        onCredential={onGoogleCredential}
+        text="signup_with"
+        theme="outline"
+      />
+
       <form onSubmit={onSubmit}>
         {error && <ErrorBanner message={error} />}
         <Field label="Full name" value={name} onChange={setName} placeholder="Your name" autoComplete="name" required />

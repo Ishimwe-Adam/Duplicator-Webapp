@@ -184,7 +184,7 @@ export default function SalesQuotationPage({ mode = "editor" }: { mode?: Quotati
           })}
         </div>
 
-        <div className="grid gap-7 xl:grid-cols-[1.02fr_0.98fr]">
+        <div className="flex flex-col gap-7">
           {mode === "editor" ? (
             <section
               className={`quotation-form-panel rounded-[20px] border p-5 shadow-[0_30px_80px_rgba(0,0,0,.35)] ${
@@ -380,7 +380,7 @@ export default function SalesQuotationPage({ mode = "editor" }: { mode?: Quotati
           )}
 
           <section
-            className={`print-paper sticky top-6 rounded-[18px] border p-4 shadow-[0_30px_80px_rgba(0,0,0,.35)] xl:overflow-hidden ${
+            className={`print-paper rounded-[18px] border p-4 shadow-[0_30px_80px_rgba(0,0,0,.35)] ${
               isDark ? "border-white/10 bg-white" : "border-[#cad7f5] bg-white"
             }`}
           >

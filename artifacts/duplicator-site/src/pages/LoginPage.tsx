@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import AuthShell, { Field, SubmitButton, ErrorBanner } from "@/components/AuthShell";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
@@ -47,6 +48,26 @@ export default function LoginPage() {
     setLocation(roleHome(user.role));
   }
 
+  async function onGoogleCredential(credential: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ credential }),
+      });
+      const data = await res.json() as { user?: { role: string }; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Google sign-in failed");
+      setLocation(roleHome(data.user!.role));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -85,6 +106,13 @@ export default function LoginPage() {
         </>
       }
     >
+      {/* ── Google Sign-In ──────────────────────────────────────────── */}
+      <GoogleSignInButton
+        onCredential={onGoogleCredential}
+        text="signin_with"
+        theme={isDark ? "filled_black" : "outline"}
+      />
+
       {/* ── Demo accounts panel — DEV BUILDS ONLY ──────────────────── */}
       {import.meta.env.DEV && (
       <div
