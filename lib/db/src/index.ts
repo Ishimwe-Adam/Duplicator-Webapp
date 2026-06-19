@@ -41,4 +41,15 @@ export {
   PAYMENT_METHOD_LABEL,
 } from "./schema/payments";
 
+export {
+  type TaskStatus,
+  type TaskPriority,
+  ALL_TASK_STATUSES,
+  ALL_TASK_PRIORITIES,
+  TASK_STATUS_LABEL,
+  TASK_PRIORITY_LABEL,
+} from "./schema/tasks";
+
+export { type DbTask, mapTask } from "./mappers";
+
 export * from "./schema/index";

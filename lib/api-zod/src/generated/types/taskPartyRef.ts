@@ -5,8 +5,8 @@
  * Duplicator Ltd platform API
  * OpenAPI spec version: 0.1.0
  */
-import type { InvoiceSummary } from './invoiceSummary';
 
-export interface InvoiceListResponse {
-  invoices: InvoiceSummary[];
+export interface TaskPartyRef {
+  id: number;
+  name: string;
 }

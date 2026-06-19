@@ -383,7 +383,63 @@ export const useGetAnalyticsSummary = <TData = AnalyticsSummary, TError = Error>
   }) as ReturnType<typeof useQuery<AnalyticsSummary, TError, TData>>;
 };
 
-// Type exports
+// ─── Tasks hooks (real API calls) ───────────────────────────────────────────
+
+export const getListTasksQueryKey = () => ["tasks"] as const;
+
+export const useListTasks = <TData = TaskListResponse, TError = Error>(options?: {
+  query?: Parameters<typeof useQuery>[0];
+}) => {
+  return useQuery({
+    queryKey: getListTasksQueryKey(),
+    queryFn: async (): Promise<TaskListResponse> => {
+      const res = await fetch("/api/tasks", { credentials: "include" });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    ...options?.query,
+  }) as ReturnType<typeof useQuery<TaskListResponse, TError, TData>>;
+};
+
+export const useCreateTask = (options?: { mutation?: Parameters<typeof useMutation>[0] }) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }: { data: CreateTaskInput }): Promise<TaskSummary> => {
+      const res = await fetch("/api/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(data) });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() }),
+    ...options?.mutation,
+  });
+};
+
+export const useUpdateTask = (options?: { mutation?: Parameters<typeof useMutation>[0] }) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: UpdateTaskInput }): Promise<TaskSummary> => {
+      const res = await fetch(`/api/tasks/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(data) });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() }),
+    ...options?.mutation,
+  });
+};
+
+export const useDeleteTask = (options?: { mutation?: Parameters<typeof useMutation>[0] }) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id }: { id: number }): Promise<void> => {
+      const res = await fetch(`/api/tasks/${id}`, { method: "DELETE", credentials: "include" });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: getListTasksQueryKey() }),
+    ...options?.mutation,
+  });
+};
+
+// ─── Type exports ────────────────────────────────────────────────────────────
 export interface HealthStatus { status: string }
 export interface ErrorResponse { error: string }
 export type UserRole = "super_admin" | "admin" | "staff" | "client";
@@ -415,3 +471,10 @@ export interface AnalyticsOrderStatusCount { status: OrderStatus; count: number 
 export interface AnalyticsTopClient { id: number; name: string; email?: string | null; revenue: number; invoiceCount: number }
 export interface AnalyticsRecentOrder { id: number; orderNumber: string; title: string; status: OrderStatus; subtotalAmount: number; clientName: string; createdAt: string }
 export interface AnalyticsSummary { generatedAt: string; revenue: { thisMonth: number; lastMonth: number; last12Months: AnalyticsMonthlyRevenue[] }; receivables: { outstandingAmount: number; overdueCount: number }; orders: { active: number; dueSoon: number; byStatus: AnalyticsOrderStatusCount[] }; clients: { total: number; newThisMonth: number; top: AnalyticsTopClient[] }; recentOrders: AnalyticsRecentOrder[] }
+export type TaskStatus = "todo" | "in_progress" | "review" | "done";
+export type TaskPriority = "low" | "medium" | "high" | "urgent";
+export interface TaskPartyRef { id: number; name: string }
+export interface TaskSummary { id: number; title: string; description?: string | null; status: TaskStatus; priority: TaskPriority; assignee?: TaskPartyRef | null; createdBy?: TaskPartyRef | null; orderId?: number | null; dueDate?: string | null; createdAt: string; updatedAt: string }
+export interface TaskListResponse { tasks: TaskSummary[] }
+export interface CreateTaskInput { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }
+export interface UpdateTaskInput { title?: string; description?: string | null; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }

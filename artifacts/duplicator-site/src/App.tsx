@@ -17,6 +17,7 @@ import InvoiceDetailPage from "@/pages/invoices/InvoiceDetailPage";
 import SalesQuotationPage from "@/pages/quotations/SalesQuotationPage";
 import JobCardPage from "@/pages/job-card/JobCardPage";
 import WorkspaceModulePage from "@/pages/workspace/WorkspaceModulePage";
+import TasksKanbanPage from "@/pages/tasks/TasksKanbanPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -40,7 +41,7 @@ function Router() {
       </Route>
       <Route path="/admin/tasks">
         <ProtectedRoute roles={["super_admin", "admin"]}>
-          <WorkspaceModulePage module="admin-tasks" />
+          <TasksKanbanPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/employees">
@@ -125,7 +126,7 @@ function Router() {
       </Route>
       <Route path="/staff/tasks">
         <ProtectedRoute roles={["staff"]}>
-          <WorkspaceModulePage module="staff-tasks" />
+          <TasksKanbanPage />
         </ProtectedRoute>
       </Route>
       <Route path="/staff/gallery">

@@ -2,6 +2,7 @@ import type { UserRole } from "./schema/users";
 import type { OrderStatus, OrderItemLine } from "./schema/orders";
 import type { InvoiceStatus } from "./schema/invoices";
 import type { PaymentMethod } from "./schema/payments";
+import type { TaskStatus, TaskPriority } from "./schema/tasks";
 
 export type User = {
   id: number;
@@ -174,5 +175,35 @@ export function mapPayment(r: Row): Payment {
     paidAt: new Date(r.paid_at as string),
     recordedById: r.recorded_by_id as number,
     createdAt: new Date(r.created_at as string),
+  };
+}
+
+export type DbTask = {
+  id: number;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  assigneeId: number | null;
+  createdById: number | null;
+  orderId: number | null;
+  dueDate: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export function mapTask(r: Row): DbTask {
+  return {
+    id: r.id as number,
+    title: r.title as string,
+    description: (r.description ?? null) as string | null,
+    status: r.status as TaskStatus,
+    priority: r.priority as TaskPriority,
+    assigneeId: (r.assignee_id ?? null) as number | null,
+    createdById: (r.created_by_id ?? null) as number | null,
+    orderId: (r.order_id ?? null) as number | null,
+    dueDate: r.due_date ? new Date(r.due_date as string) : null,
+    createdAt: new Date(r.created_at as string),
+    updatedAt: new Date(r.updated_at as string),
   };
 }
