@@ -1,5 +1,6 @@
 import { Router, type IRouter } from "express";
-import { supabase, mapUser } from "@workspace/db";
+import { db, mapUser, usersTable, sessionsTable } from "@workspace/db";
+import { eq } from "drizzle-orm";
 import {
   RegisterBody,
   LoginBody,
@@ -14,6 +15,7 @@ import {
   toAuthUser,
 } from "../lib/auth";
 import { OAuth2Client } from "google-auth-library";
+import { sql } from "drizzle-orm";
 
 const router: IRouter = Router();
 
@@ -28,39 +30,37 @@ router.post("/register", async (req, res) => {
   }
   const { email, password, name, phone, companyName } = parsed.data;
 
-  const { data: existing } = await supabase
-    .from("users")
-    .select("id")
-    .eq("email", email.toLowerCase())
+  const existing = await db
+    .select({ id: usersTable.id })
+    .from(usersTable)
+    .where(eq(usersTable.email, email.toLowerCase()))
     .limit(1);
 
-  if (existing && existing.length > 0) {
+  if (existing.length > 0) {
     res.status(409).json({ error: "Email already in use" });
     return;
   }
 
   const passwordHash = await hashPassword(password);
-  const { data: inserted, error } = await supabase
-    .from("users")
-    .insert({
+  const [inserted] = await db
+    .insert(usersTable)
+    .values({
       email: email.toLowerCase(),
-      password_hash: passwordHash,
+      passwordHash,
       name,
       phone: phone ?? null,
-      company_name: companyName ?? null,
+      companyName: companyName ?? null,
       role: "client",
     })
-    .select()
-    .single();
+    .returning();
 
-  if (error || !inserted) {
+  if (!inserted) {
     res.status(500).json({ error: "Failed to create account" });
     return;
   }
 
-  const user = mapUser(inserted as Record<string, unknown>);
-  await createSession(user.id, req, res);
-  const body: AuthResponse = { user: toAuthUser(user) };
+  await createSession(inserted.id, req, res);
+  const body: AuthResponse = { user: toAuthUser(inserted as any) };
   res.status(201).json(body);
 });
 
@@ -72,19 +72,18 @@ router.post("/login", async (req, res) => {
   }
   const { email, password } = parsed.data;
 
-  const { data: rows } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", email.toLowerCase())
+  const [raw] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email.toLowerCase()))
     .limit(1);
 
-  const raw = rows?.[0];
   if (!raw) {
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
 
-  const user = mapUser(raw as Record<string, unknown>);
+  const user = raw as any;
 
   if (!user.isActive) {
     res.status(401).json({ error: "Invalid email or password" });
@@ -97,20 +96,16 @@ router.post("/login", async (req, res) => {
 
   const ok = await verifyPassword(password, user.passwordHash);
   if (!ok) {
-    await supabase.rpc("record_failed_login", {
-      p_user_id: user.id,
-      p_max_failed: MAX_FAILED,
-      p_lock_minutes: LOCK_MINUTES,
-    });
+    await db.execute(sql`SELECT record_failed_login(${user.id}, ${MAX_FAILED}, ${LOCK_MINUTES})`);
     res.status(401).json({ error: "Invalid email or password" });
     return;
   }
 
   if (user.failedLoginAttempts !== 0 || user.lockedUntil) {
-    await supabase
-      .from("users")
-      .update({ failed_login_attempts: 0, locked_until: null })
-      .eq("id", user.id);
+    await db
+      .update(usersTable)
+      .set({ failedLoginAttempts: 0, lockedUntil: null })
+      .where(eq(usersTable.id, user.id));
   }
 
   await createSession(user.id, req, res);
@@ -150,44 +145,46 @@ router.post("/google", async (req, res) => {
     return;
   }
 
-  const { data: rows } = await supabase
-    .from("users")
-    .select("*")
-    .eq("email", email.toLowerCase())
+  const [existing] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email.toLowerCase()))
     .limit(1);
 
-  let user;
-  if (rows && rows.length > 0) {
-    user = mapUser(rows[0] as Record<string, unknown>);
+  let user: any;
+  if (existing) {
+    user = existing;
     if (!user.isActive) {
       res.status(401).json({ error: "Account is deactivated" });
       return;
     }
     if (picture && !user.profilePictureUrl) {
-      await supabase.from("users").update({ profile_picture_url: picture }).eq("id", user.id);
+      await db
+        .update(usersTable)
+        .set({ profilePictureUrl: picture })
+        .where(eq(usersTable.id, user.id));
       user = { ...user, profilePictureUrl: picture };
     }
   } else {
     const passwordHash = await hashPassword(
       `google_oauth_${Math.random().toString(36)}_${Date.now()}`
     );
-    const { data: inserted, error: insertErr } = await supabase
-      .from("users")
-      .insert({
+    const [inserted] = await db
+      .insert(usersTable)
+      .values({
         email: email.toLowerCase(),
-        password_hash: passwordHash,
+        passwordHash,
         name: fullName,
-        profile_picture_url: picture ?? null,
+        profilePictureUrl: picture ?? null,
         role: "client",
       })
-      .select()
-      .single();
+      .returning();
 
-    if (insertErr || !inserted) {
+    if (!inserted) {
       res.status(500).json({ error: "Failed to create account" });
       return;
     }
-    user = mapUser(inserted as Record<string, unknown>);
+    user = inserted;
   }
 
   await createSession(user.id, req, res);
@@ -206,7 +203,7 @@ router.get("/me", async (req, res) => {
     res.status(401).json({ error: "Not authenticated" });
     return;
   }
-  const body: AuthUser = toAuthUser(user);
+  const body: AuthUser = toAuthUser(user as any);
   res.status(200).json(body);
 });
 

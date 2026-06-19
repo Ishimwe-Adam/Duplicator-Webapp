@@ -1,7 +1,14 @@
 import { Router, type IRouter } from "express";
 import PDFDocument from "pdfkit";
+import { db } from "@workspace/db";
 import {
-  supabase,
+  usersTable,
+  ordersTable,
+  invoicesTable,
+  paymentsTable,
+} from "@workspace/db";
+import { eq, inArray, desc, and, sql } from "drizzle-orm";
+import {
   mapInvoice,
   mapPayment,
   formatInvoiceNumber,
@@ -40,31 +47,21 @@ function partyRef(u: UserRow | null | undefined): OrderPartyRef | null {
 async function fetchUserMap(ids: number[]): Promise<Map<number, UserRow>> {
   const unique = Array.from(new Set(ids));
   if (unique.length === 0) return new Map();
-  const { data: rows } = await supabase
-    .from("users")
-    .select("id, name, email")
-    .in("id", unique);
-  return new Map(
-    (rows ?? []).map((r) => [
-      r.id as number,
-      { id: r.id as number, name: r.name as string, email: r.email as string | null },
-    ]),
-  );
+  const rows = await db
+    .select({ id: usersTable.id, name: usersTable.name, email: usersTable.email })
+    .from(usersTable)
+    .where(inArray(usersTable.id, unique));
+  return new Map(rows.map((r) => [r.id, { id: r.id, name: r.name, email: r.email }]));
 }
 
 async function fetchOrderMap(ids: number[]): Promise<Map<number, OrderRow>> {
   const unique = Array.from(new Set(ids));
   if (unique.length === 0) return new Map();
-  const { data: rows } = await supabase
-    .from("orders")
-    .select("id, title")
-    .in("id", unique);
-  return new Map(
-    (rows ?? []).map((r) => [
-      r.id as number,
-      { id: r.id as number, title: r.title as string },
-    ]),
-  );
+  const rows = await db
+    .select({ id: ordersTable.id, title: ordersTable.title })
+    .from(ordersTable)
+    .where(inArray(ordersTable.id, unique));
+  return new Map(rows.map((r) => [r.id, { id: r.id, title: r.title }]));
 }
 
 function orderRef(o: OrderRow | null | undefined, orderId: number): InvoiceOrderRef {
@@ -74,25 +71,24 @@ function orderRef(o: OrderRow | null | undefined, orderId: number): InvoiceOrder
 async function fetchPaidByInvoice(invoiceIds: number[]): Promise<Map<number, number>> {
   const unique = Array.from(new Set(invoiceIds));
   if (unique.length === 0) return new Map();
-  const { data: rows } = await supabase
-    .from("payments")
-    .select("invoice_id, amount")
-    .in("invoice_id", unique);
+  const rows = await db
+    .select({ invoiceId: paymentsTable.invoiceId, amount: paymentsTable.amount })
+    .from(paymentsTable)
+    .where(inArray(paymentsTable.invoiceId, unique));
   const map = new Map<number, number>();
-  for (const r of rows ?? []) {
-    const iid = r.invoice_id as number;
-    map.set(iid, (map.get(iid) ?? 0) + Number(r.amount));
+  for (const r of rows) {
+    map.set(r.invoiceId, (map.get(r.invoiceId) ?? 0) + Number(r.amount));
   }
   return map;
 }
 
 async function fetchPaymentsForInvoice(invoiceId: number): Promise<Payment[]> {
-  const { data } = await supabase
-    .from("payments")
-    .select("*")
-    .eq("invoice_id", invoiceId)
-    .order("paid_at", { ascending: true });
-  return (data ?? []).map((r) => mapPayment(r as Record<string, unknown>));
+  const rows = await db
+    .select()
+    .from(paymentsTable)
+    .where(eq(paymentsTable.invoiceId, invoiceId))
+    .orderBy(paymentsTable.paidAt);
+  return rows.map((r) => mapPayment(r as any));
 }
 
 function paymentDto(p: Payment, recordedBy: UserRow | null): PaymentDto {
@@ -187,11 +183,22 @@ router.get("/", async (req, res) => {
     res.status(403).json({ error: "Staff cannot view invoices" });
     return;
   }
-  let query = supabase.from("invoices").select("*").order("created_at", { ascending: false });
-  if (user.role === "client") query = query.eq("client_id", user.id);
 
-  const { data: rows } = await query;
-  const invs = (rows ?? []).map((r) => mapInvoice(r as Record<string, unknown>));
+  let rows;
+  if (user.role === "client") {
+    rows = await db
+      .select()
+      .from(invoicesTable)
+      .where(eq(invoicesTable.clientId, user.id))
+      .orderBy(desc(invoicesTable.createdAt));
+  } else {
+    rows = await db
+      .select()
+      .from(invoicesTable)
+      .orderBy(desc(invoicesTable.createdAt));
+  }
+
+  const invs = rows.map((r) => mapInvoice(r as any));
 
   const [userMap, orderMap, paidMap] = await Promise.all([
     fetchUserMap(invs.map((i) => i.clientId)),
@@ -221,17 +228,47 @@ router.post("/", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  const { data, error } = await supabase.rpc("create_invoice", {
-    p_order_id: input.orderId,
-    p_tax_rate_percent: taxRate,
-    p_notes: input.notes ?? null,
-    p_due_date: dueDate.toISOString(),
-  });
+  // Transactional invoice creation (equivalent to create_invoice RPC)
+  let inv: Invoice | null = null;
+  try {
+    await db.transaction(async (tx) => {
+      const [order] = await tx
+        .select()
+        .from(ordersTable)
+        .where(eq(ordersTable.id, input.orderId))
+        .for("update");
 
-  if (error) {
-    if (error.message.includes("ORDER_NOT_FOUND")) {
+      if (!order) throw new Error("ORDER_NOT_FOUND");
+      if (order.status === "cancelled") throw new Error("ORDER_CANCELLED");
+
+      const subtotal = Number(order.subtotalAmount);
+      const taxAmount = Math.round((subtotal * taxRate) / 100);
+      const totalAmount = subtotal + taxAmount;
+
+      const [inserted] = await tx
+        .insert(invoicesTable)
+        .values({
+          orderId: input.orderId,
+          clientId: order.clientId,
+          items: order.items as OrderItemLine[],
+          subtotalAmount: subtotal,
+          taxRatePercent: taxRate,
+          taxAmount,
+          totalAmount,
+          status: "draft",
+          notes: input.notes ?? null,
+          dueDate,
+        })
+        .returning();
+
+      if (!inserted) throw new Error("INSERT_FAILED");
+      inv = mapInvoice(inserted as any);
+    });
+  } catch (e: any) {
+    const msg = e.message ?? "";
+    if (msg.includes("ORDER_NOT_FOUND")) {
       res.status(400).json({ error: "Order not found" });
-    } else if (error.message.includes("ORDER_CANCELLED")) {
+    } else if (msg.includes("ORDER_CANCELLED")) {
       res.status(400).json({ error: "Cannot invoice a cancelled order" });
     } else {
       res.status(500).json({ error: "Failed to create invoice" });
@@ -239,13 +276,11 @@ router.post("/", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  const rows = data as Record<string, unknown>[];
-  if (!rows || rows.length === 0) {
+  if (!inv) {
     res.status(500).json({ error: "Failed to create invoice" });
     return;
   }
 
-  const inv = mapInvoice(rows[0]);
   req.log.info({ invoiceId: inv.id, orderId: input.orderId, by: user.id }, "invoice created");
   res.status(201).json(await buildDetail(inv));
 });
@@ -257,13 +292,16 @@ router.get("/:id", async (req, res) => {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
-  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
-  const raw = rows?.[0];
+  const [raw] = await db
+    .select()
+    .from(invoicesTable)
+    .where(eq(invoicesTable.id, id))
+    .limit(1);
   if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
-  const inv = mapInvoice(raw as Record<string, unknown>);
+  const inv = mapInvoice(raw as any);
   if (!canViewInvoice(user.role, user.id, inv)) {
     res.status(403).json({ error: "Forbidden" });
     return;
@@ -285,13 +323,16 @@ router.patch("/:id/status", requireRole(...ADMIN_ROLES), async (req, res) => {
   }
   const nextStatus = parsed.data.status as InvoiceStatus;
 
-  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
-  const raw = rows?.[0];
+  const [raw] = await db
+    .select()
+    .from(invoicesTable)
+    .where(eq(invoicesTable.id, id))
+    .limit(1);
   if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
-  const existing = mapInvoice(raw as Record<string, unknown>);
+  const existing = mapInvoice(raw as any);
 
   if (existing.status === nextStatus) {
     res.status(200).json(await buildDetail(existing));
@@ -306,25 +347,24 @@ router.patch("/:id/status", requireRole(...ADMIN_ROLES), async (req, res) => {
   }
 
   const now = new Date();
-  const patch: Record<string, unknown> = { status: nextStatus, updated_at: now.toISOString() };
-  if (nextStatus === "sent" && !existing.sentAt) patch.sent_at = now.toISOString();
-  if (nextStatus === "paid" && !existing.paidAt) patch.paid_at = now.toISOString();
+  const patch: Record<string, unknown> = { status: nextStatus, updatedAt: now };
+  if (nextStatus === "sent" && !existing.sentAt) patch.sentAt = now;
+  if (nextStatus === "paid" && !existing.paidAt) patch.paidAt = now;
 
-  const { data: updated, error } = await supabase
-    .from("invoices")
-    .update(patch)
-    .eq("id", id)
-    .eq("status", existing.status)
-    .select();
+  const [updated] = await db
+    .update(invoicesTable)
+    .set(patch as any)
+    .where(and(eq(invoicesTable.id, id), eq(invoicesTable.status, existing.status)))
+    .returning();
 
-  if (error || !updated || (updated as unknown[]).length === 0) {
+  if (!updated) {
     res.status(409).json({
       error: "Invoice was updated by someone else. Refresh and try again.",
     });
     return;
   }
 
-  const updatedInv = mapInvoice((updated as Record<string, unknown>[])[0]);
+  const updatedInv = mapInvoice(updated as any);
   req.log.info({ invoiceId: id, status: nextStatus, by: user.id }, "invoice status updated");
   res.status(200).json(await buildDetail(updatedInv));
 });
@@ -348,18 +388,59 @@ router.post("/:id/payments", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  const { data, error } = await supabase.rpc("record_payment", {
-    p_invoice_id: id,
-    p_amount: input.amount,
-    p_method: input.method,
-    p_reference: input.reference?.trim() || null,
-    p_notes: input.notes?.trim() || null,
-    p_paid_at: paidAt.toISOString(),
-    p_recorded_by_id: user.id,
-  });
+  // Atomic payment recording (equivalent to record_payment RPC)
+  let freshInv: Invoice | null = null;
+  try {
+    await db.transaction(async (tx) => {
+      const [inv] = await tx
+        .select()
+        .from(invoicesTable)
+        .where(eq(invoicesTable.id, id))
+        .for("update");
 
-  if (error) {
-    const msg = error.message;
+      if (!inv) throw new Error("INVOICE_NOT_FOUND");
+      if (inv.status === "paid") throw new Error("INVOICE_ALREADY_PAID");
+      if (inv.status === "void") throw new Error("INVOICE_VOID");
+
+      const [{ alreadyPaid }] = await tx
+        .select({ alreadyPaid: sql<number>`COALESCE(SUM(amount), 0)` })
+        .from(paymentsTable)
+        .where(eq(paymentsTable.invoiceId, id));
+
+      const balance = Number(inv.totalAmount) - Number(alreadyPaid);
+      if (balance <= 0) throw new Error("NO_OUTSTANDING_BALANCE");
+      if (input.amount > balance) throw new Error(`AMOUNT_EXCEEDS_BALANCE:${balance}`);
+
+      await tx.insert(paymentsTable).values({
+        invoiceId: id,
+        amount: input.amount,
+        method: input.method,
+        reference: input.reference?.trim() || null,
+        notes: input.notes?.trim() || null,
+        paidAt,
+        recordedById: user.id,
+      });
+
+      const newPaid = Number(alreadyPaid) + input.amount;
+      let finalInv = inv;
+      if (newPaid >= Number(inv.totalAmount)) {
+        const [updated] = await tx
+          .update(invoicesTable)
+          .set({
+            status: "paid",
+            paidAt: new Date(),
+            sentAt: inv.sentAt ?? new Date(),
+            updatedAt: new Date(),
+          })
+          .where(eq(invoicesTable.id, id))
+          .returning();
+        if (updated) finalInv = updated;
+      }
+
+      freshInv = mapInvoice(finalInv as any);
+    });
+  } catch (e: any) {
+    const msg = e.message ?? "";
     if (msg.includes("INVOICE_NOT_FOUND")) {
       res.status(404).json({ error: "Invoice not found" });
     } else if (msg.includes("INVOICE_ALREADY_PAID")) {
@@ -379,8 +460,11 @@ router.post("/:id/payments", requireRole(...ADMIN_ROLES), async (req, res) => {
     return;
   }
 
-  const { data: fresh } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
-  const freshInv = mapInvoice((fresh?.[0] ?? data?.[0]) as Record<string, unknown>);
+  if (!freshInv) {
+    res.status(500).json({ error: "Failed to record payment" });
+    return;
+  }
+
   req.log.info({ invoiceId: id, amount: input.amount, method: input.method, by: user.id }, "payment recorded");
   res.status(201).json(await buildDetail(freshInv));
 });
@@ -392,13 +476,16 @@ router.get("/:id/pdf", async (req, res) => {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
-  const { data: rows } = await supabase.from("invoices").select("*").eq("id", id).limit(1);
-  const raw = rows?.[0];
+  const [raw] = await db
+    .select()
+    .from(invoicesTable)
+    .where(eq(invoicesTable.id, id))
+    .limit(1);
   if (!raw) {
     res.status(404).json({ error: "Invoice not found" });
     return;
   }
-  const inv = mapInvoice(raw as Record<string, unknown>);
+  const inv = mapInvoice(raw as any);
   if (!canViewInvoice(user.role, user.id, inv)) {
     res.status(403).json({ error: "Forbidden" });
     return;

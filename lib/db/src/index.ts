@@ -1,4 +1,4 @@
-export { supabase } from "./client";
+export { db, pool } from "./client";
 
 export {
   type User,
@@ -40,3 +40,5 @@ export {
   ALL_PAYMENT_METHODS,
   PAYMENT_METHOD_LABEL,
 } from "./schema/payments";
+
+export * from "./schema/index";

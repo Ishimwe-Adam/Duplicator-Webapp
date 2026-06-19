@@ -28,29 +28,30 @@ args = "API server"
 name = "Start application"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "pnpm --filter @workspace/duplicator-site run dev"
-waitForPort = 5000
-
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd artifacts/duplicator-site && node_modules/.bin/vite --config vite.config.ts --host 0.0.0.0 --port 5000"
+waitForPort = 5000
 
 [[workflows.workflow]]
 name = "API server"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=8080 pnpm --filter @workspace/api-server run dev"
-waitForPort = 8080
-
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd artifacts/api-server && node ./build.mjs && PORT=8080 NODE_ENV=development node --enable-source-maps ./dist/index.mjs"
+waitForPort = 8080
 
 [agent]
 stack = "BEST_EFFORT_FALLBACK"
 expertMode = true
+integrations = ["javascript_database:1.0.0"]
 
 [postMerge]
 path = "scripts/post-merge.sh"
@@ -68,19 +69,10 @@ externalPort = 80
 localPort = 8080
 externalPort = 8080
 
-[[ports]]
-localPort = 8081
-externalPort = 80
-
-[[ports]]
-localPort = 8082
-externalPort = 3001
-
-[[ports]]
-localPort = 24468
-externalPort = 3000
-
 [userenv]
 
 [userenv.shared]
 SUPABASE_DATABASE_URL = "postgresql://postgres.bcemzrrhznjgnicvyjta:IShimwe!%402026@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+
+[nix]
+channel = "stable-25_05"

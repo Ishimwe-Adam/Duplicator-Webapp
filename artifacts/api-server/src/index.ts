@@ -14,16 +14,11 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-const hasDb = !!(process.env.SUPABASE_URL || process.env.DATABASE_URL);
-const app = hasDb
-  ? (await import("./app")).default
-  : (await import("./mockApp")).default;
-
-if (!hasDb) {
-  logger.warn(
-    "SUPABASE_URL is not set; using local in-memory demo API for development.",
-  );
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set. Ensure the database is provisioned.");
 }
+
+const app = (await import("./app")).default;
 
 app.listen(port, (err) => {
   if (err) {

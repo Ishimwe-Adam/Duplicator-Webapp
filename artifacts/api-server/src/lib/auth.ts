@@ -1,5 +1,8 @@
-import { supabase, mapUser, type User } from "@workspace/db";
+import { db } from "@workspace/db";
+import { sessionsTable, usersTable } from "@workspace/db";
+import { eq, gt } from "drizzle-orm";
 import type { Request, Response } from "express";
+import type { User } from "@workspace/db";
 import { generateSessionToken } from "./password";
 
 export const SESSION_COOKIE = "duplicator_session";
@@ -34,12 +37,12 @@ export async function createSession(
 ): Promise<string> {
   const token = generateSessionToken();
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
-  await supabase.from("sessions").insert({
+  await db.insert(sessionsTable).values({
     token,
-    user_id: userId,
-    user_agent: req.headers["user-agent"] ?? null,
-    ip_address: req.ip ?? null,
-    expires_at: expiresAt.toISOString(),
+    userId,
+    userAgent: req.headers["user-agent"] ?? null,
+    ipAddress: req.ip ?? null,
+    expiresAt,
   });
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,
@@ -55,42 +58,37 @@ export async function getUserFromRequest(req: Request): Promise<User | null> {
   const token = req.cookies?.[SESSION_COOKIE];
   if (!token) return null;
 
-  const now = new Date().toISOString();
+  const now = new Date();
 
-  const { data: sessionRow } = await supabase
-    .from("sessions")
-    .select("*")
-    .eq("token", token)
-    .gt("expires_at", now)
-    .limit(1)
-    .single();
+  const [sessionRow] = await db
+    .select()
+    .from(sessionsTable)
+    .where(eq(sessionsTable.token, token))
+    .limit(1);
 
-  if (!sessionRow) return null;
+  if (!sessionRow || sessionRow.expiresAt <= now) return null;
 
-  const { data: userRow } = await supabase
-    .from("users")
-    .select("*")
-    .eq("id", (sessionRow as Record<string, unknown>).user_id)
-    .single();
+  const [userRow] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, sessionRow.userId))
+    .limit(1);
 
-  if (!userRow) return null;
+  if (!userRow || !userRow.isActive) return null;
 
-  const user = mapUser(userRow as Record<string, unknown>);
-  if (!user.isActive) return null;
-
-  void supabase
-    .from("sessions")
-    .update({ last_active_at: new Date().toISOString() })
-    .eq("id", (sessionRow as Record<string, unknown>).id as number)
+  void db
+    .update(sessionsTable)
+    .set({ lastActiveAt: new Date() })
+    .where(eq(sessionsTable.id, sessionRow.id))
     .then(() => {}, () => {});
 
-  return user;
+  return userRow as User;
 }
 
 export async function destroySession(req: Request, res: Response): Promise<void> {
   const token = req.cookies?.[SESSION_COOKIE];
   if (token) {
-    await supabase.from("sessions").delete().eq("token", token);
+    await db.delete(sessionsTable).where(eq(sessionsTable.token, token));
   }
   res.clearCookie(SESSION_COOKIE, { path: "/" });
 }

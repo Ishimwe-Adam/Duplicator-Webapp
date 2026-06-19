@@ -1,12 +1,19 @@
 import { Router, type IRouter } from "express";
+import { db } from "@workspace/db";
 import {
-  supabase,
+  usersTable,
+  ordersTable,
+  invoicesTable,
+  paymentsTable,
+} from "@workspace/db";
+import {
   formatOrderNumber,
   ALL_ORDER_STATUSES,
   type OrderStatus,
 } from "@workspace/db";
 import { requireAuth, requireRole } from "../middlewares/requireAuth";
 import type { AnalyticsSummary } from "@workspace/api-zod";
+import { eq, gte, lt, not, inArray, desc, sql, count, sum, and } from "drizzle-orm";
 
 const router: IRouter = Router();
 const ADMIN_ROLES = ["super_admin", "admin"] as const;
@@ -31,71 +38,120 @@ router.get("/summary", async (_req, res) => {
   const twelveMonthsAgo = addMonthsUTC(thisMonthStart, -11);
   const fourteenAgo     = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
+  const OPEN_STATUSES = ["draft", "sent"] as const;
+  const CLOSED_STATUSES = ["delivered", "cancelled"] as const;
+
   const [
     paymentsForRevenue,
     openInvoices,
-    overdueResult,
+    overdueCount,
     allOrderStatuses,
     topClientsResult,
-    clientCountResult,
-    newClientsResult,
+    clientCount,
+    newClientsCount,
     recentOrderRows,
-    dueSoonResult,
+    dueSoonCount,
   ] = await Promise.all([
-    supabase.from("payments").select("paid_at, amount")
-      .gte("paid_at", twelveMonthsAgo.toISOString()),
+    db
+      .select({ paidAt: paymentsTable.paidAt, amount: paymentsTable.amount })
+      .from(paymentsTable)
+      .where(gte(paymentsTable.paidAt, twelveMonthsAgo)),
 
-    supabase.from("invoices").select("id, total_amount")
-      .not("status", "in", "(paid,void)"),
+    db
+      .select({ id: invoicesTable.id, totalAmount: invoicesTable.totalAmount })
+      .from(invoicesTable)
+      .where(not(inArray(invoicesTable.status, ["paid", "void"]))),
 
-    supabase.from("invoices").select("id", { count: "exact", head: true })
-      .in("status", ["draft", "sent"])
-      .lt("due_date", now.toISOString()),
+    db
+      .select({ id: invoicesTable.id })
+      .from(invoicesTable)
+      .where(
+        and(
+          inArray(invoicesTable.status, [...OPEN_STATUSES]),
+          lt(invoicesTable.dueDate, now)
+        )
+      )
+      .then((rows) => rows.length),
 
-    supabase.from("orders").select("status"),
+    db.select({ status: ordersTable.status }).from(ordersTable),
 
-    supabase.rpc("get_top_clients", { p_limit: 5 }),
+    // Top clients via raw SQL (equivalent to the get_top_clients RPC)
+    db.execute(sql`
+      SELECT
+        i.client_id,
+        u.name,
+        u.email,
+        COALESCE(SUM(p.amount), 0)::BIGINT AS revenue,
+        COUNT(DISTINCT i.id)::BIGINT AS invoice_count
+      FROM payments p
+      JOIN invoices i ON p.invoice_id = i.id
+      JOIN users u ON u.id = i.client_id
+      GROUP BY i.client_id, u.name, u.email
+      ORDER BY SUM(p.amount) DESC
+      LIMIT 5
+    `),
 
-    supabase.from("users").select("id", { count: "exact", head: true })
-      .eq("role", "client"),
+    db
+      .select({ id: usersTable.id })
+      .from(usersTable)
+      .where(eq(usersTable.role, "client"))
+      .then((rows) => rows.length),
 
-    supabase.from("users").select("id", { count: "exact", head: true })
-      .eq("role", "client")
-      .gte("created_at", thisMonthStart.toISOString()),
+    db
+      .select({ id: usersTable.id })
+      .from(usersTable)
+      .where(and(eq(usersTable.role, "client"), gte(usersTable.createdAt, thisMonthStart)))
+      .then((rows) => rows.length),
 
-    supabase.from("orders")
-      .select("id, title, status, subtotal_amount, client_id, created_at")
-      .order("created_at", { ascending: false })
+    db
+      .select({
+        id: ordersTable.id,
+        title: ordersTable.title,
+        status: ordersTable.status,
+        subtotalAmount: ordersTable.subtotalAmount,
+        clientId: ordersTable.clientId,
+        createdAt: ordersTable.createdAt,
+      })
+      .from(ordersTable)
+      .orderBy(desc(ordersTable.createdAt))
       .limit(5),
 
-    supabase.from("orders").select("id", { count: "exact", head: true })
-      .gte("created_at", fourteenAgo.toISOString())
-      .not("status", "in", "(delivered,cancelled)"),
+    db
+      .select({ id: ordersTable.id })
+      .from(ordersTable)
+      .where(
+        and(
+          gte(ordersTable.createdAt, fourteenAgo),
+          not(inArray(ordersTable.status, [...CLOSED_STATUSES]))
+        )
+      )
+      .then((rows) => rows.length),
   ]);
 
   // Receivables: fetch payments only for open invoices
-  const openIds = (openInvoices.data ?? []).map((i: any) => (i as Record<string, unknown>).id as number);
+  const openIds = openInvoices.map((i) => i.id);
   const receivablesPayments = openIds.length > 0
-    ? await supabase.from("payments").select("invoice_id, amount").in("invoice_id", openIds)
-    : { data: [] as { invoice_id: number; amount: number }[] };
+    ? await db
+        .select({ invoiceId: paymentsTable.invoiceId, amount: paymentsTable.amount })
+        .from(paymentsTable)
+        .where(inArray(paymentsTable.invoiceId, openIds))
+    : [];
 
   // Client names for recent orders
-  const clientIds = (recentOrderRows.data ?? []).map((o: any) => (o as Record<string, unknown>).client_id as number);
+  const clientIds = recentOrderRows.map((o) => o.clientId);
   const clientNameRows = clientIds.length > 0
-    ? await supabase.from("users").select("id, name").in("id", clientIds)
-    : { data: [] as { id: number; name: string }[] };
-  const clientNameMap = new Map(
-    (clientNameRows.data ?? []).map((r: any) => [
-      (r as Record<string, unknown>).id as number,
-      (r as Record<string, unknown>).name as string,
-    ]),
-  );
+    ? await db
+        .select({ id: usersTable.id, name: usersTable.name })
+        .from(usersTable)
+        .where(inArray(usersTable.id, clientIds))
+    : [];
+  const clientNameMap = new Map(clientNameRows.map((r) => [r.id, r.name]));
 
   // Revenue aggregation
   const revenueByMonth = new Map<string, number>();
-  for (const p of paymentsForRevenue.data ?? []) {
-    const key = ymKey(new Date((p as Record<string, unknown>).paid_at as string));
-    revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + Number((p as Record<string, unknown>).amount));
+  for (const p of paymentsForRevenue) {
+    const key = ymKey(new Date(p.paidAt as any));
+    revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + Number(p.amount));
   }
   const last12Months: { month: string; amount: number }[] = [];
   for (let i = 0; i < 12; i++) {
@@ -108,20 +164,18 @@ router.get("/summary", async (_req, res) => {
 
   // Receivables aggregation
   const paidPerInvoice = new Map<number, number>();
-  for (const p of receivablesPayments.data ?? []) {
-    const iid = (p as Record<string, unknown>).invoice_id as number;
-    paidPerInvoice.set(iid, (paidPerInvoice.get(iid) ?? 0) + Number((p as Record<string, unknown>).amount));
+  for (const p of receivablesPayments) {
+    const iid = p.invoiceId;
+    paidPerInvoice.set(iid, (paidPerInvoice.get(iid) ?? 0) + Number(p.amount));
   }
-  const outstandingAmount = (openInvoices.data ?? []).reduce((sum: number, inv: any) => {
-    const i = inv as Record<string, unknown>;
-    return sum + Math.max(0, Number(i.total_amount) - (paidPerInvoice.get(i.id as number) ?? 0));
+  const outstandingAmount = openInvoices.reduce((sum, inv) => {
+    return sum + Math.max(0, Number(inv.totalAmount) - (paidPerInvoice.get(inv.id) ?? 0));
   }, 0);
 
   // Orders by status
   const statusCountMap = new Map<string, number>();
-  for (const o of allOrderStatuses.data ?? []) {
-    const s = (o as Record<string, unknown>).status as string;
-    statusCountMap.set(s, (statusCountMap.get(s) ?? 0) + 1);
+  for (const o of allOrderStatuses) {
+    statusCountMap.set(o.status, (statusCountMap.get(o.status) ?? 0) + 1);
   }
   const ordersByStatus = ALL_ORDER_STATUSES.map((s: OrderStatus) => ({
     status: s,
@@ -132,16 +186,13 @@ router.get("/summary", async (_req, res) => {
     .reduce((s, r) => s + r.count, 0);
 
   // Top clients
-  const topClients = (topClientsResult.data ?? []).map((r: any) => {
-    const row = r as Record<string, unknown>;
-    return {
-      id: row.client_id as number,
-      name: row.name as string,
-      email: (row.email ?? null) as string | null,
-      revenue: Number(row.revenue),
-      invoiceCount: Number(row.invoice_count),
-    };
-  });
+  const topClients = (topClientsResult.rows ?? []).map((r: any) => ({
+    id: r.client_id as number,
+    name: r.name as string,
+    email: (r.email ?? null) as string | null,
+    revenue: Number(r.revenue),
+    invoiceCount: Number(r.invoice_count),
+  }));
 
   const body: AnalyticsSummary = {
     generatedAt: now,
@@ -152,30 +203,27 @@ router.get("/summary", async (_req, res) => {
     },
     receivables: {
       outstandingAmount,
-      overdueCount: overdueResult.count ?? 0,
+      overdueCount,
     },
     orders: {
       active: activeOrders,
-      dueSoon: dueSoonResult.count ?? 0,
+      dueSoon: dueSoonCount,
       byStatus: ordersByStatus,
     },
     clients: {
-      total: clientCountResult.count ?? 0,
-      newThisMonth: newClientsResult.count ?? 0,
+      total: clientCount,
+      newThisMonth: newClientsCount,
       top: topClients,
     },
-    recentOrders: (recentOrderRows.data ?? []).map((o: any) => {
-      const row = o as Record<string, unknown>;
-      return {
-        id: row.id as number,
-        orderNumber: formatOrderNumber(row.id as number),
-        title: row.title as string,
-        status: row.status as OrderStatus,
-        subtotalAmount: Number(row.subtotal_amount),
-        clientName: clientNameMap.get(row.client_id as number) ?? "Unknown",
-        createdAt: new Date(row.created_at as string),
-      };
-    }),
+    recentOrders: recentOrderRows.map((o) => ({
+      id: o.id,
+      orderNumber: formatOrderNumber(o.id),
+      title: o.title,
+      status: o.status as OrderStatus,
+      subtotalAmount: Number(o.subtotalAmount),
+      clientName: clientNameMap.get(o.clientId) ?? "Unknown",
+      createdAt: new Date(o.createdAt as any),
+    })),
   };
 
   res.status(200).json(body);
