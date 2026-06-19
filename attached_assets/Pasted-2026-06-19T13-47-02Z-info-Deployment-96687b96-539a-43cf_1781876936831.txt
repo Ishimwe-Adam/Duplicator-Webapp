@@ -1,0 +1,30 @@
+2026-06-19T13:47:02Z info: Deployment: 96687b96-539a-43cf-a91e-ca0500795003
+2026-06-19T13:47:02Z info: Build: 2c4bd8f3-1621-49bf-b6d9-40957c801ca5
+2026-06-19T13:47:02Z info: Running Security Scan
+2026-06-19T13:47:02Z info: Running Security Scan
+2026-06-19T13:47:04Z info: Installing packages
+2026-06-19T13:47:04Z info: Starting Build
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+
+[WARN] The "pnpm" field in package.json is no longer read by pnpm. The following keys were ignored: "pnpm.onlyBuiltDependencies". See https://pnpm.io/settings for the new home of each setting.
+
+Scope: all 9 workspace projects
+
+[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY] Aborted removal of modules directory due to no TTY
+
+If you are running pnpm in CI, set the CI environment variable to "true", or set "confirmModulesPurge" to "false".
+
+[ERROR] Command failed with exit code 1: /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/node_modules/pnpm/bin/pnpm.mjs install
+
+pnpm: Command failed with exit code 1: /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node /home/runner/workspace/node_modules/pnpm/bin/pnpm.mjs install
+    at getFinalError (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:34109:14)
+    at makeError (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:36416:21)
+    at getSyncResult (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:38260:10)
+    at spawnSubprocessSync (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:38220:14)
+    at execaCoreSync (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:38150:23)
+    at callBoundExeca (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:40678:23)
+    at boundExeca (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:40655:49)
+    at sync (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:40814:10)
+    at runPnpmCli (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:246476:5)
+    at runDepsStatusCheck (file:///home/runner/workspace/node_modules/.pnpm/pnpm@11.8.0/node_modules/pnpm/dist/pnpm.mjs:248210:7)
+
