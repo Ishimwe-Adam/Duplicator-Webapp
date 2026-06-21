@@ -383,6 +383,25 @@ export const useGetAnalyticsSummary = <TData = AnalyticsSummary, TError = Error>
   }) as ReturnType<typeof useQuery<AnalyticsSummary, TError, TData>>;
 };
 
+// ─── Users hooks (real API calls) ───────────────────────────────────────────
+
+export const getListUsersQueryKey = () => ["users"] as const;
+
+export const useListUsers = <TData = UserListResponse, TError = Error>(options?: {
+  query?: Parameters<typeof useQuery>[0];
+}) => {
+  return useQuery({
+    queryKey: getListUsersQueryKey(),
+    queryFn: async (): Promise<UserListResponse> => {
+      const res = await fetch("/api/users", { credentials: "include" });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    staleTime: 60_000,
+    ...options?.query,
+  }) as ReturnType<typeof useQuery<UserListResponse, TError, TData>>;
+};
+
 // ─── Tasks hooks (real API calls) ───────────────────────────────────────────
 
 export const getListTasksQueryKey = () => ["tasks"] as const;
@@ -477,4 +496,7 @@ export interface TaskPartyRef { id: number; name: string }
 export interface TaskSummary { id: number; title: string; description?: string | null; status: TaskStatus; priority: TaskPriority; assignee?: TaskPartyRef | null; createdBy?: TaskPartyRef | null; orderId?: number | null; dueDate?: string | null; createdAt: string; updatedAt: string }
 export interface TaskListResponse { tasks: TaskSummary[] }
 export interface CreateTaskInput { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }
+export type StaffRole = "super_admin" | "admin" | "staff";
+export interface UserSummary { id: number; name: string; email: string; role: StaffRole }
+export interface UserListResponse { users: UserSummary[] }
 export interface UpdateTaskInput { title?: string; description?: string | null; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }

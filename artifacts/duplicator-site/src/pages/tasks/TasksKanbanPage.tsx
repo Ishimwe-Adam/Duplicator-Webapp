@@ -8,11 +8,14 @@ import {
   useCreateTask,
   useUpdateTask,
   useDeleteTask,
+  useListUsers,
   getListTasksQueryKey,
+  getListUsersQueryKey,
   type TaskSummary,
   type TaskStatus,
   type TaskPriority,
   type CreateTaskInput,
+  type UserSummary,
 } from "@/lib/api-stub";
 import {
   Plus,
@@ -75,14 +78,22 @@ interface CreateModalProps {
   error: string | null;
   isDark: boolean;
   c: ReturnType<typeof useTheme>["c"];
+  users: UserSummary[];
 }
 
-function CreateTaskModal({ onClose, onCreate, loading, error, isDark, c }: CreateModalProps) {
+const ROLE_BADGE: Record<string, string> = {
+  super_admin: "Owner",
+  admin: "Admin",
+  staff: "Staff",
+};
+
+function CreateTaskModal({ onClose, onCreate, loading, error, isDark, c, users }: CreateModalProps) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
   const [status, setStatus] = useState<TaskStatus>("todo");
   const [dueDate, setDueDate] = useState("");
+  const [assigneeId, setAssigneeId] = useState<number | "">("");
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -92,6 +103,7 @@ function CreateTaskModal({ onClose, onCreate, loading, error, isDark, c }: Creat
       description: description.trim() || undefined,
       priority,
       status,
+      assigneeId: assigneeId !== "" ? assigneeId : null,
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
     });
   }
@@ -187,6 +199,24 @@ function CreateTaskModal({ onClose, onCreate, loading, error, isDark, c }: Creat
                 ))}
               </select>
             </div>
+          </div>
+
+          <div>
+            <label style={{ fontSize: 12, color: c.textMuted, fontFamily: "'Inter', sans-serif", marginBottom: 5, display: "block" }}>
+              Assign to
+            </label>
+            <select
+              style={selectStyle}
+              value={assigneeId}
+              onChange={(e) => setAssigneeId(e.target.value === "" ? "" : Number(e.target.value))}
+            >
+              <option value="">— Unassigned —</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.name}{u.role !== "staff" ? ` (${ROLE_BADGE[u.role] ?? u.role})` : ""}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -423,13 +453,15 @@ export default function TasksKanbanPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
 
+  const isAdmin = user?.role === "super_admin" || user?.role === "admin";
+
   const tasksQ = useListTasks({ query: { queryKey: getListTasksQueryKey(), staleTime: 10_000, refetchOnWindowFocus: true } });
+  const usersQ = useListUsers({ query: { queryKey: getListUsersQueryKey(), enabled: isAdmin } });
   const createM = useCreateTask();
   const updateM = useUpdateTask();
   const deleteM = useDeleteTask();
 
   if (!user) return null;
-  const isAdmin = user.role === "super_admin" || user.role === "admin";
 
   const tasks = tasksQ.data?.tasks ?? [];
 
@@ -569,6 +601,7 @@ export default function TasksKanbanPage() {
           error={createError}
           isDark={isDark}
           c={c}
+          users={usersQ.data?.users ?? []}
         />
       )}
 
