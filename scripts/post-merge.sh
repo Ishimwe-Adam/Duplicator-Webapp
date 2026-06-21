@@ -1,4 +1,5 @@
 #!/bin/bash
 set -e
-pnpm install --frozen-lockfile
+
+CI=true pnpm install --no-frozen-lockfile --ignore-scripts=false
 pnpm --filter @workspace/db run push 2>/dev/null || true
