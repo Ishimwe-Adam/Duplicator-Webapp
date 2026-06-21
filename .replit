@@ -3,6 +3,8 @@ modules = ["nodejs-24"]
 [deployment]
 router = "application"
 deploymentTarget = "autoscale"
+run = ["node", "--enable-source-maps", "artifacts/api-server/dist/index.mjs"]
+build = ["bash", "-c", "pnpm install --frozen-lockfile=false && pnpm --filter @workspace/duplicator-site run build && cd artifacts/api-server && node ./build.mjs"]
 
 [deployment.postBuild]
 args = ["pnpm", "store", "prune"]
