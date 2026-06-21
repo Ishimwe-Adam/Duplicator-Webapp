@@ -1,2 +1,3 @@
 - [duplicator-site port config](duplicator-site-port.md) — Vite on port 5000 (webview), Express API on port 8080, Vite proxies /api to port 8080.
 - [Google OAuth GIS approach](google-oauth-gis.md) — Use GIS script directly, not @react-oauth/google, to avoid React multi-instance crash in pnpm monorepo.
+- [pnpm v11 supply-chain post-merge fix](pnpm-v11-postmerge.md) — Never add pnpm as a workspace dependency; it causes lockfile supply-chain check failures in the post-merge runner.
