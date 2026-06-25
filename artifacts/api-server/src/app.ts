@@ -41,7 +41,7 @@ if (process.env.NODE_ENV === "production") {
   const distDir = path.resolve(__dirname, "../../duplicator-site/dist");
   if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
-    app.get("*", (_req: Request, res: Response, _next: NextFunction) => {
+    app.get("(.*)", (_req: Request, res: Response, _next: NextFunction) => {
       res.sendFile(path.join(distDir, "index.html"));
     });
   } else {
