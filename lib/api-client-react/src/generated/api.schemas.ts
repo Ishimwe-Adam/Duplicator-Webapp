@@ -19,6 +19,7 @@ export type UserRole = typeof UserRole[keyof typeof UserRole];
 export const UserRole = {
   super_admin: 'super_admin',
   admin: 'admin',
+  manager: 'manager',
   staff: 'staff',
   client: 'client',
 } as const;
@@ -48,6 +49,8 @@ export interface RegisterInput {
   name: string;
   phone?: string;
   companyName?: string;
+  /** Required to register as admin, manager, or staff. */
+  inviteCode?: string;
 }
 
 export interface LoginInput {
@@ -420,3 +423,22 @@ export interface UpdateTaskInput {
   dueDate?: string | null;
 }
 
+export interface Invite {
+  id: number;
+  email: string;
+  code: string;
+  role: UserRole;
+  invitedBy?: OrderPartyRef;
+  createdAt: string;
+  /** @nullable */
+  usedAt?: string | null;
+}
+
+export interface InviteListResponse {
+  invites: Invite[];
+}
+
+export interface CreateInviteInput {
+  email: string;
+  role: UserRole;
+}

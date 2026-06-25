@@ -18,7 +18,7 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
- * @summary Create an account (client self-signup)
+ * @summary Create an account (client self-signup or invite redemption)
  */
 export const registerBodyPasswordMin = 8;
 
@@ -30,7 +30,8 @@ export const RegisterBody = zod.object({
   "password": zod.string().min(registerBodyPasswordMin),
   "name": zod.string().min(1),
   "phone": zod.string().optional(),
-  "companyName": zod.string().optional()
+  "companyName": zod.string().optional(),
+  "inviteCode": zod.string().optional().describe('Required to register as admin, manager, or staff.')
 })
 
 export const RegisterResponse = zod.object({
@@ -38,7 +39,7 @@ export const RegisterResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['super_admin', 'admin', 'staff', 'client']),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client']),
   "phone": zod.string().nullish(),
   "companyName": zod.string().nullish(),
   "profilePictureUrl": zod.string().nullish()
@@ -62,7 +63,7 @@ export const LoginResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['super_admin', 'admin', 'staff', 'client']),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client']),
   "phone": zod.string().nullish(),
   "companyName": zod.string().nullish(),
   "profilePictureUrl": zod.string().nullish()
@@ -83,7 +84,7 @@ export const GetCurrentUserResponse = zod.object({
   "id": zod.number(),
   "email": zod.string(),
   "name": zod.string(),
-  "role": zod.enum(['super_admin', 'admin', 'staff', 'client']),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client']),
   "phone": zod.string().nullish(),
   "companyName": zod.string().nullish(),
   "profilePictureUrl": zod.string().nullish()
@@ -803,3 +804,44 @@ export const UpdateInvoiceStatusResponse = zod.object({
 })
 
 
+/**
+ * @summary List team invitations (admin/manager only)
+ */
+export const ListInvitesResponse = zod.object({
+  "invites": zod.array(zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "code": zod.string(),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client']),
+  "invitedBy": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string().nullish()
+}).optional(),
+  "createdAt": zod.coerce.date(),
+  "usedAt": zod.coerce.date().nullish()
+}))
+})
+
+
+/**
+ * @summary Create a team invitation (admin/manager only)
+ */
+export const CreateInviteBody = zod.object({
+  "email": zod.string().email(),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client'])
+})
+
+export const CreateInviteResponse = zod.object({
+  "id": zod.number(),
+  "email": zod.string(),
+  "code": zod.string(),
+  "role": zod.enum(['super_admin', 'admin', 'manager', 'staff', 'client']),
+  "invitedBy": zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string().nullish()
+}).optional(),
+  "createdAt": zod.coerce.date(),
+  "usedAt": zod.coerce.date().nullish()
+})

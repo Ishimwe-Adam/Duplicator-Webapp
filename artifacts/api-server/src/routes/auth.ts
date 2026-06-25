@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
-import { db, mapUser, usersTable, sessionsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
+import { db, mapUser, usersTable, sessionsTable, invitesTable } from "@workspace/db";
+import { eq, and, isNull } from "drizzle-orm";
 import {
   RegisterBody,
   LoginBody,
@@ -28,40 +28,81 @@ router.post("/register", async (req, res) => {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
     return;
   }
-  const { email, password, name, phone, companyName } = parsed.data;
+  const { email, password, name, phone, companyName, inviteCode } = parsed.data;
 
-  const existing = await db
-    .select({ id: usersTable.id })
-    .from(usersTable)
-    .where(eq(usersTable.email, email.toLowerCase()))
-    .limit(1);
+  try {
+    const result = await db.transaction(async (tx) => {
+      let targetRole: any = "client";
 
-  if (existing.length > 0) {
-    res.status(409).json({ error: "Email already in use" });
-    return;
+      if (inviteCode) {
+        const [invite] = await tx
+          .select()
+          .from(invitesTable)
+          .where(and(eq(invitesTable.code, inviteCode.toUpperCase()), isNull(invitesTable.usedAt)))
+          .limit(1);
+
+        if (!invite) {
+          throw new Error("INVITE_INVALID");
+        }
+
+        if (invite.email.toLowerCase() !== email.toLowerCase()) {
+          throw new Error("INVITE_EMAIL_MISMATCH");
+        }
+
+        targetRole = invite.role;
+      }
+
+      const [existing] = await tx
+        .select({ id: usersTable.id })
+        .from(usersTable)
+        .where(eq(usersTable.email, email.toLowerCase()))
+        .limit(1);
+
+      if (existing) {
+        throw new Error("EMAIL_IN_USE");
+      }
+
+      const passwordHash = await hashPassword(password);
+      const [inserted] = await tx
+        .insert(usersTable)
+        .values({
+          email: email.toLowerCase(),
+          passwordHash,
+          name,
+          phone: phone ?? null,
+          companyName: companyName ?? null,
+          role: targetRole,
+        })
+        .returning();
+
+      if (!inserted) {
+        throw new Error("INSERT_FAILED");
+      }
+
+      if (inviteCode) {
+        await tx
+          .update(invitesTable)
+          .set({ usedAt: new Date() })
+          .where(eq(invitesTable.code, inviteCode.toUpperCase()));
+      }
+
+      return inserted;
+    });
+
+    await createSession(result.id, req, res);
+    const body: AuthResponse = { user: toAuthUser(result as any) };
+    res.status(201).json(body);
+  } catch (err: any) {
+    if (err.message === "INVITE_INVALID") {
+      res.status(400).json({ error: "Invalid or already used invite code" });
+    } else if (err.message === "INVITE_EMAIL_MISMATCH") {
+      res.status(400).json({ error: "This invite code is for a different email address" });
+    } else if (err.message === "EMAIL_IN_USE") {
+      res.status(409).json({ error: "Email already in use" });
+    } else {
+      res.status(500).json({ error: "Failed to create account" });
+    }
   }
-
-  const passwordHash = await hashPassword(password);
-  const [inserted] = await db
-    .insert(usersTable)
-    .values({
-      email: email.toLowerCase(),
-      passwordHash,
-      name,
-      phone: phone ?? null,
-      companyName: companyName ?? null,
-      role: "client",
-    })
-    .returning();
-
-  if (!inserted) {
-    res.status(500).json({ error: "Failed to create account" });
-    return;
-  }
-
-  await createSession(inserted.id, req, res);
-  const body: AuthResponse = { user: toAuthUser(inserted as any) };
-  res.status(201).json(body);
 });
 
 router.post("/login", async (req, res) => {

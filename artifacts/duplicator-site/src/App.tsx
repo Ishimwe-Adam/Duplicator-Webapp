@@ -30,82 +30,87 @@ function Router() {
       <Route path="/login" component={LoginPage} />
       <Route path="/signup" component={SignupPage} />
       <Route path="/admin">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <AdminDashboard />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/analytics">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <AdminDashboard />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/tasks">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <TasksKanbanPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/employees">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-employees" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/clients">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-clients" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/messages">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-messages" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/calendar">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-calendar" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/documents">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-documents" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/gallery">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-gallery" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/announcements">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-announcements" />
         </ProtectedRoute>
       </Route>
+      <Route path="/admin/invites">
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
+          <WorkspaceModulePage module="admin-invites" />
+        </ProtectedRoute>
+      </Route>
       <Route path="/admin/settings">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <WorkspaceModulePage module="admin-settings" />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/orders">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <OrdersListPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/orders/:id">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <OrderDetailPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/invoices">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <SalesQuotationPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/job-card">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <JobCardPage />
         </ProtectedRoute>
       </Route>
       <Route path="/admin/invoices/:id">
-        <ProtectedRoute roles={["super_admin", "admin"]}>
+        <ProtectedRoute roles={["super_admin", "admin", "manager"]}>
           <SalesQuotationPage />
         </ProtectedRoute>
       </Route>

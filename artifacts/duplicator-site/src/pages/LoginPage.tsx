@@ -27,7 +27,7 @@ type DemoAccount = {
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
   { label: "Owner",   role: "super_admin", email: "admin@duplicator.rw",   password: "Admin@2026",   desc: "Full admin panel",        accent: "#A78BFA" },
-  { label: "Manager", role: "admin",       email: "manager@duplicator.rw", password: "Manager@2026", desc: "Admin (limited)",         accent: "#2645C8" },
+  { label: "Manager", role: "manager",     email: "manager@duplicator.rw", password: "Manager@2026", desc: "Admin (limited)",         accent: "#2645C8" },
   { label: "Staff",   role: "staff",       email: "staff@duplicator.rw",   password: "Staff@2026",   desc: "Tasks & production view", accent: "#00C6FF" },
   { label: "Client",  role: "client",      email: "client@example.com",    password: "Client@2026",  desc: "Customer portal",         accent: "#22C55E" },
 ];
@@ -219,6 +219,7 @@ export function roleHome(role: string): string {
   switch (role) {
     case "super_admin":
     case "admin":
+    case "manager":
       return "/admin";
     case "staff":
       return "/staff";

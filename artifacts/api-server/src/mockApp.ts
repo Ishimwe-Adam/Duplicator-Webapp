@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import crypto from "node:crypto";
 
-type Role = "super_admin" | "admin" | "staff" | "client";
+type Role = "super_admin" | "admin" | "manager" | "staff" | "client";
 type OrderStatus =
   | "draft"
   | "quoted"
@@ -106,7 +106,7 @@ const users: User[] = [
     email: "manager@duplicator.rw",
     password: "Manager@2026",
     name: "Sales Manager",
-    role: "admin",
+    role: "manager",
     phone: null,
     companyName: null,
     profilePictureUrl: null,
@@ -524,7 +524,7 @@ function authUser(user: User) {
 }
 
 function isAdmin(user: User) {
-  return user.role === "super_admin" || user.role === "admin";
+  return user.role === "super_admin" || user.role === "admin" || user.role === "manager";
 }
 
 function userById(id: number) {

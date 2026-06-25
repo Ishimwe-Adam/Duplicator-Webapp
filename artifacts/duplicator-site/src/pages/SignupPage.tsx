@@ -23,6 +23,7 @@ export default function SignupPage() {
   const [companyName, setCompanyName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -61,6 +62,7 @@ export default function SignupPage() {
         password,
         companyName: companyName || undefined,
         phone: phone || undefined,
+        inviteCode: inviteCode || undefined,
       });
       setLocation(roleHome(user.role));
     } catch (err) {
@@ -100,6 +102,7 @@ export default function SignupPage() {
         <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="you@company.com" autoComplete="email" required />
         <Field label="Phone (optional)" type="tel" value={phone} onChange={setPhone} placeholder="+250 7xx xxx xxx" autoComplete="tel" />
         <Field label="Password" type="password" value={password} onChange={setPassword} placeholder="At least 8 characters" autoComplete="new-password" required />
+        <Field label="Invite Code (required for team accounts)" value={inviteCode} onChange={setInviteCode} placeholder="8-character code" />
         <SubmitButton loading={loading}>Create account</SubmitButton>
       </form>
     </AuthShell>
