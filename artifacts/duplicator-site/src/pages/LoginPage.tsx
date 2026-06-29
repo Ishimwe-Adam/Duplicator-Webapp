@@ -114,7 +114,7 @@ export default function LoginPage() {
       />
 
       {/* ── Demo accounts panel — DEV BUILDS ONLY ──────────────────── */}
-      {import.meta.env.DEV && (
+
       <div
         style={{
           marginBottom: 22,
@@ -181,7 +181,6 @@ export default function LoginPage() {
           })}
         </div>
       </div>
-      )}
 
       <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
         <div style={{ flex: 1, height: 1, background: c.border }} />
