@@ -28,11 +28,11 @@ router.post("/register", async (req, res) => {
     res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Invalid input" });
     return;
   }
-  const { email, password, name, phone, companyName, inviteCode } = parsed.data;
+  const { email, password, name, phone, companyName, inviteCode, role } = parsed.data as any;
 
   try {
     const result = await db.transaction(async (tx) => {
-      let targetRole: any = "client";
+      let targetRole: any = role || "client";
 
       if (inviteCode) {
         const [invite] = await tx

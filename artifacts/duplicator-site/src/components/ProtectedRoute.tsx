@@ -7,6 +7,7 @@ import { useTheme } from "@/context/ThemeContext";
 const ROLE_RANK: Record<Role, number> = {
   client: 0,
   staff: 1,
+  manager: 2,
   admin: 2,
   super_admin: 3,
 };

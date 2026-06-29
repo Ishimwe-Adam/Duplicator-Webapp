@@ -71,7 +71,10 @@ function useFileSignature() {
 
 export default function JobCardPage() {
   const { isDark } = useTheme();
-  const [jobCardNo, setJobCardNo] = useState("DPL-JC-0001");
+  const [jobCardNo, setJobCardNo] = useState(() => {
+    const saved = localStorage.getItem('duplicator_JC_count') || '0';
+    return "JC" + (parseInt(saved) + 1);
+  });
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [clientName, setClientName] = useState("");
   const [partyTin, setPartyTin] = useState("");
@@ -87,6 +90,7 @@ export default function JobCardPage() {
     { sn: 3, description: "", qty: 1, unitPrice: 0 },
   ]);
   const [remarks, setRemarks] = useState("");
+  const [isDraft, setIsDraft] = useState(true);
   const [activeTab, setActiveTab] = useState<(typeof EDITOR_TABS)[number]["id"]>("details");
 
   const receiverSig = useFileSignature();
@@ -137,6 +141,18 @@ export default function JobCardPage() {
               Select a tab to edit fields. The job card below updates live.
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsDraft(false);
+              const current = parseInt(localStorage.getItem('duplicator_JC_count') || '0');
+              localStorage.setItem('duplicator_JC_count', String(current + 1));
+              alert('Saved as final!');
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2645C8] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2645C8]/25 transition hover:scale-[1.02] hover:bg-[#1e3aa8] active:scale-95"
+          >
+            Save as Final
+          </button>
           <button
             type="button"
             onClick={() => window.print()}

@@ -75,6 +75,8 @@ const SIGNATURE_OPTIONS = ["Receiver", "Client Representative", "Sales Manager",
 
 const EMPLOYEE_ROSTER = [
   "Sales team",
+  "Marketing team",
+  "Transportation team",
   "Production",
   "Accounts",
   "Design",
@@ -2466,7 +2468,7 @@ function AdminInvitesModule() {
       <Section title="Active invitations" subtitle="One-time codes that haven't been redeemed yet." noPad>
         <DataTable
           columns={[
-            { key: "email", header: "Email" },
+            { key: "email", header: "Email", render: (r: any) => <span>{r.email}</span> },
             { key: "role", header: "Target Role", render: (r: any) => <StatusPill tone="blue">{r.role}</StatusPill> },
             { key: "code", header: "Code", render: (r: any) => <code className="rounded bg-white/10 px-2 py-1 font-mono text-sm">{r.code}</code> },
             { key: "status", header: "Status", align: "right" as const, render: (r: any) => r.usedAt ? <StatusPill tone="green">Used</StatusPill> : <StatusPill tone="amber">Pending</StatusPill> },

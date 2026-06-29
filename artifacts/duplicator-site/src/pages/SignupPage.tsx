@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Link, useLocation } from "wouter";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import AuthShell, { Field, SubmitButton, ErrorBanner } from "@/components/AuthShell";
+import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/auth";
 import { roleHome } from "./LoginPage";
 function errorMessage(err: unknown, fallback: string): string {
@@ -23,6 +24,8 @@ export default function SignupPage() {
   const [companyName, setCompanyName] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("client");
+  const { c } = useTheme();
   const [inviteCode, setInviteCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -60,6 +63,7 @@ export default function SignupPage() {
         name,
         email,
         password,
+        ...({ role: role as any } as any),
         companyName: companyName || undefined,
         phone: phone || undefined,
         inviteCode: inviteCode || undefined,
@@ -97,6 +101,29 @@ export default function SignupPage() {
 
       <form onSubmit={onSubmit}>
         {error && <ErrorBanner message={error} />}
+        <label style={{ display: "block", marginBottom: 16 }}>
+          <span style={{ display: "block", fontFamily: "'Inter', sans-serif", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: c.textMuted, marginBottom: 7 }}>Account Type</span>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 14,
+              color: c.textPrimary,
+              background: c.inputBg,
+              border: `1px solid ${c.inputBorder}`,
+              borderRadius: 10,
+              outline: "none",
+            }}
+          >
+            <option value="client">Client (Standard)</option>
+            <option value="staff">Staff (Team)</option>
+            <option value="manager">Manager (Admin)</option>
+            <option value="super_admin">Owner (Full Access)</option>
+          </select>
+        </label>
         <Field label="Full name" value={name} onChange={setName} placeholder="Your name" autoComplete="name" required />
         <Field label="Company (optional)" value={companyName} onChange={setCompanyName} placeholder="Acme Co." autoComplete="organization" />
         <Field label="Email" type="email" value={email} onChange={setEmail} placeholder="you@company.com" autoComplete="email" required />

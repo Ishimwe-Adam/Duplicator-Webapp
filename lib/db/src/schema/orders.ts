@@ -97,6 +97,16 @@ export function formatOrderNumber(id: number): string {
   return `DUP-${String(id).padStart(5, "0")}`;
 }
 
+/** Public sales quotation number (SLQ1, SLQ2...) */
+export function formatQuotationNumber(id: number): string {
+  return `SLQ${id}`;
+}
+
+/** Public job card number (JC1, JC2...) */
+export function formatJobCardNumber(id: number): string {
+  return `JC${id}`;
+}
+
 /** Canonical order lifecycle (cancelled handled separately). */
 const ORDER_PIPELINE: OrderStatus[] = [
   "draft",

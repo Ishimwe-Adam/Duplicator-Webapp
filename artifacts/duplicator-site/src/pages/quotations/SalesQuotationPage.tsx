@@ -81,7 +81,10 @@ export default function SalesQuotationPage({ mode = "editor" }: { mode?: Quotati
   const { isDark } = useTheme();
   const [clientName, setClientName] = useState("");
   const [partyTin, setPartyTin] = useState("");
-  const [quotationNo, setQuotationNo] = useState("DPL-Q-0001");
+  const [quotationNo, setQuotationNo] = useState(() => {
+    const saved = localStorage.getItem('duplicator_SLQ_count') || '0';
+    return "SLQ" + (parseInt(saved) + 1);
+  });
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [receiverSignature, setReceiverSignature] = useState("Receiver");
   const [senderSignature, setSenderSignature] = useState("Sales Manager");
@@ -93,6 +96,7 @@ export default function SalesQuotationPage({ mode = "editor" }: { mode?: Quotati
     { sn: 4, description: "", qty: 1, unitPrice: 0 },
   ]);
   const [remarks, setRemarks] = useState("");
+  const [isDraft, setIsDraft] = useState(true);
   const [activeTab, setActiveTab] = useState<(typeof EDITOR_TABS)[number]["id"] | (typeof CLIENT_TABS)[number]["id"]>(
     mode === "client" ? "paper" : "details",
   );
@@ -152,6 +156,18 @@ export default function SalesQuotationPage({ mode = "editor" }: { mode?: Quotati
                 : "Select a tab to edit fields. The paper below updates live."}
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsDraft(false);
+              const current = parseInt(localStorage.getItem('duplicator_SLQ_count') || '0');
+              localStorage.setItem('duplicator_SLQ_count', String(current + 1));
+              alert('Saved as final!');
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2645C8] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2645C8]/25 transition hover:scale-[1.02] hover:bg-[#1e3aa8] active:scale-95"
+          >
+            Save as Final
+          </button>
           <button
             type="button"
             onClick={() => window.print()}
