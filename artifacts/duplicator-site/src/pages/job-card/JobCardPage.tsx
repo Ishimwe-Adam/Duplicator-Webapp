@@ -71,7 +71,10 @@ function useFileSignature() {
 
 export default function JobCardPage() {
   const { isDark } = useTheme();
-  const [jobCardNo, setJobCardNo] = useState("DPL-JC-0001");
+  const [jobCardNo, setJobCardNo] = useState(() => {
+    const saved = localStorage.getItem('duplicator_JC_count') || '0';
+    return "JC" + (parseInt(saved) + 1);
+  });
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [clientName, setClientName] = useState("");
   const [partyTin, setPartyTin] = useState("");
@@ -87,6 +90,7 @@ export default function JobCardPage() {
     { sn: 3, description: "", qty: 1, unitPrice: 0 },
   ]);
   const [remarks, setRemarks] = useState("");
+  const [isDraft, setIsDraft] = useState(true);
   const [activeTab, setActiveTab] = useState<(typeof EDITOR_TABS)[number]["id"]>("details");
 
   const receiverSig = useFileSignature();
@@ -137,6 +141,18 @@ export default function JobCardPage() {
               Select a tab to edit fields. The job card below updates live.
             </p>
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setIsDraft(false);
+              const current = parseInt(localStorage.getItem('duplicator_JC_count') || '0');
+              localStorage.setItem('duplicator_JC_count', String(current + 1));
+              alert('Saved as final!');
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2645C8] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#2645C8]/25 transition hover:scale-[1.02] hover:bg-[#1e3aa8] active:scale-95"
+          >
+            Save as Final
+          </button>
           <button
             type="button"
             onClick={() => window.print()}
@@ -289,8 +305,8 @@ export default function JobCardPage() {
           </div>
         )}
 
-        <section className="print-paper rounded-[18px] border border-[#cad7f5] bg-white p-3 shadow-[0_30px_80px_rgba(0,0,0,.22)]">
-          <div className="jobcard-paper mx-auto text-black">
+        <section className="print-paper mx-auto overflow-hidden rounded-[18px] border border-[#cad7f5] bg-white shadow-[0_30px_80px_rgba(0,0,0,.22)] print:m-0 print:border-none print:shadow-none">
+          <div className="jobcard-paper mx-auto w-[210mm] min-h-[297mm] text-black">
             <JobCardPaper
               jobCardNo={jobCardNo}
               date={date}
@@ -349,23 +365,56 @@ export default function JobCardPage() {
         }
 
         @media print {
-          @page { size: A4 portrait; margin: 6mm; }
-          body { background: #fff !important; }
+          @page {
+            size: A4 portrait;
+            margin: 0;
+          }
+          html, body {
+            margin: 0;
+            padding: 0;
+            width: 210mm;
+            height: 297mm;
+          }
+          body {
+            background: #fff !important;
+            -webkit-print-color-adjust: exact;
+          }
           .dl-sidebar,
+          header,
           .jobcard-toolbar,
           .jobcard-tabs,
-          .jobcard-edit-strip {
+          .jobcard-edit-strip,
+          .dl-mobile-only,
+          .dl-desktop-only {
             display: none !important;
           }
-          .dl-content { padding: 0 !important; }
-          .jobcard-shell { max-width: none !important; }
+          main {
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .dl-content {
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          .jobcard-shell {
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
           .print-paper {
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+            margin: 0 !important;
             border-radius: 0 !important;
+            width: 210mm !important;
+            height: 297mm !important;
           }
-          .jobcard-paper { max-height: none !important; }
+          .jobcard-paper {
+            width: 210mm !important;
+            height: 297mm !important;
+            padding: 10mm !important;
+          }
         }
       `}</style>
     </DashboardLayout>
@@ -493,9 +542,9 @@ function JobCardPaper({
   remarks: string;
 }) {
   return (
-    <article className="bg-white px-5 py-4 text-[11px] leading-5 text-black">
-      <header className="grid gap-3 border-b-[4px] border-black pb-3 lg:grid-cols-[72px_1fr_200px]">
-        <div className="flex items-start justify-center lg:justify-start">
+    <article className="flex flex-col h-full bg-white px-[12mm] py-[10mm] text-[11px] leading-5 text-black">
+      <header className="grid gap-3 border-b-[4px] border-black pb-3 grid-cols-[72px_1fr_200px]">
+        <div className="flex items-start justify-start">
           <div className="flex h-[58px] w-[58px] items-center justify-center rounded-sm bg-[#2645C8] text-[38px] font-black leading-none text-white">
             D
           </div>
@@ -509,14 +558,14 @@ function JobCardPaper({
             Tel: (+250)788355226 | Email: duplicator10@gmail.com | P.O. Box 6332 Kigali / KN 78St 69
           </p>
         </div>
-        <ul className="space-y-0.5 border-l-2 border-black pl-3 text-[9px] font-bold leading-4">
+        <ul className="space-y-0.5 border-l-2 border-black pl-3 text-[8.5px] font-bold leading-[1.3]">
           {capabilities.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
       </header>
 
-      <section className="mt-3 grid gap-x-6 gap-y-1 text-[11px] md:grid-cols-2">
+      <section className="mt-5 grid gap-x-12 gap-y-1.5 text-[11px] md:grid-cols-2">
         <PaperField label="Job card no" value={jobCardNo} />
         <PaperField label="Date" value={prettyDate(date)} />
         <PaperField label="Client name" value={clientName || "________________"} />
@@ -527,68 +576,78 @@ function JobCardPaper({
         <PaperField label="Remarks" value={remarks || "________________"} />
       </section>
 
-      <div className="mt-3 overflow-hidden rounded-[4px] border border-black">
-        <table className="w-full border-collapse text-[10px]">
-          <thead>
-            <tr className="bg-neutral-100">
-              <th className="w-10 border border-black p-1 text-center font-black">S.N</th>
-              <th className="border border-black p-1 text-left font-black">Description</th>
-              <th className="w-10 border border-black p-1 text-center font-black">QTY</th>
-              <th className="w-24 border border-black p-1 text-center font-black">Unit Price</th>
-              <th className="w-28 border border-black p-1 text-center font-black">Amount (RWF)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.sn}>
-                <td className="border border-black p-1 text-center font-semibold">{row.sn}</td>
-                <td className="border border-black p-1">{row.description || "\u00A0"}</td>
-                <td className="border border-black p-1 text-center">{row.qty || 0}</td>
-                <td className="border border-black p-1 text-right">{formatMoney(row.unitPrice)}</td>
-                <td className="border border-black p-1 text-right font-semibold">{formatMoney(row.amount)}</td>
+      <div className="mt-6 flex-grow">
+        <div className="overflow-hidden rounded-[4px] border border-black">
+          <table className="w-full border-collapse text-[10.5px]">
+            <thead>
+              <tr className="bg-neutral-100">
+                <th className="w-10 border border-black p-2 text-center font-black">S.N</th>
+                <th className="border border-black p-2 text-left font-black">Description</th>
+                <th className="w-14 border border-black p-2 text-center font-black">QTY</th>
+                <th className="w-28 border border-black p-2 text-center font-black">Unit Price</th>
+                <th className="w-32 border border-black p-2 text-center font-black">Amount (RWF)</th>
               </tr>
-            ))}
-            <tr>
-              <td className="border border-black p-1 font-bold" colSpan={4}>
-                Inclusive 18% VAT
-              </td>
-              <td className="border border-black p-1 text-right font-bold">{formatMoney(vat)}</td>
-            </tr>
-            <tr>
-              <td className="border border-black p-1 text-right font-black" colSpan={4}>
-                Grand total.
-              </td>
-              <td className="border border-black p-1 text-right text-[12px] font-black">{formatMoney(grandTotal)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <section className="mt-2 rounded-[4px] border border-black p-3 text-[10px]">
-        <h3 className="font-black">Terms & Conditions:</h3>
-        <div className="mt-1 space-y-0.5 font-semibold leading-4">
-          {terms.map((term) => (
-            <p key={term}>{term}</p>
-          ))}
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.sn}>
+                  <td className="border border-black p-2 text-center font-semibold">{row.sn}</td>
+                  <td className="border border-black p-2">{row.description || "\u00A0"}</td>
+                  <td className="border border-black p-2 text-center">{row.qty || 0}</td>
+                  <td className="border border-black p-2 text-right">{formatMoney(row.unitPrice)}</td>
+                  <td className="border border-black p-2 text-right font-semibold">{formatMoney(row.amount)}</td>
+                </tr>
+              ))}
+              <tr>
+                <td className="border border-black p-2 font-bold" colSpan={4}>
+                  Inclusive 18% VAT
+                </td>
+                <td className="border border-black p-2 text-right font-bold">{formatMoney(vat)}</td>
+              </tr>
+              <tr className="bg-neutral-50">
+                <td className="border border-black p-2 text-right font-black" colSpan={4}>
+                  GRAND TOTAL
+                </td>
+                <td className="border border-black p-2 text-right text-[12px] font-black">{formatMoney(grandTotal)}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p className="mt-2 font-black">Amount in words: {amountInWords(grandTotal)}</p>
-      </section>
 
-      <footer className="mt-2 grid gap-2 text-[10px] md:grid-cols-3">
-        <div className="min-h-[72px] border border-black p-2">
-          <h3 className="mb-1 font-black">Methods of Payment:</h3>
-          <div className="space-y-0.5 font-semibold leading-4">
-            {paymentMethods.map((method) => (
-              <p key={method}>{method}</p>
+        <section className="mt-5 rounded-[4px] border border-black p-4 text-[10px]">
+          <h3 className="font-black uppercase tracking-wider text-[11px] mb-2">Terms & Conditions:</h3>
+          <div className="space-y-1 font-semibold leading-relaxed">
+            {terms.map((term) => (
+              <p key={term} className="flex gap-2"><span>•</span> {term}</p>
             ))}
           </div>
-        </div>
-        <SignaturePaper label="Receiver's Signature:" value={receiverSignature} asset={receiverAsset} />
-        <SignaturePaper label="Sender's Signature:" value={senderSignature} asset={senderAsset} />
-      </footer>
+          <p className="mt-4 font-black text-[11px]">Amount in words: <span className="uppercase">{amountInWords(grandTotal)}</span></p>
+        </section>
+      </div>
 
-      <div className="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3">
-        <SignaturePaper label="Client's Signature:" value={clientSignature} asset={clientAsset} />
+      <div className="mt-auto pt-6">
+        <footer className="grid gap-3 text-[10px] grid-cols-3">
+          <div className="min-h-[90px] border border-black p-3">
+            <h3 className="mb-2 font-black uppercase text-[9px] tracking-wider">Methods of Payment:</h3>
+            <div className="space-y-1 font-semibold leading-relaxed">
+              {paymentMethods.map((method) => (
+                <p key={method}>{method}</p>
+              ))}
+            </div>
+          </div>
+          <SignaturePaper label="Receiver's Signature:" value={receiverSignature} asset={receiverAsset} />
+          <SignaturePaper label="Sender's Signature:" value={senderSignature} asset={senderAsset} />
+        </footer>
+
+        <div className="mt-3 grid grid-cols-3 gap-3">
+          <SignaturePaper label="Client's Signature:" value={clientSignature} asset={clientAsset} />
+          <div className="col-span-2 flex items-center justify-end">
+            <div className="text-right">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[#2645C8]">Switch Your Brand ON</p>
+              <p className="text-[8px] font-bold text-neutral-400 mt-0.5">Design & Printing Solution</p>
+            </div>
+          </div>
+        </div>
       </div>
     </article>
   );

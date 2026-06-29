@@ -7,7 +7,7 @@ import { requireAuth, requireRole } from "../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
-const ADMIN_ROLES = ["super_admin", "admin"] as const;
+const ADMIN_ROLES = ["super_admin", "admin", "manager"] as const;
 const STAFF_OR_ADMIN = ["super_admin", "admin", "staff"] as const;
 
 const TASK_STATUSES = ["todo", "in_progress", "review", "done"] as const;

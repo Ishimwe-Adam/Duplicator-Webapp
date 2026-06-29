@@ -22,6 +22,8 @@ tags:
     description: Aggregated metrics for admin dashboards
   - name: tasks
     description: Internal Kanban task management
+  - name: invites
+    description: Team member invitations
 paths:
   /healthz:
     get:
@@ -41,7 +43,7 @@ paths:
     post:
       operationId: register
       tags: [auth]
-      summary: Create an account (client self-signup)
+      summary: Create an account (client self-signup or invite redemption)
       requestBody:
         required: true
         content:
@@ -633,6 +635,66 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
 
+  /invites:
+    get:
+      operationId: listInvites
+      tags: [invites]
+      summary: List team invitations (admin/manager only)
+      responses:
+        "200":
+          description: Invites list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InviteListResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      operationId: createInvite
+      tags: [invites]
+      summary: Create a team invitation (admin/manager only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInviteInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -653,7 +715,7 @@ components:
 
     UserRole:
       type: string
-      enum: [super_admin, admin, staff, client]
+      enum: [super_admin, admin, manager, staff, client]
 
     AuthUser:
       type: object
@@ -698,6 +760,9 @@ components:
           type: string
         companyName:
           type: string
+        inviteCode:
+          type: string
+          description: Required to register as admin, manager, or staff.
 
     LoginInput:
       type: object
@@ -1338,3 +1403,43 @@ components:
           type: string
           format: date-time
           nullable: true
+
+    Invite:
+      type: object
+      required: [id, email, code, role, createdAt]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        code:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        invitedBy:
+          $ref: "#/components/schemas/OrderPartyRef"
+        createdAt:
+          type: string
+          format: date-time
+        usedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    InviteListResponse:
+      type: object
+      required: [invites]
+      properties:
+        invites:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invite"
+
+    CreateInviteInput:
+      type: object
+      required: [email, role]
+      properties:
+        email:
+          type: string
+          format: email
+        role:
+          $ref: "#/components/schemas/UserRole"

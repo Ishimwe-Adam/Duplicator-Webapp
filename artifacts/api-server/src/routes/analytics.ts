@@ -16,7 +16,7 @@ import type { AnalyticsSummary } from "@workspace/api-zod";
 import { eq, gte, lt, not, inArray, desc, sql, count, sum, and } from "drizzle-orm";
 
 const router: IRouter = Router();
-const ADMIN_ROLES = ["super_admin", "admin"] as const;
+const ADMIN_ROLES = ["super_admin", "admin", "manager"] as const;
 
 router.use(requireAuth);
 router.use(requireRole(...ADMIN_ROLES));

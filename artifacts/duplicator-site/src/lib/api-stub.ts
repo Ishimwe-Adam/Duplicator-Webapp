@@ -13,15 +13,19 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // Mock data
 const mockUsers: Record<string, { password: string; user: AuthUser }> = {
   "admin@duplicator.rw": {
-    password: "password123",
-    user: { id: 1, email: "admin@duplicator.rw", name: "Admin User", role: "admin" as UserRole, phone: "+250788123456", companyName: "Duplicator Ltd" }
+    password: "Admin@2026",
+    user: { id: 1, email: "admin@duplicator.rw", name: "Admin User", role: "super_admin" as UserRole, phone: "+250788123456", companyName: "Duplicator Ltd" }
+  },
+  "manager@duplicator.rw": {
+    password: "Manager@2026",
+    user: { id: 4, email: "manager@duplicator.rw", name: "Manager User", role: "manager" as UserRole, phone: "+250788999888", companyName: "Duplicator Ltd" }
   },
   "staff@duplicator.rw": {
-    password: "password123",
+    password: "Staff@2026",
     user: { id: 2, email: "staff@duplicator.rw", name: "Staff Member", role: "staff" as UserRole, phone: "+250788654321" }
   },
   "client@example.com": {
-    password: "password123",
+    password: "Client@2026",
     user: { id: 3, email: "client@example.com", name: "John Client", role: "client" as UserRole, phone: "+250788111222", companyName: "Client Corp" }
   }
 };
@@ -458,13 +462,44 @@ export const useDeleteTask = (options?: { mutation?: Parameters<typeof useMutati
   });
 };
 
+// ─── Invites hooks (real API calls) ─────────────────────────────────────────
+
+export const getListInvitesQueryKey = () => ["invites"] as const;
+
+export const useListInvites = <TData = InviteListResponse, TError = Error>(options?: {
+  query?: Parameters<typeof useQuery>[0];
+}) => {
+  return useQuery({
+    queryKey: getListInvitesQueryKey(),
+    queryFn: async (): Promise<InviteListResponse> => {
+      const res = await fetch("/api/invites", { credentials: "include" });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    ...options?.query,
+  }) as ReturnType<typeof useQuery<InviteListResponse, TError, TData>>;
+};
+
+export const useCreateInvite = (options?: { mutation?: Parameters<typeof useMutation>[0] }) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ data }: { data: CreateInviteInput }): Promise<Invite> => {
+      const res = await fetch("/api/invites", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify(data) });
+      if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error((e as any).error ?? `HTTP ${res.status}`); }
+      return res.json();
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: getListInvitesQueryKey() }),
+    ...options?.mutation,
+  });
+};
+
 // ─── Type exports ────────────────────────────────────────────────────────────
 export interface HealthStatus { status: string }
 export interface ErrorResponse { error: string }
-export type UserRole = "super_admin" | "admin" | "staff" | "client";
+export type UserRole = "super_admin" | "admin" | "manager" | "staff" | "client";
 export interface AuthUser { id: number; email: string; name: string; role: UserRole; phone?: string | null; companyName?: string | null; profilePictureUrl?: string | null }
 export interface AuthResponse { user: AuthUser }
-export interface RegisterInput { email: string; password: string; name: string; phone?: string; companyName?: string }
+export interface RegisterInput { email: string; password: string; name: string; phone?: string; companyName?: string; inviteCode?: string }
 export interface LoginInput { email: string; password: string }
 export type OrderStatus = "draft" | "quoted" | "approved" | "in_production" | "ready" | "delivered" | "cancelled";
 export interface OrderItemLine { description: string; qty: number; unitPrice: number }
@@ -496,7 +531,10 @@ export interface TaskPartyRef { id: number; name: string }
 export interface TaskSummary { id: number; title: string; description?: string | null; status: TaskStatus; priority: TaskPriority; assignee?: TaskPartyRef | null; createdBy?: TaskPartyRef | null; orderId?: number | null; dueDate?: string | null; createdAt: string; updatedAt: string }
 export interface TaskListResponse { tasks: TaskSummary[] }
 export interface CreateTaskInput { title: string; description?: string; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }
-export type StaffRole = "super_admin" | "admin" | "staff";
+export type StaffRole = "super_admin" | "admin" | "manager" | "staff";
 export interface UserSummary { id: number; name: string; email: string; role: StaffRole }
 export interface UserListResponse { users: UserSummary[] }
 export interface UpdateTaskInput { title?: string; description?: string | null; status?: TaskStatus; priority?: TaskPriority; assigneeId?: number | null; orderId?: number | null; dueDate?: string | null }
+export interface Invite { id: number; email: string; code: string; role: UserRole; invitedBy: OrderPartyRef; createdAt: string; usedAt?: string | null }
+export interface InviteListResponse { invites: Invite[] }
+export interface CreateInviteInput { email: string; role: UserRole }

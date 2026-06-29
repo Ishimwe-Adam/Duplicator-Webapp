@@ -34,7 +34,7 @@ import {
 import { requireAuth, requireRole } from "../middlewares/requireAuth";
 
 const router: IRouter = Router();
-const ADMIN_ROLES = ["super_admin", "admin"] as const;
+const ADMIN_ROLES = ["super_admin", "admin", "manager"] as const;
 
 type UserRow  = { id: number; name: string; email: string | null };
 type OrderRow = { id: number; title: string };

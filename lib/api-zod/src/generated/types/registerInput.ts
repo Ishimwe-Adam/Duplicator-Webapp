@@ -14,4 +14,6 @@ export interface RegisterInput {
   name: string;
   phone?: string;
   companyName?: string;
+  /** Required to register as admin, manager, or staff. */
+  inviteCode?: string;
 }

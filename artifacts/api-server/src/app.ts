@@ -41,7 +41,11 @@ if (process.env.NODE_ENV === "production") {
   const distDir = path.resolve(__dirname, "../../duplicator-site/dist");
   if (fs.existsSync(distDir)) {
     app.use(express.static(distDir));
-    app.get("*", (_req: Request, res: Response, _next: NextFunction) => {
+    // Catch-all route for SPA: serve index.html for any non-API request
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      if (req.path.startsWith("/api")) {
+        return next();
+      }
       res.sendFile(path.join(distDir, "index.html"));
     });
   } else {

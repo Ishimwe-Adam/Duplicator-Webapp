@@ -72,13 +72,15 @@ function navForRole(role: string): NavItem[] {
     { href: "/admin/gallery", label: "Gallery", icon: Image },
     { href: "/admin/calendar", label: "Calendar", icon: Calendar },
     { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
+    { href: "/admin/invites", label: "Invitations", icon: Users },
     { href: "/admin/settings", label: "Settings", icon: Settings },
   ];
 }
 
 const roleLabel: Record<string, string> = {
   super_admin: "Owner",
-  admin: "Manager",
+  admin: "Admin",
+  manager: "Manager",
   staff: "Staff",
   client: "Client",
 };

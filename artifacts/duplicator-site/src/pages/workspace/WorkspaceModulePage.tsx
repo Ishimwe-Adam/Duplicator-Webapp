@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/context/auth";
 import { useTheme } from "@/context/ThemeContext";
+import { useState as useReactState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { KpiCard } from "@/components/DashboardKpi";
 import { Avatar, DataTable, ProgressBar, Section, StatusPill } from "@/components/dashboard/Primitives";
@@ -19,9 +20,12 @@ import {
   useGetAnalyticsSummary,
   useListInvoices,
   useListOrders,
+  useListInvites,
+  useCreateInvite,
   getGetAnalyticsSummaryQueryKey,
   getListInvoicesQueryKey,
   getListOrdersQueryKey,
+  getListInvitesQueryKey,
 } from "@/lib/api-stub";
 import type { OrderStatus } from "@/lib/api-stub";
 import { Bell, CalendarDays, CircleCheck as CheckCircle2, ClipboardList, Download, FileText, Megaphone, MessageSquare, FolderPlus, FileUp, Image, Plus, Save, Search, PencilLine, Settings2, ShoppingBag, Sparkles, Star, Users, Wallet, Upload, Trash2 } from "lucide-react";
@@ -35,6 +39,7 @@ type ModuleKey =
   | "admin-documents"
   | "admin-gallery"
   | "admin-announcements"
+  | "admin-invites"
   | "admin-settings"
   | "staff-tasks"
   | "staff-gallery"
@@ -54,6 +59,7 @@ const MODULE_META: Record<ModuleKey, { title: string; subtitle: string }> = {
   "admin-documents": { title: "Documents", subtitle: "Quick access to quotation, order, invoice, and catalogue files." },
   "admin-gallery": { title: "Gallery", subtitle: "Upload, edit, and rate production work shared across the company." },
   "admin-announcements": { title: "Announcements", subtitle: "Broadcast updates to the team and sales crew." },
+  "admin-invites": { title: "Invitations", subtitle: "Generate one-time codes to onboard new team members." },
   "admin-settings": { title: "Settings", subtitle: "Company identity, payment details, and defaults." },
   "staff-tasks": { title: "Staff Tasks", subtitle: "Assigned work, QC checklist, and production priorities." },
   "staff-gallery": { title: "Gallery", subtitle: "Post recent work, review proofs, and rate team output." },
@@ -68,23 +74,23 @@ const MODULE_META: Record<ModuleKey, { title: string; subtitle: string }> = {
 const SIGNATURE_OPTIONS = ["Receiver", "Client Representative", "Sales Manager", "Print Operator", "Owner"] as const;
 
 const EMPLOYEE_ROSTER = [
-  "Sales team",
-  "Production",
-  "Accounts",
+  "Sales",
+  "Marketing",
   "Design",
-  "Print Operator",
+  "Transportation",
+  "Production",
+  "Account",
   "Manager",
   "Owner",
-  "Client Representative",
 ] as const;
 
 const TASK_ASSIGNEES = ["Unassigned", ...EMPLOYEE_ROSTER] as const;
 const TASK_PRIORITIES = ["High", "Medium", "Low"] as const;
 const TASK_STATUSES = ["todo", "doing", "done"] as const;
 const TASK_PRESETS = [
-  { title: "Approve final proof for client", owner: "Sales team", due: "Today", priority: "High" as const, status: "todo" as const },
+  { title: "Approve final proof for client", owner: "Sales", due: "Today", priority: "High" as const, status: "todo" as const },
   { title: "Print roll-up banners — 2pcs", owner: "Production", due: "Tomorrow", priority: "Medium" as const, status: "todo" as const },
-  { title: "Issue invoice for completed order", owner: "Accounts", due: "Today", priority: "High" as const, status: "doing" as const },
+  { title: "Issue invoice for completed order", owner: "Account", due: "Today", priority: "High" as const, status: "doing" as const },
   { title: "Design new flyer template", owner: "Design", due: "Friday", priority: "Low" as const, status: "todo" as const },
 ];
 const MESSAGE_RECIPIENTS = [
@@ -239,6 +245,8 @@ function ModuleBody({ module }: { module: ModuleKey }) {
       return <GalleryModule role="admin" />;
     case "admin-announcements":
       return <AdminAnnouncementsModule />;
+    case "admin-invites":
+      return <AdminInvitesModule />;
     case "admin-settings":
       return <AdminSettingsModule />;
     case "staff-tasks":
@@ -270,7 +278,7 @@ function AdminTasksModule() {
     {
       id: 1,
       title: "Approve final proof for Bank of Kigali",
-      owner: "Sales team",
+      owner: "Sales",
       due: "Today",
       priority: "High",
       status: "doing",
@@ -297,7 +305,7 @@ function AdminTasksModule() {
     {
       id: 4,
       title: "Call client about invoice settlement",
-      owner: "Accounts",
+      owner: "Account",
       due: "Thu",
       priority: "High",
       status: "todo",
@@ -2391,4 +2399,82 @@ function statusTone(status: OrderStatus): "blue" | "green" | "amber" | "red" | "
   if (status === "quoted") return "cyan";
   if (status === "approved") return "blue";
   return "grey";
+}
+
+function AdminInvitesModule() {
+  const { isDark } = useTheme();
+  const { data, refetch } = useListInvites({
+    query: { queryKey: getListInvitesQueryKey() }
+  });
+  const createInvite = useCreateInvite();
+
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<any>("staff");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      await createInvite.mutateAsync({ data: { email, role } });
+      setEmail("");
+      setRole("staff");
+      refetch();
+    } catch (err: any) {
+      setError(err.data?.error || "Failed to create invite");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const invites = data?.invites || [];
+
+  return (
+    <div className="space-y-6">
+      <Section title="Invite team member" subtitle="Generate a one-time code for a specific email and role.">
+        <form onSubmit={onSubmit} className="grid gap-4 md:grid-cols-3">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none"
+            placeholder="colleague@duplicator.rw"
+            required
+          />
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none"
+          >
+            <option value="staff">Staff</option>
+            <option value="manager">Manager</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2645C8] to-[#00C6FF] px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          >
+            {loading ? "Generating..." : "Generate code"}
+          </button>
+        </form>
+        {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      </Section>
+
+      <Section title="Active invitations" subtitle="One-time codes that haven't been redeemed yet." noPad>
+        <DataTable
+          columns={[
+            { key: "email", header: "Email", render: (r: any) => <span>{r.email}</span> },
+            { key: "role", header: "Target Role", render: (r: any) => <StatusPill tone="blue">{r.role}</StatusPill> },
+            { key: "code", header: "Code", render: (r: any) => <code className="rounded bg-white/10 px-2 py-1 font-mono text-sm">{r.code}</code> },
+            { key: "status", header: "Status", align: "right" as const, render: (r: any) => r.usedAt ? <StatusPill tone="green">Used</StatusPill> : <StatusPill tone="amber">Pending</StatusPill> },
+          ]}
+          rows={invites}
+          emptyText="No invitations found."
+        />
+      </Section>
+    </div>
+  );
 }

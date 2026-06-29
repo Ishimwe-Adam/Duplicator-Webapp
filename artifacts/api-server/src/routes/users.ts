@@ -5,8 +5,8 @@ import { requireAuth, requireRole } from "../middlewares/requireAuth";
 
 const router: IRouter = Router();
 
-const ADMIN_ROLES = ["super_admin", "admin"] as const;
-const ASSIGNABLE_ROLES = ["super_admin", "admin", "staff"] as const;
+const ADMIN_ROLES = ["super_admin", "admin", "manager"] as const;
+const ASSIGNABLE_ROLES = ["super_admin", "admin", "manager", "staff"] as const;
 
 router.get("/", requireAuth, requireRole(...ADMIN_ROLES), async (_req, res) => {
   const rows = await db

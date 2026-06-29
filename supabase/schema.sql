@@ -4,7 +4,7 @@
 -- =========================================================
 
 -- Enums
-CREATE TYPE user_role     AS ENUM ('super_admin', 'admin', 'staff', 'client');
+CREATE TYPE user_role     AS ENUM ('super_admin', 'admin', 'manager', 'staff', 'client');
 CREATE TYPE order_status  AS ENUM ('draft', 'quoted', 'approved', 'in_production', 'ready', 'delivered', 'cancelled');
 CREATE TYPE invoice_status AS ENUM ('draft', 'sent', 'paid', 'void');
 CREATE TYPE payment_method AS ENUM ('momo', 'airtel', 'bank_transfer', 'cash', 'other');
@@ -93,6 +93,17 @@ CREATE TABLE IF NOT EXISTS payments (
   paid_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   recorded_by_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Invites
+CREATE TABLE IF NOT EXISTS invites (
+  id              SERIAL PRIMARY KEY,
+  email           TEXT NOT NULL,
+  code            TEXT NOT NULL UNIQUE,
+  role            user_role NOT NULL,
+  invited_by_id   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  used_at         TIMESTAMPTZ
 );
 
 -- =========================================================
