@@ -74,25 +74,23 @@ const MODULE_META: Record<ModuleKey, { title: string; subtitle: string }> = {
 const SIGNATURE_OPTIONS = ["Receiver", "Client Representative", "Sales Manager", "Print Operator", "Owner"] as const;
 
 const EMPLOYEE_ROSTER = [
-  "Sales team",
-  "Marketing team",
-  "Transportation team",
-  "Production",
-  "Accounts",
+  "Sales",
+  "Marketing",
   "Design",
-  "Print Operator",
+  "Transportation",
+  "Production",
+  "Account",
   "Manager",
   "Owner",
-  "Client Representative",
 ] as const;
 
 const TASK_ASSIGNEES = ["Unassigned", ...EMPLOYEE_ROSTER] as const;
 const TASK_PRIORITIES = ["High", "Medium", "Low"] as const;
 const TASK_STATUSES = ["todo", "doing", "done"] as const;
 const TASK_PRESETS = [
-  { title: "Approve final proof for client", owner: "Sales team", due: "Today", priority: "High" as const, status: "todo" as const },
+  { title: "Approve final proof for client", owner: "Sales", due: "Today", priority: "High" as const, status: "todo" as const },
   { title: "Print roll-up banners — 2pcs", owner: "Production", due: "Tomorrow", priority: "Medium" as const, status: "todo" as const },
-  { title: "Issue invoice for completed order", owner: "Accounts", due: "Today", priority: "High" as const, status: "doing" as const },
+  { title: "Issue invoice for completed order", owner: "Account", due: "Today", priority: "High" as const, status: "doing" as const },
   { title: "Design new flyer template", owner: "Design", due: "Friday", priority: "Low" as const, status: "todo" as const },
 ];
 const MESSAGE_RECIPIENTS = [
@@ -280,7 +278,7 @@ function AdminTasksModule() {
     {
       id: 1,
       title: "Approve final proof for Bank of Kigali",
-      owner: "Sales team",
+      owner: "Sales",
       due: "Today",
       priority: "High",
       status: "doing",
@@ -307,7 +305,7 @@ function AdminTasksModule() {
     {
       id: 4,
       title: "Call client about invoice settlement",
-      owner: "Accounts",
+      owner: "Account",
       due: "Thu",
       priority: "High",
       status: "todo",
